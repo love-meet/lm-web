@@ -111,6 +111,7 @@ export default function HomePage() {
               />
               <div className="absolute  bg-gradient-to-r from-[var(--primary-blue)] via-[var(--primary-purple)] to-[var(--accent-pink)] rounded-3xl opacity-20 blur-xl animate-pulse group-hover:opacity-40 transition-opacity duration-500" />
 
+
               {/* <div className="absolute inset-0 rounded-3xl bg-gradient-to-r from-[var(--primary-cyan)] via-transparent to-[var(--accent-pink)] opacity-0 group-hover:opacity-20 transition-all duration-500" /> */}
             </div>
           </div>
