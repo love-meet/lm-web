@@ -8,7 +8,7 @@ const Feeds = lazy(() => import('./pages/dashboard/feeds/Index'));
 
 
 // Protected Route - Lazy loaded
-const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
+// const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
 export const routes = [
   {
