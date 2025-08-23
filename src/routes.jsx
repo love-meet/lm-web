@@ -5,6 +5,9 @@ import { Navigate } from 'react-router';
 const NotFound = lazy(() => import('./pages/Notfound'));
 const HomePage = lazy(() => import('./pages/home/Index'));
 const Feeds = lazy(() => import('./pages/dashboard/feeds/Index'));
+const Chats = lazy(() => import('./pages/dashboard/chats/Index'));
+const Settings = lazy(() => import('./pages/dashboard/settings/Index'));
+const Posts = lazy(() => import('./pages/dashboard/post/Index'));
 
 
 // Protected Route - Lazy loaded
@@ -25,7 +28,27 @@ export const routes = [
     showInNav: true,
     protected: false,
   },
-
+  {
+    path: '/post',
+    element: <Posts /> ,
+    name: 'post',
+    showInNav: true,
+    protected: false,
+  },
+  {
+    path: '/settings',
+    element: <Settings /> ,
+    name: 'settings',
+    showInNav: true,
+    protected: false,
+  },
+  {
+    path: '/chats',
+    element: <Chats /> ,
+    name: 'settings',
+    showInNav: true,
+    protected: false,
+  },
 
   // {
   //   path: '/transactions',

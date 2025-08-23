@@ -37,7 +37,7 @@ const MobileNavbar = () => {
           <img 
             src="/assets/lm-logo.png" 
             alt="Love Meet Logo" 
-            className="h-4 w-auto animate-logoGlow"
+            className="h-5 w-auto animate-logoGlow"
           />
         </div>
         
@@ -45,7 +45,7 @@ const MobileNavbar = () => {
         <div className="flex items-center space-x-3">
           {/* Notification Bell */}
           <button className="relative p-2 rounded-full bg-white/10 backdrop-blur-sm hover:bg-white/20 transition-colors">
-            <Bell size={15} className="text-[var(--text-primary)]" />
+            <Bell size={17} className="text-[var(--text-primary)]" />
             {/* Notification dot */}
             <div className="absolute -top-1 -right-1 w-3 h-3 bg-[var(--accent-pink)] rounded-full border-2 border-[var(--bg-primary)] animate-pulse"></div>
           </button>

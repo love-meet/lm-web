@@ -61,7 +61,7 @@ export default function HomePage() {
           <div 
             className="absolute inset-0 bg-cover bg-center bg-no-repeat z-5"
             style={{
-              backgroundImage: "linear-gradient(rgba(15, 15, 35, 0.6), rgba(26, 26, 46, 0.6)), url('/assets/they_should_be_looking_at_each_other.jpeg')"
+              backgroundImage: "linear-gradient(rgba(15, 15, 35, 0.6), rgba(26, 26, 46, 0.6)), url('/assets/they_should_be_looking_at_each_other_11zon.jpeg')"
             }}
           />
           
@@ -101,7 +101,7 @@ export default function HomePage() {
           <div className="flex-1 flex items-center justify-center">
             <div className="relative group cursor-pointer">
               <img 
-                src="/assets/they_should_be_looking_at_each_other.jpeg"
+                src="/assets/they_should_be_looking_at_each_other_11zon.jpeg"
                 alt="Couple looking at each other"
                 className="w-96 h-96 lg:w-[500px] lg:h-[500px] object-cover rounded-3xl shadow-2xl transition-all duration-500 ease-out group-hover:scale-105 group-hover:rotate-0"
                 style={{
@@ -117,12 +117,6 @@ export default function HomePage() {
           </div>
         </div>
       </section>
-
-      {/* Main Content */}
-      <main id="main-content">
-        
-
-      </main>
     </>
   );
 }

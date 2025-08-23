@@ -321,3 +321,46 @@ button {
       opacity: 0.8;
     }
   }
+
+  @keyframes streamFlow {
+    0% { 
+      transform: translateY(-100vh) scaleY(0); 
+      opacity: 0;
+    }
+    20% { 
+      transform: translateY(-50vh) scaleY(1); 
+      opacity: 1;
+    }
+    80% { 
+      transform: translateY(50vh) scaleY(1); 
+      opacity: 1;
+    }
+    100% { 
+      transform: translateY(100vh) scaleY(0); 
+      opacity: 0;
+    }
+  }
+
+  @keyframes fadeIn {
+    0% { 
+      opacity: 0; 
+      transform: translateY(20px);
+    }
+    100% { 
+      opacity: 1; 
+      transform: translateY(0);
+    }
+  }
+
+  .animate-fadeIn {
+    animation: fadeIn 0.6s ease-out forwards;
+  }
+
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }

@@ -46,7 +46,7 @@ const Layout = () => {
       
       {/* Main Content Area */}
       <main className={`
-        ${!isHomePage ? 'pt-16 pb-20 md:pt-0 md:pb-0 md:pr-72' : ''}
+        ${!isHomePage ? 'pt-14 pb-20 md:pt-2 md:pb-0 md:pr-72' : ''}
         min-h-screen
       `}>
         <div className={`
