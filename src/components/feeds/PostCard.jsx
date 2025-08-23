@@ -76,7 +76,7 @@ const PostCard = ({ post }) => {
           <img 
             src={post.image || post.images?.[0]} 
             alt="Post"
-            className="w-full h-64 object-cover"
+            className="w-full h-full object-cover"
           />
           {/* Image overlay gradient */}
           <div className="absolute inset-0 bg-gradient-to-t from-black/20 to-transparent" />
