@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Send, Images } from 'lucide-react';
 
-const PostCard = ({ post }) => {
+const PostCard = ({ post, onClick }) => {
   const [liked, setLiked] = useState(false);
   const [likes, setLikes] = useState(post.likes);
 
@@ -36,7 +36,10 @@ const PostCard = ({ post }) => {
   const tiltAngle = (Math.random() - 0.5) * 6; // Random tilt between -3 and 3 degrees
 
   return (
-    <div className="w-full max-w-sm mx-auto bg-gradient-to-b from-[var(--bg-secondary)]/80 to-[var(--bg-tertiary)]/80 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl mb-8 ">
+    <div 
+      className="w-full max-w-sm mx-auto bg-gradient-to-b from-[var(--bg-secondary)]/80 to-[var(--bg-tertiary)]/80 backdrop-blur-lg border border-white/10 rounded-2xl overflow-hidden shadow-2xl mb-8 cursor-pointer hover:transform hover:scale-105 transition-all duration-300"
+      onClick={onClick}
+    >
       {/* Header */}
       <div className="flex items-center justify-between p-4">
         <div className="flex items-center space-x-3">
@@ -98,7 +101,10 @@ const PostCard = ({ post }) => {
         {/* Action buttons */}
         <div className="flex items-center justify-around pt-3 border-t border-white/10">
           <button 
-            onClick={handleLike}
+            onClick={(e) => {
+              e.stopPropagation();
+              handleLike();
+            }}
             className={`flex items-center space-x-2 px-4 py-2 rounded-full transition-all duration-300 ${
               liked 
                 ? 'bg-[var(--accent-pink)]/20 text-[var(--accent-pink)]' 
@@ -112,12 +118,18 @@ const PostCard = ({ post }) => {
             <span className="text-sm font-medium">{likes}</span>
           </button>
           
-          <button className="flex items-center space-x-2 px-4 py-2 rounded-full text-[var(--text-muted)] hover:bg-white/10 hover:text-white transition-all duration-300">
+          <button 
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center space-x-2 px-4 py-2 rounded-full text-[var(--text-muted)] hover:bg-white/10 hover:text-white transition-all duration-300"
+          >
             <MessageCircle size={18} />
-            <span className="text-sm font-medium">{post.comments || 0}</span>
+            <span className="text-sm font-medium">{Array.isArray(post.comments) ? post.comments.length : post.comments || 0}</span>
           </button>
           
-          <button className="flex items-center space-x-2 px-4 py-2 rounded-full text-[var(--text-muted)] hover:bg-white/10 hover:text-white transition-all duration-300">
+          <button 
+            onClick={(e) => e.stopPropagation()}
+            className="flex items-center space-x-2 px-4 py-2 rounded-full text-[var(--text-muted)] hover:bg-white/10 hover:text-white transition-all duration-300"
+          >
             <Send size={18} />
             <span className="text-sm font-medium">Share</span>
           </button>

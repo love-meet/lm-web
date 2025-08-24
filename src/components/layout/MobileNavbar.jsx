@@ -5,24 +5,24 @@ const MobileNavbar = () => {
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
 
-  useEffect(() => {
-    const handleScroll = () => {
-      const currentScrollY = window.scrollY;
+  // useEffect(() => {
+  //   const handleScroll = () => {
+  //     const currentScrollY = window.scrollY;
       
-      // Always show navbar at the top
-      if (currentScrollY < 10) {
-        setIsVisible(true);
-      } else {
-        // Show when scrolling up, hide when scrolling down
-        setIsVisible(currentScrollY < lastScrollY);
-      }
+  //     // Always show navbar at the top
+  //     if (currentScrollY < 10) {
+  //       setIsVisible(true);
+  //     } else {
+  //       // Show when scrolling up, hide when scrolling down
+  //       setIsVisible(currentScrollY < lastScrollY);
+  //     }
       
-      setLastScrollY(currentScrollY);
-    };
+  //     setLastScrollY(currentScrollY);
+  //   };
 
-    window.addEventListener('scroll', handleScroll, { passive: true });
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, [lastScrollY]);
+  //   window.addEventListener('scroll', handleScroll, { passive: true });
+  //   return () => window.removeEventListener('scroll', handleScroll);
+  // }, [lastScrollY]);
 
   return (
     <nav 

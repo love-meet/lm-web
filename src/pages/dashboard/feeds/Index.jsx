@@ -1,94 +1,18 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import PostCard from '../../../components/feeds/PostCard';
+import { postsData } from '../../../data/postsData';
 
 const FeedsPage = () => {
   const [posts, setPosts] = useState([]);
+  const navigate = useNavigate();
 
-  // Sample data using gallery images
-  const samplePosts = [
-    {
-      id: 1,
-      username: "Sarah_Love",
-      badge: "Diamond",
-      userAvatar: "/assets/default-profile.jpg",
-      image: "/gallery/photo_2025-08-23_18-52-12.jpg",
-      content: "Beautiful sunset today! Feeling grateful for these peaceful moments. 🌅✨",
-      timestamp: new Date(Date.now() - 1000 * 60 * 2), // 2 minutes ago
-      likes: 24,
-      comments: 5
-    },
-    {
-      id: 2,
-      username: "Mike_Adventure",
-      badge: "Platinum", 
-      userAvatar: "/assets/default-profile.jpg",
-      images: ["/gallery/DSC_9900.jpeg", "/gallery/IMG-20230504-WA0025.jpg"],
-      image: "/gallery/DSC_9900.jpeg",
-      content: "Weekend adventure with amazing friends! Life is so much better when shared with someone special 💕",
-      timestamp: new Date(Date.now() - 1000 * 60 * 15), // 15 minutes ago
-      likes: 156,
-      comments: 23
-    },
-    {
-      id: 3,
-      username: "Emma_Wanderlust",
-      badge: "Gold",
-      userAvatar: "/assets/default-profile.jpg", 
-      image: "/gallery/FB_IMG_1702736841815_1.jpg",
-      content: "Exploring new places and making memories. Who wants to join me on my next adventure? 🗺️",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 2), // 2 hours ago
-      likes: 89,
-      comments: 12
-    },
-    {
-      id: 4,
-      username: "Alex_Photographer",
-      badge: "Silver",
-      userAvatar: "/assets/default-profile.jpg",
-      images: ["/gallery/IMG-20241027-WA0044.jpg", "/gallery/photo_2024-12-05_00-48-44.jpg"],
-      image: "/gallery/IMG-20241027-WA0044.jpg", 
-      content: "Captured this perfect moment today. Photography helps me see the beauty in everything 📸",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 5), // 5 hours ago
-      likes: 67,
-      comments: 8
-    },
-    {
-      id: 5,
-      username: "Luna_Dreamer",
-      badge: "Bronze",
-      userAvatar: "/assets/default-profile.jpg",
-      image: "/gallery/IMG_20240117_150001_111_optimized_100.webp",
-      content: "Sometimes the best moments are the quiet ones. Looking for someone to share these peaceful times with 🌙",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24), // 1 day ago
-      likes: 143,
-      comments: 31
-    },
-    {
-      id: 6,
-      username: "David_Explorer",
-      badge: "Diamond",
-      userAvatar: "/assets/default-profile.jpg",
-      image: "/gallery/photo_2024-12-05_00-48-44.jpg",
-      content: "New day, new possibilities! Ready to make some amazing connections today 🌟",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago 
-      likes: 91,
-      comments: 15
-    },
-       {
-      id: 6,
-      username: "David_Explorer",
-      badge: "Diamond",
-      userAvatar: "/assets/default-profile.jpg",
-      image: "/gallery/IMG-20230504-WA0025.jpg",
-      content: "New day, new possibilities! Ready to make some amazing connections today 🌟",
-      timestamp: new Date(Date.now() - 1000 * 60 * 60 * 24 * 3), // 3 days ago 
-      likes: 91,
-      comments: 15
-    }
-  ];
+  const handlePostClick = (postId) => {
+    navigate(`/post/${postId}`);
+  };
 
   useEffect(() => {
-    setPosts(samplePosts);
+    setPosts(postsData);
   }, []);
 
   return (
@@ -135,7 +59,7 @@ const FeedsPage = () => {
       </div>
 
       {/* Main Content */}
-      <div className="relative z-10 pt-0 pb-1">
+      <div className="relative z-10 p-4 space-y-6">
         {/* Header */}
 
         {/* Posts Container */}
@@ -155,7 +79,7 @@ const FeedsPage = () => {
                 animationFillMode: 'forwards'
               }}
             >
-              <PostCard post={post} />
+              <PostCard post={post} onClick={() => handlePostClick(post.id)} />
             </div>
           ))}
         </div>

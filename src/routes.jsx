@@ -1,5 +1,4 @@
 import { lazy } from 'react';
-import { Navigate } from 'react-router';
 
 // Lazy load all components for better performance
 const NotFound = lazy(() => import('./pages/Notfound'));
@@ -8,6 +7,8 @@ const Feeds = lazy(() => import('./pages/dashboard/feeds/Index'));
 const Chats = lazy(() => import('./pages/dashboard/chats/Index'));
 const Settings = lazy(() => import('./pages/dashboard/settings/Index'));
 const Posts = lazy(() => import('./pages/dashboard/post/Index'));
+const PostDetails = lazy(() => import('./pages/dashboard/postDetails/Index'));
+const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
 
 
 // Protected Route - Lazy loaded
@@ -47,6 +48,22 @@ export const routes = [
     element: <Chats /> ,
     name: 'settings',
     showInNav: true,
+    protected: false,
+  },
+
+  {
+    path: '/post/:postId',
+    element: <PostDetails /> ,
+    name: 'Post Details',
+    showInNav: false,
+    protected: false,
+  },
+
+  {
+    path: '/chat/:chatId',
+    element: <ChatDetails /> ,
+    name: 'Chat Details',
+    showInNav: false,
     protected: false,
   },
 
