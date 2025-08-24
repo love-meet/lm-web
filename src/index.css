@@ -364,3 +364,43 @@ button {
   .scrollbar-hide::-webkit-scrollbar {
     display: none;
   }
+
+
+  @keyframes pulse {
+          0%, 100% {
+            transform: scale(1);
+            opacity: 1;
+          }
+          50% {
+            transform: scale(1.2);
+            opacity: 0.8;
+          }
+        }
+        .animate-pulse {
+          animation: pulse 2s infinite;
+        }
+
+        @keyframes spin {
+          from {
+            transform: rotate(0deg);
+          }
+          to {
+            transform: rotate(360deg);
+          }
+        }
+        .animate-spin {
+          animation: spin 3s linear infinite;
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
+        }
+        .animate-shimmer {
+          animation: shimmer 3s infinite linear;
+          background-size: 200% 100%;
+        }
