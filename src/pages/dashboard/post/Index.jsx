@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { FaImage, FaTimes } from 'react-icons/fa';
 
 export default function Post() {
-  const [postType, setPostType] = useState('post'); // 'post' or 'status'
+  const [postType, setPostType] = useState('post'); 
   const [postText, setPostText] = useState('');
   const [selectedImage, setSelectedImage] = useState(null);
   const fileInputRef = useRef(null);
