@@ -1,5 +1,30 @@
 import React, { useState } from 'react';
 import { Heart, MessageCircle, Send, Images } from 'lucide-react';
+import { FaUser, FaLeaf, FaSeedling, FaFan, FaTree, FaWater, FaSun, FaStar, FaGem } from 'react-icons/fa';
+
+const planIcons = {
+  'Free': FaUser,
+  'Sprout': FaLeaf,
+  'Seedling': FaSeedling,
+  'Blossom': FaFan,
+  'Orchard': FaTree,
+  'Oasis': FaWater,
+  'Paradise': FaSun,
+  'Utopia': FaStar,
+  'Nirvana': FaGem,
+};
+
+const planColors = {
+  'Free': '#9CA3AF',
+  'Sprout': '#10B981',
+  'Seedling': '#84CC16',
+  'Blossom': '#F59E0B',
+  'Orchard': '#8B5CF6',
+  'Oasis': '#3B82F6',
+  'Paradise': '#EC4899',
+  'Utopia': '#F97316',
+  'Nirvana': '#A855F7',
+};
 
 const PostCard = ({ post, onClick }) => {
   const [liked, setLiked] = useState(false);
@@ -8,17 +33,6 @@ const PostCard = ({ post, onClick }) => {
   const handleLike = () => {
     setLiked(!liked);
     setLikes(prev => liked ? prev - 1 : prev + 1);
-  };
-
-  const getBadgeColor = (badge) => {
-    switch(badge.toLowerCase()) {
-      case 'bronze': return '#CD7F32';
-      case 'silver': return '#C0C0C0';
-      case 'gold': return '#FFD700';
-      case 'diamond': return '#B9F2FF';
-      case 'platinum': return '#E5E4E2';
-      default: return '#CD7F32';
-    }
   };
 
   const getTimeAgo = (timestamp) => {
@@ -34,6 +48,9 @@ const PostCard = ({ post, onClick }) => {
   };
 
   const tiltAngle = (Math.random() - 0.5) * 6; // Random tilt between -3 and 3 degrees
+
+  const PlanIcon = planIcons[post.badge];
+  const iconColor = planColors[post.badge];
 
   return (
     <div 
@@ -52,12 +69,7 @@ const PostCard = ({ post, onClick }) => {
           </div>
           <div className="flex items-center space-x-2">
             <span className="text-white font-semibold text-sm">{post.username}</span>
-            <div 
-              className="px-2 py-1 rounded-full text-xs font-bold text-black"
-              style={{ backgroundColor: getBadgeColor(post.badge) }}
-            >
-              {post.badge.toUpperCase()}
-            </div>
+            {PlanIcon && <PlanIcon style={{ color: iconColor }} className="text-lg" />}
           </div>
         </div>
         

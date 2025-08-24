@@ -60,11 +60,8 @@ const FeedsPage = () => {
 
       {/* Main Content */}
       <div className="relative z-10 p-4 space-y-6">
-        {/* Header */}
-
-        {/* Posts Container */}
         <div 
-          className="px-4 space-y-6 max-h-screen overflow-y-auto scrollbar-hide"
+          className="px-0 space-y-6 max-h-screen overflow-y-auto scrollbar-hide"
           style={{
             scrollbarWidth: 'none',
             msOverflowStyle: 'none'

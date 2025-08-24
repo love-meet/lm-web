@@ -9,6 +9,9 @@ const Settings = lazy(() => import('./pages/dashboard/settings/Index'));
 const Posts = lazy(() => import('./pages/dashboard/post/Index'));
 const PostDetails = lazy(() => import('./pages/dashboard/postDetails/Index'));
 const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
+const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'));
+const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
+const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 
 
 // Protected Route - Lazy loaded
@@ -63,6 +66,30 @@ export const routes = [
     path: '/chat/:chatId',
     element: <ChatDetails /> ,
     name: 'Chat Details',
+    showInNav: false,
+    protected: false,
+  },
+
+  {
+    path: '/affiliate/dashboard',
+    element: <AffiliateDashboard />,
+    name: 'Affiliate Dashboard',
+    showInNav: false,
+    protected: false,
+  },
+
+  {
+    path: '/subscription/plans',
+    element: <SubscriptionPlans />,
+    name: 'Subscription Plans',
+    showInNav: false,
+    protected: false,
+  },
+
+  {
+    path: '/profile',
+    element: <Profile />,
+    name: 'Profile',
     showInNav: false,
     protected: false,
   },
