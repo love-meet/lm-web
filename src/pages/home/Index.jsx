@@ -1,7 +1,20 @@
 import React from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
+import { useAuth } from '../../context/AuthContext';
+
+
 export default function HomePage() {
   const navigate = useNavigate()
+  const {user} = useAuth()
+
+  const handleGetStated = (()=>{
+    if(user){
+      navigate("/feeds")
+    }else{
+      navigate("/login")
+    }
+  })
+
   return (
     <>
       {/* Hero Section */}
@@ -16,8 +29,6 @@ export default function HomePage() {
         </div>
         {/* Animated Background - Visible on all screens */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] z-0">
- 
-          
           {/* Animated Love Icons - All screens */}
           <div className="absolute inset-0">
             {[...Array(15)].map((_, i) => (
@@ -73,9 +84,10 @@ export default function HomePage() {
             <p className="text-lg mb-8 text-[var(--text-secondary)] max-w-md leading-relaxed">
               Where hearts connect, love grows, and forever begins. Join thousands finding their perfect match.
             </p>
-            <button onClick={()=> navigate("/feeds")} className="button-primary text-lg px-8 py-4 rounded-full font-semibold transform hover:scale-105 transition-all duration-300">
+            <button onClick={handleGetStated} className="button-primary text-lg px-8 py-4 rounded-full font-semibold transform hover:scale-105 transition-all duration-300">
               Find Your Match
             </button>
+
           </div>
         </div>
 
@@ -91,9 +103,10 @@ export default function HomePage() {
               Where hearts connect, love grows, and forever begins. Join thousands of people finding their perfect match in our vibrant community.
             </p>
             <div className="flex gap-4">
-              <button onClick={()=> navigate("/feeds")} className="button-primary text-lg px-10 py-4 rounded-full font-semibold transform hover:scale-105 transition-all duration-300">
+              <button onClick={handleGetStated} className="button-primary text-lg px-10 py-4 rounded-full font-semibold transform hover:scale-105 transition-all duration-300">
                 Find Your Match
               </button>
+     
             </div>
           </div>
 

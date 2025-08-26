@@ -6,11 +6,11 @@ import api from '../api/axios';
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
-
+  const [user, setUser] = useState(null)
   
   const [appLoad, setAppLoad] = useState(true)
 
-  const fetchstudentData = async () => {
+  const fetchUserData = async () => {
     try {
       const token = Cookies.get('token'); 
       if (!token) {
@@ -32,11 +32,15 @@ export const AuthProvider = ({ children }) => {
     };
 
     useEffect(() => {
-        fetchstudentData();
+        // fetchUserData();
     }, []);
 
+    const fetchWithGoogle = (async(data)=>{
+      console.log((data))
+    })
+
   return (
-    <AuthContext.Provider value={{ appLoad }}>
+    <AuthContext.Provider value={{ appLoad, user, fetchWithGoogle }}>
       {children}
     </AuthContext.Provider>
   );

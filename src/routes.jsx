@@ -12,6 +12,7 @@ const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
 const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'));
 const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
 const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
+const Login = lazy(() => import('./pages//auth/Login'));
 
 
 // Protected Route - Lazy loaded
@@ -93,7 +94,13 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
-
+ {
+    path: '/login',
+    element: <Login />,
+    name: 'Login',
+    showInNav: false,
+    protected: false,
+  },
   // {
   //   path: '/transactions',
   //   element: <ProtectedRoute><Transactions /></ProtectedRoute>,

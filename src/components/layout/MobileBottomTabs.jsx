@@ -47,7 +47,7 @@ const MobileBottomTabs = () => {
   return (
     <div className="fixed bottom-0 left-0 right-0 z-50 md:hidden">
       {/* Background with blur */}
-      <div className="bg-gradient-to-r from-[var(--bg-primary)] to-[var(--bg-secondary)] backdrop-blur-lg border-t border-white/10">
+      <div className="bg-gradient-to-r pb-3 pt-1 from-[var(--bg-primary)] to-[var(--bg-secondary)] backdrop-blur-lg border-t border-white/10">
         <div className="flex justify-between items-center py-1 px-4">
           {tabs.map((tab) => {
             const Icon = tab.icon;
