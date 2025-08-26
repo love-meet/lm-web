@@ -1,6 +1,6 @@
 import React from 'react';
-import { useGoogleLogin } from '@react-oauth/google';
-import { FcGoogle } from 'react-icons/fc';
+// import { useGoogleLogin } from '@react-oauth/google';
+// import { FcGoogle } from 'react-icons/fc';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Phone, Video, MoreHorizontal } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
@@ -24,11 +24,10 @@ export default function Login() {
                   onClick={() => navigate(-1)}
                   className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
                 >
-                  <ArrowLeft size={20} className="text-white" />
+                  <ArrowLeft size={18} className="text-white" />
                 </button>
               </div>
-              
-            {/* Login Card */}
+
             <div className="relative w-[90%] z-10 flex flex-col items-center justify-center bg-[var(--bg-secondary)] bg-opacity-20 backdrop-blur-lg rounded-2xl shadow-lg p-4  ">
                 <h1 className="text-3xl font-bold mb-4 text-gradient-primary">Welcome Back</h1>
                 <p className="text-md mb-8 text-[var(--text-secondary)]">Sign in to continue your journey.</p>
