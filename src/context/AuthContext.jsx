@@ -2,12 +2,10 @@ import React, { createContext, useState, useEffect, useContext } from 'react';
 import Cookies from 'js-cookie';
 import api from '../api/axios';
 
-
 export const AuthContext = createContext();
 
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
-  
   const [appLoad, setAppLoad] = useState(true)
 
   const fetchUserData = async () => {
