@@ -13,6 +13,7 @@ const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'
 const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
 const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
+const Mines = lazy(() => import('./games/mines/Mines'));
 
 
 // Protected Route - Lazy loaded
@@ -62,6 +63,15 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
+
+  {
+  path: '/games/mines',
+  element: <Mines />,
+  name: 'Mines',
+  showInNav: false, 
+  protected: false,  
+},
+
 
   {
     path: '/chat/:chatId',
