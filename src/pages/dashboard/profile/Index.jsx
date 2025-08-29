@@ -1,15 +1,20 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaCrown, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe, FaFan } from 'react-icons/fa';
+import { FaArrowLeft, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe } from 'react-icons/fa';
+import { useAuth } from '../../../context/AuthContext';
+import { planIcons, planColors } from '../../../data/PlansIcons';
 
 const Profile = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [bio, setBio] = useState('This is a default bio. Click the pencil icon to edit.');
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
-  const [currentPlan, setCurrentPlan] = useState({ name: 'Blossom', icon: FaFan });
 
-  const affiliateLink = 'https://love-meet.com/ref/user12345678901234567890';
+  const affiliateLink = `https://love-meet.com/ref/${user?._id}`;
+  const planName = user?.subscriptionPlan?.planName || 'Free';
+  const PlanIcon = planIcons[planName] || FaUser;
+  const planColor = planColors[planName] || '#9CA3AF';
 
   const handleCopy = () => {
     navigator.clipboard.writeText(affiliateLink);
@@ -17,6 +22,25 @@ const Profile = () => {
     setTimeout(() => {
       setIsCopied(false);
     }, 2000);
+  };
+
+  useEffect(() => {
+    if (user?.bio) {
+      setBio(user.bio);
+    }
+  }, [user]);
+
+  const formatDateTime = (e) => {
+    const date = new Date(e);
+    const options = {
+      year: 'numeric',
+      month: 'long',
+      day: 'numeric',
+      hour: 'numeric',
+      minute: 'numeric',
+      hour12: true,
+    };
+    return date.toLocaleString('en-US', options);
   };
 
   return (
@@ -35,21 +59,21 @@ const Profile = () => {
         <div className="text-center mb-8">
           <div className="relative inline-block">
             <img
-              src="/assets/default-profile.jpg" // Replace with actual profile image
+              src={user?.profilePicture || "/assets/default-profile.jpg"}
               alt="Profile"
-              className="w-32 h-32 rounded-full border-4 border-[var(--primary-cyan)]"
+              className="w-32 h-32 rounded-full border-4 border-[var(--primary-cyan)] object-cover"
             />
-            <div className="absolute bottom-0 right-0 bg-[var(--accent-pink)] p-2 rounded-full">
-              <currentPlan.icon className="text-yellow-300 text-2xl" />
+            <div className="absolute bottom-0 right-0 bg-[var(--bg-secondary)] p-2 rounded-full">
+              <PlanIcon style={{ color: planColor }} className="text-2xl" />
             </div>
           </div>
-          <h2 className="text-3xl font-bold mt-4">User Name</h2>
-          <p className="text-[var(--text-muted)]">user.name@example.com</p>
+          <h2 className="text-3xl font-bold mt-4">{user?.username}</h2>
+          <p className="text-[var(--text-muted)]">{user?.email}</p>
           <div className="mt-2 text-xs text-gray-400">
-            <span>Subscribed on: 2023-10-26</span>
+            <span>Joined on: {user?.dateJoined ? formatDateTime(user.dateJoined) : 'N/A'}</span>
           </div>
-          <div className="mt-2 text-sm font-semibold text-[var(--primary-cyan)]">
-            <span>Current Plan: {currentPlan.name}</span>
+          <div className="mt-2 text-sm font-semibold" style={{ color: planColor }}>
+            <span>Current Plan: {planName}</span>
           </div>
         </div>
 
@@ -75,7 +99,7 @@ const Profile = () => {
               rows="4"
             ></textarea>
           ) : (
-            <p className="text-gray-300">{bio}</p>
+            <p className="text-gray-300">{bio ? bio : " Click the pencil icon to edit." }</p>
           )}
         </div>
 
@@ -85,23 +109,23 @@ const Profile = () => {
           <div className="grid grid-cols-2 gap-4">
             <div className="flex items-center space-x-2">
               <FaUser className="text-[var(--accent-pink)]" />
-              <span>Age: 28</span>
+              <span>Age: {user?.age || 'N/A'}</span>
             </div>
             <div className="flex items-center space-x-2">
               <FaVenusMars className="text-[var(--accent-pink)]" />
-              <span>Gender: Male</span>
+              <span>Gender: {user?.gender || 'N/A'}</span>
             </div>
             <div className="flex items-center space-x-2">
               <FaMapMarkerAlt className="text-[var(--accent-pink)]" />
-              <span>City: New York</span>
+              <span>City: {user?.city || 'N/A'}</span>
             </div>
             <div className="flex items-center space-x-2">
               <FaMapMarkerAlt className="text-[var(--accent-pink)]" />
-              <span>State: NY</span>
+              <span>State: {user?.state || 'N/A'}</span>
             </div>
             <div className="flex items-center space-x-2">
               <FaGlobe className="text-[var(--accent-pink)]" />
-              <span>Country: USA</span>
+              <span>Country: {user?.country || 'N/A'}</span>
             </div>
           </div>
         </div>
@@ -110,7 +134,7 @@ const Profile = () => {
         <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
           <div className="flex justify-between items-center mb-4">
             <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Affiliate Program</h3>
-            <Link to="/affiliate/dashboard" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+            <Link to="/dashboard/affiliate" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
               <FaTachometerAlt className="text-white" />
             </Link>
           </div>
@@ -132,13 +156,13 @@ const Profile = () => {
             <div className="flex justify-between items-center">
                 <div className="flex items-center space-x-2">
                     <FaUsers className="text-[var(--accent-pink)]" />
-                    <span>123 Referrals</span>
+                    <span>{user?.referrals?.length || 0} Referrals</span>
                 </div>
                 <div className="text-right">
                     <h4 className="text-lg font-semibold">Earnings</h4>
                     <div className="flex items-center space-x-2 mt-1">
                         <FaWallet className="text-[var(--accent-pink)]" />
-                        <span className="text-2xl font-bold">₦1,234.56</span>
+                        <span className="text-2xl font-bold">₦{user?.affiliateEarnings || '0.00'}</span>
                     </div>
                 </div>
             </div>

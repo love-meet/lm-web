@@ -1,17 +1,13 @@
 import React from 'react';
-import { useNavigate, useLocation } from 'react-router-dom';
 import { useAuth } from '../../context/AuthContext';
 
-
 export default function HomePage() {
-  const navigate = useNavigate()
-  const {user} = useAuth()
-
+  const  { user }  = useAuth()
   const handleGetStated = (()=>{
     if(user){
-      navigate("/feeds")
+         window.location.href = '/feeds' 
     }else{
-      navigate("/login")
+        window.location.href = '/login'
     }
   })
 
