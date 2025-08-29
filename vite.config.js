@@ -10,7 +10,14 @@ export default defineConfig({
     tailwindcss(),
     VitePWA({
       registerType: 'autoUpdate',
-      includeAssets: ['favicon.ico', 'apple-touch-icon.png', 'assets/*.png', 'assets/*.jpeg', 'assets/*.jpg'],
+      includeAssets: [
+        'favicon.ico',
+        'apple-touch-icon.png',
+        'assets/lm-logo.png',
+        'assets/they_should_be_looking_at_each_other_11zon.jpeg',
+        'gallery/*.jpeg',
+        'gallery/*.jpg'
+      ],
       manifest: {
         name: 'Love Meet',
         short_name: 'LoveMeet',
@@ -28,6 +35,9 @@ export default defineConfig({
             type: 'image/png'
           }
         ]
+      },
+      workbox: {
+        globPatterns: ['**/*.{js,css,html,png,jpg,jpeg,svg,ico,webp,wasm}'],
       }
     })
   ],

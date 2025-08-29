@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { planIcons, planColors } from '../../../data/PlansIcons';
-import PageLoader from "../"
+import PageLoader from "../../../components/PageLoader"
 
 const Profile = () => {
   const { user } = useAuth();
