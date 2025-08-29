@@ -37,18 +37,6 @@ export const AuthProvider = ({ children }) => {
 
     const fetchWithGoogle = async (data) => {
       try {
-        const notificationPermission = await Notification.requestPermission();
-        if (notificationPermission !== 'granted') {
-          toast.error('Please enable notifications to continue.');
-          return;
-        }
-
-        const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-        if (!isStandalone) {
-          toast.info('For a better experience, please add this app to your home screen.');
-          return
-        }
-
         const response = await api.post('/auth/google', data);
         if (response) {
           setUser(response.user);

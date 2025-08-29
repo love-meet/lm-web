@@ -1,15 +1,61 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
+import { toast } from 'sonner';
 
 export default function HomePage() {
-  const  { user }  = useAuth()
-  const handleGetStated = (()=>{
-    if(user){
-         window.location.href = '/feeds' 
-    }else{
-        window.location.href = '/login'
+  const { user } = useAuth();
+  const [deferredPrompt, setDeferredPrompt] = useState(null);
+
+  useEffect(() => {
+    const handleBeforeInstallPrompt = (e) => {
+      e.preventDefault();
+      setDeferredPrompt(e);
+    };
+
+    window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+
+    return () => {
+      window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt);
+    };
+  }, []);
+
+  const handleGetStated = async () => {
+    if (user) {
+      window.location.href = '/feeds';
+      return;
     }
-  })
+
+    // 1. Check for notification permission
+    try {
+      const notificationPermission = await Notification.requestPermission();
+      if (notificationPermission !== 'granted') {
+        toast.error('Please enable notifications to continue.');
+        return;
+      }
+    } catch (error) {
+      console.error('Notification permission error:', error);
+      toast.error('Could not request notification permission.');
+      return;
+    }
+
+    // 2. Check for PWA installation
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+    if (deferredPrompt && !isStandalone) {
+      deferredPrompt.prompt();
+      const { outcome } = await deferredPrompt.userChoice;
+      if (outcome === 'dismissed') {
+        toast.info('Installation cancelled. You can still install it later from the browser menu.');
+        // Decide if you want to proceed without installation. The prompt says it MUST be added.
+        return;
+      }
+      // If accepted, it will be installed. We can proceed.
+      setDeferredPrompt(null);
+    }
+
+    // 3. Proceed to login
+    window.location.href = '/login';
+  };
+
 
   return (
     <>
