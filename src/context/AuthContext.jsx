@@ -46,14 +46,20 @@ export const AuthProvider = ({ children }) => {
         } else {
           toast.error('Failed to fetch admin data');
         }
+        
       } catch (error) {
         console.error('Failed to fetch admin data:', error);
         toast.error('An error occurred during login.');
       }
     };
 
+    const handleLogOut = ()=>{
+      Cookies.remove("token")
+      setUser(null)
+    }
+
   return (
-    <AuthContext.Provider value={{ appLoad, user, fetchWithGoogle }}>
+    <AuthContext.Provider value={{ appLoad, user, fetchWithGoogle , handleLogOut}}>
       {children}
     </AuthContext.Provider>
   );

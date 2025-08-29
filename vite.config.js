@@ -23,6 +23,8 @@ export default defineConfig({
         short_name: 'LoveMeet',
         description: 'Find your soulmate with Love Meet.',
         theme_color: '#ffffff',
+        display: 'standalone',
+        start_url: '/',
         icons: [
           {
             src: 'android-chrome-192x192.png',

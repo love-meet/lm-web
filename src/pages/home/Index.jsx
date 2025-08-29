@@ -30,7 +30,6 @@ export default function HomePage() {
     }
 
     const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
-
     // --- iOS Flow ---
     if (isIOS()) {
         if (isStandalone) {
@@ -48,19 +47,7 @@ export default function HomePage() {
         }
         return; // End of iOS flow, do not proceed to login automatically
     }
-    else{
-      if(isStandalone){
-          window.location.href = '/login';
-      }
-      else if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => {
-          navigator.serviceWorker.register('/sw.js', { scope: '/' })
-        })
-      }
-      return
-    }
 
-    // 1. Request Notification Permission
     if ('Notification' in window) {
         try {
             const notificationPermission = await Notification.requestPermission();
