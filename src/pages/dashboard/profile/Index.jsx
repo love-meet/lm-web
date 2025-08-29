@@ -1,8 +1,9 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, Suspense  } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaArrowLeft, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { planIcons, planColors } from '../../../data/PlansIcons';
+import PageLoader from "../"
 
 const Profile = () => {
   const { user } = useAuth();
@@ -44,6 +45,7 @@ const Profile = () => {
   };
 
   return (
+    <Suspense fallback={<PageLoader />}  >
     <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] z-50 flex flex-col">
       {/* Header */}
       <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center flex-shrink-0">
@@ -183,6 +185,8 @@ const Profile = () => {
         </div>
       </div>
     </div>
+  </Suspense >
+
   );
 };
 

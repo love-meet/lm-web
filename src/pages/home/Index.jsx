@@ -19,40 +19,62 @@ export default function HomePage() {
     };
   }, []);
 
+  const isIOS = () => {
+    return /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+  }
+
   const handleGetStated = async () => {
     if (user) {
-      window.location.href = '/feeds';
-      return;
-    }
-
-    // 1. Check for notification permission
-    try {
-      const notificationPermission = await Notification.requestPermission();
-      if (notificationPermission !== 'granted') {
-        toast.error('Please enable notifications to continue.');
+        window.location.href = '/feeds';
         return;
-      }
-    } catch (error) {
-      console.error('Notification permission error:', error);
-      toast.error('Could not request notification permission.');
-      return;
     }
 
-    // 2. Check for PWA installation
-    const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
-    if (deferredPrompt && !isStandalone) {
-      deferredPrompt.prompt();
-      const { outcome } = await deferredPrompt.userChoice;
-      if (outcome === 'dismissed') {
-        toast.info('Installation cancelled. You can still install it later from the browser menu.');
-        // Decide if you want to proceed without installation. The prompt says it MUST be added.
-        return;
-      }
-      // If accepted, it will be installed. We can proceed.
-      setDeferredPrompt(null);
+    const isStandalone = window.matchMedia('(display-mode: standalone)').matches || window.navigator.standalone;
+
+    // --- iOS Flow ---
+    if (isIOS()) {
+        if (isStandalone) {
+            // Already installed on iOS, proceed to login
+            window.location.href = '/login';
+        } else {
+            // Not installed on iOS, show instructions.
+            toast.info(
+                <div>
+                    <h4>Install the App</h4>
+                    <p>To add Love Meet to your Home Screen, tap the Share button below and then select "Add to Home Screen".</p>
+                </div>,
+                { duration: 20000, dismissible: true }
+            );
+        }
+        return; // End of iOS flow, do not proceed to login automatically
     }
 
-    // 3. Proceed to login
+    // 1. Request Notification Permission
+    if ('Notification' in window) {
+        try {
+            const notificationPermission = await Notification.requestPermission();
+            if (notificationPermission !== 'granted') {
+                toast.error('Notification permission is recommended for the best experience.');
+            }
+        } catch (error) {
+            console.error('Notification permission error:', error);
+        }
+    }
+
+    // 2. Trigger Add to Home Screen prompt
+    if (deferredPrompt) {
+        deferredPrompt.prompt();
+        const { outcome } = await deferredPrompt.userChoice;
+        if (outcome === 'accepted') {
+            toast.success('App installed successfully!');
+            setDeferredPrompt(null);
+            return; // App will reload, so we wait.
+        } else {
+            toast.info('Installation cancelled. You can proceed to login.');
+        }
+    }
+
+    // Fallback: If prompt was not shown or was dismissed, proceed to login
     window.location.href = '/login';
   };
 
@@ -63,9 +85,9 @@ export default function HomePage() {
       <section className="hero-section relative min-h-screen flex items-center justify-center overflow-hidden">
         {/* Logo */}
         <div className="absolute top-6 left-6 z-20">
-          <img 
-            src="/assets/lm-logo.png" 
-            alt="Love Meet Logo" 
+          <img
+            src="/assets/lm-logo.png"
+            alt="Love Meet Logo"
             className="h-5 md:h-6 w-19 md:w-24 animate-logoGlow"
           />
         </div>
@@ -88,7 +110,7 @@ export default function HomePage() {
                 💖
               </div>
             ))}
-            
+
             {/* Additional heart variants */}
             {[...Array(8)].map((_, i) => (
               <div
@@ -111,13 +133,13 @@ export default function HomePage() {
         {/* Mobile Layout */}
         <div className="md:hidden relative z-10 w-full h-screen">
           {/* Background Image for Mobile - Straight */}
-          <div 
+          <div
             className="absolute inset-0 bg-cover bg-center bg-no-repeat z-5"
             style={{
               backgroundImage: "linear-gradient(rgba(15, 15, 35, 0.6), rgba(26, 26, 46, 0.6)), url('/assets/they_should_be_looking_at_each_other_11zon.jpeg')"
             }}
           />
-          
+
           {/* Content Overlay */}
           <div className="absolute inset-0 flex flex-col justify-center items-center px-6 text-center z-10">
             <h1 className="text-4xl font-bold mb-6 text-gradient-primary">
@@ -148,14 +170,14 @@ export default function HomePage() {
               <button onClick={handleGetStated} className="button-primary text-lg px-10 py-4 rounded-full font-semibold transform hover:scale-105 transition-all duration-300">
                 Find Your Match
               </button>
-     
+
             </div>
           </div>
 
           {/* Right Image */}
           <div className="flex-1 flex items-center justify-center">
             <div className="relative group cursor-pointer">
-              <img 
+              <img
                 src="/assets/they_should_be_looking_at_each_other_11zon.jpeg"
                 alt="Couple looking at each other"
                 className="w-96 h-96 lg:w-[500px] lg:h-[500px] object-cover rounded-3xl shadow-2xl transition-all duration-500 ease-out group-hover:scale-105 group-hover:rotate-0"
