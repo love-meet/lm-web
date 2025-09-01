@@ -40,6 +40,7 @@ const Layout = () => {
           <MobileBottomTabs />
         </>
       )}
+
       
       {/* Desktop Sidebar - Hide on home page */}
       {!isHomePage && <DesktopSidebar />}

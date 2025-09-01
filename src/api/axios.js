@@ -1,6 +1,5 @@
 import axios from 'axios';
 import { getCookie } from './cookies';
-import { toast } from 'sonner';
 
 export const backendUrl = () => {
   let localhostUrl = "http://localhost:8000";
