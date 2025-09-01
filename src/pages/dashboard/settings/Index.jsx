@@ -22,8 +22,10 @@ import {
   AlertTriangle,
   Info
 } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
 
 export default function Settings() {
+  const { handleLogOut } = useAuth()
   const [darkMode, setDarkMode] = useState(true);
   const [notifications, setNotifications] = useState({
     push: true,
@@ -252,13 +254,6 @@ export default function Settings() {
     );
   };
 
-  const handleLogout = () => {
-    // Handle logout logic here
-    if (window.confirm('Are you sure you want to logout?')) {
-      console.log('Logging out...');
-      // Redirect to home or login page
-    }
-  };
 
   return (
     <div className="relative min-h-screen">
@@ -381,7 +376,7 @@ export default function Settings() {
         {/* Logout Section */}
         <div className="mt-12 pt-6 border-t border-white/20">
           <button
-            onClick={handleLogout}
+            onClick={handleLogOut}
             className="w-full flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-red-600/80 to-red-700/80 hover:from-red-600 hover:to-red-700 rounded-2xl transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-red-500/30"
           >
             <LogOut size={20} className="text-white group-hover:animate-bounce" />

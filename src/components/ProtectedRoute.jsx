@@ -1,16 +1,16 @@
 import React from 'react';
 import { Navigate } from 'react-router-dom';
 import { useAuth } from '../context/AuthContext';
-import Preloader from './Preloader';
+import Preloader from './SimpleLoader';
 
 const ProtectedRoute = ({ children }) => {
-  const { studentData, appLoad } = useAuth();
+  const { user, appLoad } = useAuth();
   
   if (appLoad) {
     return <Preloader />;
   }
-  
-  if (!studentData) {
+
+  if (!user) {
     return <Navigate to="/login" replace />;
   }
 
