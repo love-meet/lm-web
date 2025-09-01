@@ -190,9 +190,27 @@ body {
 
 button {
   cursor: pointer;
+
 }
 
-
+.input-styled { 
+    background: rgba(255,255,255,0.05); 
+    border: 1px solid rgba(255,255,255,0.1); 
+    padding: 12px; 
+    border-radius: 8px; 
+    width: 100%; 
+    color: white; 
+    transition: all 0.3s; 
+  } 
+  .input-styled:focus { 
+    outline: none; 
+    border-color: var(--accent-pink); 
+    box-shadow: 0 0 10px var(--glow-pink); 
+  }
+  .input-styled option {
+    background: var(--bg-secondary);
+    color: var(--text-primary);
+  }
 
 
  @keyframes floatParticles {

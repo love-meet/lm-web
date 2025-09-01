@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FaArrowLeft } from 'react-icons/fa';
+import { FaWallet,  FaLink,FaCheck, FaCopy, FaUsers, FaTachometerAlt} from 'react-icons/fa';
+import { useAuth } from '../../../context/AuthContext';
 
 const referredUsers = [
   { id: 1, name: 'John Doe', avatar: '/assets/default-profile.jpg', earnings: 5000, plan: 'Premium', date: '2023-10-26' },
@@ -15,10 +17,26 @@ const referredUsers = [
   { id: 10, name: 'Laura Taylor', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-17' },
 ];
 
+
+
 const AffiliateDashboard = () => {
+  const { user } = useAuth()
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
+
+  const [isCopied, setIsCopied] = useState(false);
+  const affiliateLink = `https://love-meet.com/ref/${user?._id}`;
+
+  const handleCopy = () => {
+      navigator.clipboard.writeText(affiliateLink);
+      setIsCopied(true);
+      setTimeout(() => {
+          setIsCopied(false);
+      }, 2000);
+  };
+
+
 
   // Get current users
   const indexOfLastUser = currentPage * usersPerPage;
@@ -38,8 +56,52 @@ const AffiliateDashboard = () => {
         <h1 className="text-xl font-bold ml-4">Affiliate Dashboard</h1>
       </div>
 
+
       {/* Scrollable Body */}
       <div className="overflow-y-auto p-4 pb-20">
+
+             <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
+          <div className="flex justify-between items-center mb-4">
+            <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Affiliate Program</h3>
+            {/* <Link to="/affiliate/dashboard" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+              <FaTachometerAlt className="text-white" />
+            </Link> */}
+          </div>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="text-[var(--text-muted)]">Your affiliate link:</p>
+              <div className="flex items-center space-x-2 mt-2">
+                <FaLink className="text-[var(--accent-pink)] flex-shrink-0" />
+                <span className="text-white font-mono truncate w-48">{affiliateLink}</span>
+              </div>
+            </div>
+            <button 
+              onClick={handleCopy}
+              className={`p-2 rounded-full transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-white/10 hover:bg-white/20'}`}>
+              {isCopied ? <FaCheck className="text-white" /> : <FaCopy className="text-white" />}
+            </button>
+          </div>
+          <div className="mt-6 border-t border-white/10 pt-4">
+            <div className="flex justify-between items-center">
+                <div className="flex items-center space-x-2">
+                    <FaUsers className="text-[var(--accent-pink)]" />
+                    <span>{user?.referrals?.length || 0} Referrals</span>
+                </div>
+                <div className="text-right">
+                    <h4 className="text-lg font-semibold">Earnings</h4>
+                    <div className="flex items-center space-x-2 mt-1">
+                        <FaWallet className="text-[var(--accent-pink)]" />
+                        <span className="text-2xl font-bold">₦{user?.affiliateEarnings || '0.00'}</span>
+                    </div>
+                </div>
+            </div>
+            <button className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition-all duration-300">
+                Withdraw
+            </button>
+          </div>
+        </div>
+
+        
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4">
           <h2 className="text-2xl font-bold mb-4 text-[var(--primary-cyan)]">Referred Users</h2>
           <div className="overflow-x-auto">
