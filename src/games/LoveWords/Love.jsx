@@ -16,6 +16,16 @@ export default function LoveInWords() {
   const [player, setPlayer] = useState(1);
   const [answers, setAnswers] = useState({ p1: "", p2: "" });
 
+  const leftPlayer = {
+    name: "You",
+    avatar: "/assets/you.jpg",
+  };
+
+  const rightPlayer = {
+    name: "Wisdom",
+    avatar: "/assets/wisdom.jpg",
+  };
+
   const nextStep = () => setStep((prev) => prev + 1);
 
   const handleAnswer = () => {
@@ -23,49 +33,69 @@ export default function LoveInWords() {
       setAnswers((prev) => ({ ...prev, p1: answer }));
       setPlayer(2);
       setAnswer("");
-      setStep(4);
+      setStep(5); // Player 1 submitted → show answer
     } else {
       setAnswers((prev) => ({ ...prev, p2: answer }));
-      setStep(5);
+      setAnswer("");
+      setPlayer(1); 
+      setStep(3); // Player 2 submitted → back to picking number
     }
   };
 
+  /** 🔹 Unified Player Header */
   const PlayerHeader = ({ status }) => (
-    <div className="px-0 pt-4 pb-2 w-full">
-      <div className="flex flex-col items-center text-center w-full">
-        {/* Top status + leave button */}
-        <div className="flex items-center justify-between w-full bg-[#111827]/90 border border-white/10 px-4 py-2 shadow-lg mb-3">
-          <p className="text-pink-400 font-semibold text-sm">{status}</p>
-          <button
-            onClick={() => {
-              setStep(0);
-              setPlayer(1);
-              setAnswers({ p1: "", p2: "" });
-            }}
-            className="flex items-center gap-1 text-sm text-rose-400 hover:text-rose-300 transition-colors"
-          >
-            Leave <ArrowRightFromLine size={16} />
-          </button>
+    <div className="px-4 pt-4 pb-6 w-full flex flex-col">
+      {/* Leave button row */}
+      <div className="flex items-center justify-end mb-4">
+        <button
+          onClick={() => {
+            setStep(0);
+            setPlayer(1);
+            setAnswers({ p1: "", p2: "" });
+          }}
+          className="flex items-center gap-1 text-sm text-rose-400 hover:text-rose-300 transition-colors"
+        >
+          <span>Leave</span>
+          <ArrowRightFromLine size={16} />
+        </button>
+      </div>
+
+      {/* Status text */}
+      <div className="text-center text-pink-400 font-semibold mb-3 text-[15px]">
+        {status}
+      </div>
+
+      {/* Players Row */}
+      <div className="grid grid-cols-3 items-center gap-0">
+        {/* Left Player */}
+        <div className="w-full text-left">
+          <div className="flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-white/10 shadow-md bg-gradient-to-r from-indigo-700 to-purple-700 min-w-0">
+            <span className="text-[13px] font-semibold max-w-full flex-1">
+              {leftPlayer.name}
+            </span>
+            <img
+              src={leftPlayer.avatar}
+              alt={leftPlayer.name}
+              className="h-6 w-6 rounded-full object-cover ring-2 ring-white/30"
+            />
+          </div>
         </div>
 
-        {/* Players + heart */}
-        <div className="flex items-center justify-between w-full">
-          {/* Left player (You) */}
-          <div className="flex items-center justify-center bg-slate-800/80 px-3 py-2 border border-white/10 flex-1">
+        {/* Heart in middle */}
+        <div className="flex justify-center">
+          <Heart className="text-pink-400 animate-pulse" size={28} />
+        </div>
+
+        {/* Right Player */}
+        <div className="w-full text-right">
+          <div className="ml-auto flex items-center gap-2 px-2.5 py-1.5 rounded-xl border border-white/10 shadow-md bg-gradient-to-r from-indigo-700 to-purple-700 min-w-0">
             <img
-              src="/assets/default-profile.jpg"
-              alt="you"
-              className="h-8 w-8 object-cover"
+              src={rightPlayer.avatar}
+              alt={rightPlayer.name}
+              className="h-6 w-6 rounded-full object-cover ring-2 ring-white/30"
             />
-            <span className="ml-2 text-sm font-medium">You</span>
-          </div>
-
-          <Heart className="text-pink-400 mx-3 animate-pulse" size={20} />
-
-          {/* Right player */}
-          <div className="flex items-center justify-center bg-slate-800/80 px-3 py-2 border border-white/10 flex-1">
-            <span className="text-sm font-medium text-gray-300">
-              {status === "Waiting for Partner..." ? "Waiting..." : "Partner"}
+            <span className="text-[13px] font-semibold max-w-full flex-1">
+              {status === "Waiting for Partner..." ? "Waiting..." : rightPlayer.name}
             </span>
           </div>
         </div>
@@ -73,6 +103,7 @@ export default function LoveInWords() {
     </div>
   );
 
+  /** 🔹 Game Card Wrapper */
   const GameCard = ({ children }) => (
     <div className="flex items-center justify-center min-h-[60vh] px-4">
       <div className="bg-[#111827]/80 border border-white/10 shadow-md w-80 aspect-square flex items-center justify-center text-center p-6">
@@ -111,7 +142,7 @@ export default function LoveInWords() {
                 onClick={nextStep}
                 className="bg-green-600 px-6 py-2 rounded-lg shadow hover:bg-green-700 transition"
               >
-                Simulate Connected
+                Connect
               </button>
             </div>
           </div>
@@ -177,61 +208,86 @@ export default function LoveInWords() {
           </>
         )}
 
-        {/* Step 4 → Answer questions */}
+        {/* Step 4 → Answer input */}
         {step === 4 && (
-          <>
+          <div className="flex flex-col min-h-screen">
             <PlayerHeader status="Connected" />
-            <GameCard>
-              <div className="flex flex-col items-center">
-                <h2 className="mb-4 text-md text-pink-300 text-center">
-                  Player {player}, answer this: <br />✨{" "}
-                  {questions[(number - 1) % questions.length]} ✨
-                </h2>
+            <div className="flex flex-col items-center justify-center flex-1 px-4">
+              {/* Main Game Content */}
+              <div className="bg-[#191129] border border-white/10 shadow-lg w-80 min-h-80 flex flex-col p-6 rounded-3xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                  <span className="text-sm font-medium text-blue-400">
+                    {questions[(number - 1) % questions.length]}
+                  </span>
+                </div>
+                <div className="bg-[#11111f] rounded-lg p-4 h-36 border border-gray-700/50">
+                  {/* Empty box for partner's answer */}
+                </div>
+              </div>
+            </div>
+            {/* Bottom input bar */}
+            <div className="px-4 pb-4 mt-auto">
+              <div className="w-full bg-[#1b1b2f] rounded-full pl-6 pr-2 py-2 flex items-center border border-white/10 shadow-md">
                 <input
                   type="text"
                   placeholder="Type your answer..."
                   value={answer}
                   onChange={(e) => setAnswer(e.target.value)}
-                  className="px-4 py-2 text-black rounded-lg border border-gray-400 focus:ring-2 focus:ring-pink-500 w-60"
+                  className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm"
                 />
                 <button
                   onClick={handleAnswer}
                   disabled={!answer.trim()}
-                  className="mt-3 bg-pink-600 px-6 py-2 rounded hover:bg-pink-700 transition disabled:bg-gray-600"
+                  className="w-10 h-10 flex items-center justify-center bg-purple-600 rounded-full hover:bg-purple-700 transition disabled:bg-gray-600"
                 >
-                  Send
+                  <svg
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                    strokeWidth={1.5}
+                    stroke="currentColor"
+                    className="w-5 h-5 text-white -rotate-45"
+                  >
+                    <path
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
+                    />
+                  </svg>
                 </button>
               </div>
-            </GameCard>
-          </>
+            </div>
+          </div>
         )}
 
-        {/* Step 5 → Game Over */}
+        {/* Step 5 → Answer Submitted */}
         {step === 5 && (
-          <>
-            <PlayerHeader status="Game Over" />
-            <GameCard>
-              <div className="flex flex-col items-center text-sm w-full px-2">
-                <h2 className="mb-3 text-lg text-purple-300">💖 Final Answers</h2>
-                <p className="bg-gray-900 px-6 py-3 border border-pink-600 text-pink-200 shadow-lg mb-2 w-full">
-                  Player 1: {answers.p1}
-                </p>
-                <p className="bg-gray-900 px-6 py-3 border border-pink-600 text-pink-200 shadow-lg w-full">
-                  Player 2: {answers.p2}
-                </p>
+          <div className="flex flex-col min-h-screen">
+            <PlayerHeader status="Connected" />
+            <div className="flex flex-col items-center justify-center flex-1 px-4">
+              {/* Main Game Content */}
+              <div className="bg-[#191129] border border-white/10 shadow-lg w-80 min-h-80 flex flex-col items-center justify-center p-6 rounded-3xl">
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="w-2 h-2 rounded-full bg-blue-400"></span>
+                  <span className="text-sm font-medium text-blue-400">
+                    {questions[(number - 1) % questions.length]}
+                  </span>
+                </div>
+                <div className="bg-[#11111f] rounded-lg p-4 h-36 flex items-center justify-center w-full">
+                  <p className="text-white text-lg font-semibold">
+                    {answers.p1}
+                  </p>
+                </div>
                 <button
-                  onClick={() => {
-                    setStep(0);
-                    setPlayer(1);
-                    setAnswers({ p1: "", p2: "" });
-                  }}
-                  className="mt-6 bg-blue-600 px-8 py-3 rounded-full hover:bg-blue-700 transition"
+                  onClick={() => setStep(4)} // Switch to Player 2 answering
+                  className="mt-6 w-full p-3 rounded-xl text-white font-semibold shadow-lg bg-gradient-to-r from-cyan-500 to-purple-500"
                 >
-                  Play Again
+                  Okay 👍
                 </button>
               </div>
-            </GameCard>
-          </>
+            </div>
+          </div>
         )}
       </div>
     </Suspense>
