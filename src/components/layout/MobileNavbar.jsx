@@ -71,7 +71,7 @@ const MobileNavbar = () => {
               className="w-8 h-8 rounded-full overflow-hidden border-2 border-[var(--primary-cyan)] hover:border-[var(--accent-pink)] transition-colors"
             >
               <img 
-                src={user?.picture || "/assets/default-profile.jpg" }
+                src={user?.picture || "/assets/male.jpg" }
                 alt="Profile" 
                 className="w-full h-full object-cover"
                 onError={(e) => {

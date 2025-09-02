@@ -1,104 +1,155 @@
-import React, { useState, useRef } from 'react';
-import { FaImage, FaTimes } from 'react-icons/fa';
+ import React, { useState, useRef } from 'react';
+import { FaImage, FaTimes, FaVideo, FaUpload } from 'react-icons/fa';
+import { Toaster, toast } from 'sonner';
+import './ToggleSwitch.css';
 
 export default function Post() {
-  const [postType, setPostType] = useState('post'); 
+  const [postType, setPostType] = useState('post');
   const [postText, setPostText] = useState('');
-  const [selectedImage, setSelectedImage] = useState(null);
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const [previewUrls, setPreviewUrls] = useState([]);
   const fileInputRef = useRef(null);
 
-  const handleImageChange = (e) => {
-    if (e.target.files && e.target.files[0]) {
-      setSelectedImage(URL.createObjectURL(e.target.files[0]));
+  const handleFileChange = (e) => {
+    const files = Array.from(e.target.files);
+
+    if (postType === 'status') {
+      if (files.length > 1 || selectedFiles.length > 0) {
+        toast.error('You can only upload one file for a status.');
+        return;
+      }
+    } else {
+      const hasVideo = selectedFiles.some(file => file.type === 'video') || files.some(file => file.type.startsWith('video/'));
+      const hasImage = selectedFiles.some(file => file.type === 'image') || files.some(file => file.type.startsWith('image/'));
+
+      if ((hasVideo && files.some(file => file.type.startsWith('image/'))) || (hasImage && files.some(file => file.type.startsWith('video/')))) {
+        toast.error('You can only upload images or a single video, not both.');
+        return;
+      }
+
+      if (hasVideo && files.length > 0) {
+        toast.error('You can only upload one video.');
+        return;
+      }
+
+      if (files.some(file => file.type.startsWith('video/')) && files.length > 1) {
+        toast.error('You can only upload one video.');
+        return;
+      }
+
+      if (selectedFiles.length + files.length > 5 && !hasVideo) {
+        toast.error('You can only upload a maximum of 5 images.');
+        return;
+      }
     }
+
+    const newFiles = files.map(file => ({
+      file,
+      type: file.type.startsWith('image/') ? 'image' : 'video'
+    }));
+
+    const newPreviewUrls = files.map(file => URL.createObjectURL(file));
+
+    setSelectedFiles([...selectedFiles, ...newFiles]);
+    setPreviewUrls([...previewUrls, ...newPreviewUrls]);
   };
 
-  const handleRemoveImage = () => {
-    setSelectedImage(null);
-    if (fileInputRef.current) {
-      fileInputRef.current.value = null;
+  const handleRemoveFile = (index) => {
+    const newSelectedFiles = [...selectedFiles];
+    const newPreviewUrls = [...previewUrls];
+
+    newSelectedFiles.splice(index, 1);
+    newPreviewUrls.splice(index, 1);
+
+    setSelectedFiles(newSelectedFiles);
+    setPreviewUrls(newPreviewUrls);
+
+    // Revoke the object URL to free up memory
+    URL.revokeObjectURL(previewUrls[index]);
+  };
+
+  const isUploadDisabled = () => {
+    if (postType === 'status' && selectedFiles.length > 0) return true;
+    if (postType === 'post') {
+      if (selectedFiles.some(file => file.type === 'video')) return true;
+      if (selectedFiles.filter(file => file.type === 'image').length >= 5) return true;
     }
+    return false;
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white p-4">
-      <div className="max-w-2xl mx-auto">
-        <h1 className="text-3xl font-bold mb-6 text-center text-[var(--primary-cyan)]">Create a new {postType}</h1>
-
-        {/* Post Type Selection */}
-        <div className="flex justify-center space-x-4 mb-6">
-          <button
-            onClick={() => setPostType('post')}
-            className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
-              postType === 'post'
-                ? 'bg-[var(--primary-cyan)] text-gray-900 shadow-lg'
-                : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-          >
-            Post
-          </button>
-          <button
-            onClick={() => setPostType('status')}
-            className={`px-6 py-2 rounded-full font-semibold transition-all duration-300 ${
-              postType === 'status'
-                ? 'bg-[var(--accent-pink)] text-gray-900 shadow-lg'
-                : 'bg-gray-800 text-white hover:bg-gray-700'
-            }`}
-          >
-            Status
-          </button>
+    <div className="min-h-screen bg-gradient-bg-primary text-white p-4 font-sans">
+      <div className="max-w-3xl mx-auto  bg-[var(--bg-secondary)] border border-gray-700 p-6 rounded-2xl">
+        <div className="flex justify-center mb-8">
+          <label className="toggle-switch">
+            <div className={`toggle-switch-slider ${postType === 'post' ? '' : 'status'}`}></div>
+            <button className="toggle-switch-text toggle-switch-text-post" onClick={()=> setPostType('post')}>Post</button>
+            <button className="toggle-switch-text toggle-switch-text-status" onClick={()=> setPostType('status')}>Status</button>
+          </label>
         </div>
 
         {/* Post Creation Form */}
-        <div className="bg-gray-800 bg-opacity-50 p-6 rounded-lg shadow-xl">
-          {/* Image Upload */}
-          {!selectedImage && (
+        <div className="space-y-6">
+          {/* File Upload */}
+          {!isUploadDisabled() && (
             <div
               onClick={() => fileInputRef.current && fileInputRef.current.click()}
-              className="border-2 border-dashed border-gray-500 rounded-lg p-12 text-center cursor-pointer hover:border-gray-400 transition-all duration-300"
+              className="border-2 border-dashed border-gray-600 rounded-lg p-12 text-center cursor-pointer hover:border-primary-cyan transition-all duration-300 bg-gray-800 bg-opacity-40"
             >
               <input
                 type="file"
                 ref={fileInputRef}
-                onChange={handleImageChange}
+                onChange={handleFileChange}
                 className="hidden"
-                accept="image/*"
+                accept="image/*,video/*"
+                multiple
+                disabled={isUploadDisabled()}
               />
-              <FaImage className="mx-auto text-5xl text-gray-500 mb-4" />
-              <p className="text-gray-400">Click to upload an image</p>
+              <FaUpload className="mx-auto text-6xl text-gray-500 mb-4 animate-bounce" />
+              <p className="text-text-muted text-lg">
+                {postType === 'post' ? 'Upload up to 5 images or 1 video' : 'Upload one image or video'}
+              </p>
+              <p className="text-sm text-gray-600">Click here to select files</p>
             </div>
           )}
 
-          {/* Image Preview and Text Area */}
-          {selectedImage && (
-            <div className="relative">
-              <img
-                src={selectedImage}
-                alt="Selected"
-                className="w-full h-auto rounded-lg mb-4"
-              />
-              <button
-                onClick={handleRemoveImage}
-                className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full hover:bg-opacity-75 transition-all duration-300"
-              >
-                <FaTimes />
-              </button>
-              <textarea
-                value={postText}
-                onChange={(e) => setPostText(e.target.value)}
-                placeholder={`What's on your mind?`}
-                className="w-full p-4 bg-gray-900 bg-opacity-70 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary-cyan)] transition-all duration-300"
-                rows="4"
-                disabled={!selectedImage}
-              ></textarea>
+          {/* File Previews */}
+          {previewUrls.length > 0 && (
+            <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5 gap-4">
+              {previewUrls.map((url, index) => (
+                <div key={index} className="relative group animate-fadeIn">
+                  {selectedFiles[index].type === 'image' ? (
+                    <img src={url} alt={`Preview ${index}`} className="w-full h-32 object-cover rounded-lg shadow-lg" />
+                  ) : (
+                    <video src={url} controls className="w-full h-32 object-cover rounded-lg shadow-lg" />
+                  )}
+                  <button
+                    onClick={() => handleRemoveFile(index)}
+                    className="absolute top-2 right-2 bg-black bg-opacity-50 text-white p-2 rounded-full opacity-0 group-hover:opacity-100 transition-all duration-300 transform hover:scale-110"
+                  >
+                    <FaTimes />
+                  </button>
+                </div>
+              ))}
             </div>
+          )}
+
+          {/* Text Area */}
+          {selectedFiles.length > 0 && (
+            <textarea
+              value={postText}
+              onChange={(e) => setPostText(e.target.value)}
+              placeholder={`What's on your mind?`}
+              className="w-full p-4 input-styled bg-opacity-70 text-lg"
+              rows="5"
+            ></textarea>
           )}
 
           {/* Post Button */}
-          <div className="mt-6 text-right">
+          <div className="text-center pt-4">
             <button
-              className="bg-[var(--primary-cyan)] text-gray-900 font-bold py-3 px-8 rounded-full hover:bg-opacity-80 transition-all duration-300 disabled:bg-gray-600 disabled:cursor-not-allowed"
-              disabled={!selectedImage || !postText}
+              className="button-primary text-lg font-bold py-4 px-12 rounded-full transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed"
+              disabled={selectedFiles.length === 0 || !postText}
             >
               Create {postType}
             </button>

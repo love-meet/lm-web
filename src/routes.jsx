@@ -14,7 +14,7 @@ const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
 const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Mines = lazy(() => import('./games/mines/Mines'));
-
+const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
 
 // Protected Route - Lazy loaded
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
@@ -71,7 +71,13 @@ export const routes = [
   showInNav: false, 
   protected: false,  
 },
-
+{
+  path: '/games/love',
+  element: <Love />,
+  name: 'Love In Words',
+  showInNav: false, 
+  protected: false,  
+},
 
   {
     path: '/chat/:chatId',
