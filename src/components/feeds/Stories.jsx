@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef } from "react";
 import { ArrowLeft, Trash, Plus } from "lucide-react";
 
-
+// Helper: format "time ago"
 const formatTimeAgo = (timestamp) => {
   const diff = Math.floor((Date.now() - timestamp) / 1000); // in seconds
   if (diff < 60) return `${diff}s ago`;
@@ -10,7 +10,7 @@ const formatTimeAgo = (timestamp) => {
   return `${Math.floor(diff / 86400)}d ago`;
 };
 
-
+// Fake stories for testing (friends)
 const storiesData = [
   {
     id: 1,

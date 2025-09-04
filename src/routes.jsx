@@ -10,8 +10,10 @@ const Posts = lazy(() => import('./pages/dashboard/post/Index'));
 const PostDetails = lazy(() => import('./pages/dashboard/postDetails/Index'));
 const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
 const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'));
+const CreateAffiliate = lazy(() => import('./pages/dashboard/affiliate/CreateAffiliate'));
 const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
 const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
+const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Mines = lazy(() => import('./games/mines/Mines'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
@@ -97,6 +99,14 @@ export const routes = [
   },
 
   {
+    path: '/affiliate/create',
+    element: <CreateAffiliate />,
+    name: 'Become an Affiliate',
+    showInNav: false,
+    protected: false,
+  },
+
+  {
     path: '/subscription/plans',
     element: <ProtectedRoute> <SubscriptionPlans /> </ProtectedRoute> ,
     name: 'Subscription Plans',
@@ -111,7 +121,14 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
- {
+  {
+    path: '/ref/:id',
+    element: <ReferralHandler />,
+    name: 'Referral Handler',
+    showInNav: false,
+    protected: false,
+  },
+  {
     path: '/login',
     element: <Login />,
     name: 'Login',
