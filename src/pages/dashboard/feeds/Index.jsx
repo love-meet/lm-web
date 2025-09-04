@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostCard from '../../../components/feeds/PostCard';
 import { postsData } from '../../../data/postsData';
+import Stories from '../../../components/feeds/Stories';
 
 const FeedsPage = () => {
   const [posts, setPosts] = useState([]);
@@ -38,7 +39,6 @@ const FeedsPage = () => {
           ))}
         </div>
         
-        
         {/* Floating love icons */}
         <div className="absolute inset-0">
           {[...Array(6)].map((_, i) => (
@@ -67,6 +67,10 @@ const FeedsPage = () => {
             msOverflowStyle: 'none'
           }}
         >
+          {/* 👇 Stories go here at the top */}
+          <Stories />
+
+          {/* Posts */}
           {posts.map((post, index) => (
             <div 
               key={post.id}
