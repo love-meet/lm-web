@@ -422,3 +422,26 @@ button {
           animation: shimmer 3s infinite linear;
           background-size: 200% 100%;
         }
+
+
+          .swiper-pagination-bullet {
+          background: var(--primary-cyan) !important;
+          opacity: 0.5;
+        }
+        .swiper-pagination-bullet-active {
+          background: var(--primary-cyan) !important;
+          opacity: 1;
+        }
+        .swiper-button-next,
+        .swiper-button-prev {
+          color: var(--primary-cyan) !important;
+          background: rgba(0, 0, 0, 0.5);
+          width: 40px !important;
+          height: 40px !important;
+          border-radius: 50%;
+          margin-top: -20px !important;
+        }
+        .swiper-button-next:after,
+        .swiper-button-prev:after {
+          font-size: 16px !important;
+        }

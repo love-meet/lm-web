@@ -36,7 +36,7 @@ const Layout = () => {
       {/* Mobile Navigation - Hide on home page */}
       {!isHomePage && (
         <>
-          <MobileNavbar />
+          {/* <MobileNavbar /> */}
           <MobileBottomTabs />
         </>
       )}
@@ -47,7 +47,7 @@ const Layout = () => {
       
       {/* Main Content Area */}
       <main className={`
-        ${!isHomePage ? 'pt-14 pb-20 md:pt-2 md:pb-0 md:pr-72' : ''}
+        ${!isHomePage ? 'pt-4 pb-20 md:pt-2 md:pb-0 md:pr-72' : ''}
         min-h-screen
       `}>
         <div className={`

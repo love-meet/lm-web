@@ -1,7 +1,7 @@
 import React from 'react'
 
 export default function OtpModal({isNewAccount, otp, setOtp,
-     setIsNewAccount, setShowOTPModal, verifyOTP }) {
+     setIsNewAccount, setShowOTPModal, verifyOTP, isLoading }) {
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
         <div className="bg-[var(--bg-secondary)] rounded-2xl p-6 w-full max-w-md border border-white/10 shadow-2xl">
@@ -38,9 +38,19 @@ export default function OtpModal({isNewAccount, otp, setOtp,
                     </button>
                     <button
                         onClick={verifyOTP}
-                        className="flex-1 py-3 px-4 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg text-white hover:from-green-600 hover:to-blue-600 transition"
+                        className="flex gap-2 py-3 px-4 bg-gradient-to-r from-green-500 to-blue-500 rounded-lg text-white hover:from-green-600 hover:to-blue-600 transition"
                     >
-                        Verify 🎯
+                         {isLoading ? (
+                                <>
+                                    <div className="animate-spin w-5 h-5 border-2 border-white border-t-transparent rounded-full"></div>
+                                   Verify...
+                                </>
+                            ) : (
+                                <>
+                                    Verify 🎯
+                                </>
+                            )}
+                      
                     </button>
                 </div>
             </div>

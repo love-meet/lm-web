@@ -108,7 +108,7 @@ export default function Login() {
             toast.error('Please enter a valid 6-digit OTP 🔢');
             return;
         }
-
+             setIsLoading(true);
         try {
             const response = await api.post('/auth/verify-otp', {
                 email: formData.email,
@@ -124,6 +124,9 @@ export default function Login() {
         } catch (error) {
             console.error('OTP verification failed:', error);
            toast.error(`${error?.message} 💔`);
+        }
+        finally {
+            setIsLoading(false);
         }
     };
 
@@ -354,6 +357,7 @@ export default function Login() {
                     isNewAccount={isNewAccount}
                     otp={otp} setOtp={setOtp} setIsNewAccount={setIsNewAccount}
                     setShowOTPModal={setShowOTPModal} verifyOTP={verifyOTP}
+                    isLoading={isLoading}
                 />
             )}
 
