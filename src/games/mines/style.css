@@ -1,0 +1,50 @@
+.heart-loader {
+          width: 80px;
+          height: 80px;
+          background-color: #f472b6; /* pink-400 */
+          position: relative;
+          transform: rotate(45deg);
+          box-shadow: 0 0 20px #f472b6;
+        }
+        .heart-loader:before,
+        .heart-loader:after {
+          content: "";
+          width: 80px;
+          height: 80px;
+          background-color: #f472b6; /* pink-400 */
+          border-radius: 50%;
+          position: absolute;
+        }
+        .heart-loader:before {
+          top: -40px;
+          left: 0;
+        }
+        .heart-loader:after {
+          top: 0;
+          left: -40px;
+        }
+        @keyframes pulse {
+          0%, 100% {
+            transform: scale(1) rotate(45deg);
+            box-shadow: 0 0 20px #f472b6;
+          }
+          50% {
+            transform: scale(1.1) rotate(45deg);
+            box-shadow: 0 0 35px #f472b6;
+          }
+        }
+        .animate-pulse {
+            animation-name: pulse;
+            animation-duration: 1.5s;
+            animation-iteration-count: infinite;
+        }
+        @keyframes sparkle {
+          0%, 100% {
+            opacity: 0;
+            transform: scale(0.5);
+          }
+          50% {
+            opacity: 1;
+            transform: scale(1.2);
+          }
+        }

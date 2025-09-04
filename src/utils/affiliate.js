@@ -16,6 +16,12 @@ export const generateAffiliateLink = (affiliateCode) => {
   return `${baseUrl}/register?ref=${affiliateCode}`;
 };
 
+// Generate referral link for direct user ID (matches new route structure)
+export const generateReferralLink = (userId, baseUrl = null) => {
+  const domain = baseUrl || window.location.origin;
+  return `${domain}/ref/${userId}`;
+};
+
 // Create custom affiliate link with campaign tracking
 export const createCustomAffiliateLink = (affiliateCode, campaign = 'general', source = 'direct') => {
   const baseUrl = window.location.origin;

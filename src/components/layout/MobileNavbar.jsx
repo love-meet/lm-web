@@ -2,8 +2,11 @@ import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import { Bell } from 'lucide-react';
 import NotificationModal from '../notifications/NotificationModal';
+import { useAuth } from '../../context/AuthContext';
+
 
 const MobileNavbar = () => {
+  const { user } = useAuth(); 
   const [isVisible, setIsVisible] = useState(true);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
@@ -68,7 +71,7 @@ const MobileNavbar = () => {
               className="w-8 h-8 rounded-full overflow-hidden border-2 border-[var(--primary-cyan)] hover:border-[var(--accent-pink)] transition-colors"
             >
               <img 
-                src="/assets/default-profile.jpg" 
+                src={user?.picture || "/assets/male.jpg" }
                 alt="Profile" 
                 className="w-full h-full object-cover"
                 onError={(e) => {

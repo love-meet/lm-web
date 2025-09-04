@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
-import React, { useState } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { FaArrowLeft, FaUsers, FaCheck, FaDollarSign } from 'react-icons/fa';
+import { FaArrowLeft, FaWallet, FaLink, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaDollarSign } from 'react-icons/fa';
+import { useAuth } from '../../../context/AuthContext';
 import { useAffiliate } from '../../../context/AffiliateContext';
 
 const referredUsers = [
@@ -17,11 +17,27 @@ const referredUsers = [
   { id: 10, name: 'Laura Taylor', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-17' },
 ];
 
+
+
 const AffiliateDashboard = () => {
+  const { user } = useAuth();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
-  const { isUserAffiliate, setIsUserAffiliate } = useAffiliate(); 
+  const { isUserAffiliate } = useAffiliate();
+
+  const [isCopied, setIsCopied] = useState(false);
+  const affiliateLink = `https://love-meet.com/ref/${user?._id}`;
+
+  const handleCopy = () => {
+      navigator.clipboard.writeText(affiliateLink);
+      setIsCopied(true);
+      setTimeout(() => {
+          setIsCopied(false);
+      }, 2000);
+  };
+
+
 
   // Get current users
   const indexOfLastUser = currentPage * usersPerPage;
@@ -41,35 +57,53 @@ const AffiliateDashboard = () => {
         <h1 className="text-xl font-bold ml-4">{isUserAffiliate ? 'Affiliate Dashboard' : 'Affiliate Program'}</h1>
       </div>
 
+
       {/* Scrollable Body */}
       <div className="overflow-y-auto p-4 pb-20">
         {isUserAffiliate ? (
           // Existing Affiliate Dashboard
           <>
-            {/* Quick Stats */}
-            <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 text-center">
-                <h3 className="text-sm text-gray-400 mb-1">Total Referrals</h3>
-                <p className="text-2xl font-bold text-[var(--primary-cyan)]">{referredUsers.length}</p>
+            <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
+              <div className="flex justify-between items-center mb-4">
+                <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Affiliate Program</h3>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 text-center">
-                <h3 className="text-sm text-gray-400 mb-1">Total Earnings</h3>
-                <p className="text-2xl font-bold text-green-400">₦{referredUsers.reduce((sum, user) => sum + user.earnings, 0).toLocaleString()}</p>
+              <div className="flex items-center justify-between">
+                <div>
+                  <p className="text-[var(--text-muted)]">Your affiliate link:</p>
+                  <div className="flex items-center space-x-2 mt-2">
+                    <FaLink className="text-[var(--accent-pink)] flex-shrink-0" />
+                    <span className="text-white font-mono truncate w-48">{affiliateLink}</span>
+                  </div>
+                </div>
+                <button 
+                  onClick={handleCopy}
+                  className={`p-2 rounded-full transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-white/10 hover:bg-white/20'}`}>
+                  {isCopied ? <FaCheck className="text-white" /> : <FaCopy className="text-white" />}
+                </button>
               </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 text-center">
-                <h3 className="text-sm text-gray-400 mb-1">Active Plans</h3>
-                <p className="text-2xl font-bold text-[var(--accent-pink)]">{referredUsers.filter(user => user.plan).length}</p>
-              </div>
-              <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4 text-center">
-                <h3 className="text-sm text-gray-400 mb-1">Conversion Rate</h3>
-                <p className="text-2xl font-bold text-yellow-400">{Math.round((referredUsers.filter(user => user.plan).length / referredUsers.length) * 100)}%</p>
+              <div className="mt-6 border-t border-white/10 pt-4">
+                <div className="flex justify-between items-center">
+                    <div className="flex items-center space-x-2">
+                        <FaUsers className="text-[var(--accent-pink)]" />
+                        <span>{user?.referrals?.length || 0} Referrals</span>
+                    </div>
+                    <div className="text-right">
+                        <h4 className="text-lg font-semibold">Earnings</h4>
+                        <div className="flex items-center space-x-2 mt-1">
+                            <FaWallet className="text-[var(--accent-pink)]" />
+                            <span className="text-2xl font-bold">₦{user?.affiliateEarnings || '0.00'}</span>
+                        </div>
+                    </div>
+                </div>
+                <button className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition-all duration-300">
+                    Withdraw
+                </button>
               </div>
             </div>
-            
+
+        
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4">
-              <div className="flex items-center justify-between mb-4">
-                <h2 className="text-2xl font-bold text-[var(--primary-cyan)]">Referred Users</h2>
-              </div>
+              <h2 className="text-2xl font-bold mb-4 text-[var(--primary-cyan)]">Referred Users</h2>
               <div className="overflow-x-auto">
                 <table className="w-full text-left table-auto">
                   <thead>

@@ -1,17 +1,15 @@
 import axios from 'axios';
 import { getCookie } from './cookies';
-import { toast } from 'sonner';
 
 export const backendUrl = () => {
   let localhostUrl = "http://localhost:8000";
-  let remoteUrl = "https://highscore-tech-server.onrender.com";
-  
-  // Check if window is defined (client-side) before accessing location
+  let remoteUrl = "https://love-meet.onrender.com";
+
   const isLocalhost = typeof window !== 'undefined' && 
     (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
   
   const _api = isLocalhost ? localhostUrl : remoteUrl;
-  return _api;
+  return remoteUrl;
 };
 
 const api = axios.create({

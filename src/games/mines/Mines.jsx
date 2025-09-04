@@ -140,7 +140,7 @@ export default function Mines() {
   const knobLeft = `calc(${progress}% - 8px)`
 
   return (
-    <Suspense fallback={<MinesLoader />}>
+    <Suspense fallback={<MinesLoader name={"Mines Game"} />}>
       <div
         className="fixed inset-0 z-[999] flex flex-col text-slate-200 bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424] overflow-y-auto overscroll-y-none"
         role="dialog"
@@ -294,7 +294,7 @@ export default function Mines() {
           </div>
         )}
 
-        {gameStatus === 'waiting' && <MinesLoader />}
+        {gameStatus === 'waiting' && <MinesLoader name={"Mines Game"}  />}
       </div>
     </Suspense>
   )

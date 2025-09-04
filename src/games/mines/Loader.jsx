@@ -1,20 +1,40 @@
+import React from 'react';
+import "./style.css"
 
-import React from 'react'
-
-export default function MinesLoader() {
+export default function MinesLoader({ name }) {
   return (
-    <div className="fixed inset-0 z-[1000] grid place-items-center bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424]">
+    <div className="fixed inset-0 z-[1000] grid place-items-center bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424] overflow-hidden">
       <div className="text-center">
-        <h2 className="text-3xl font-extrabold mb-4 bg-gradient-to-r from-pink-400 to-purple-500 bg-clip-text text-transparent">Mines Game</h2>
-        <div className="flex items-center justify-center space-x-4">
-          <span className="h-3 w-3 rounded-full bg-violet-500 shadow-md animate-bounce" style={{ animationDelay: '0ms' }} />
-          <span className="h-3 w-3 rounded-full bg-indigo-400 shadow-md animate-bounce" style={{ animationDelay: '120ms' }} />
-          <span className="h-3 w-3 rounded-full bg-sky-400 shadow-md animate-bounce" style={{ animationDelay: '240ms' }} />
-          <span className="h-3 w-3 rounded-full bg-orange-500 shadow-md animate-bounce" style={{ animationDelay: '360ms' }} />
-          <span className="h-3 w-3 rounded-full bg-orange-400 shadow-md animate-bounce" style={{ animationDelay: '480ms' }} />
+        {/* Pulsing Heart */}
+        <div className="relative w-32 h-32 mb-8 mx-auto">
+          <div className="absolute inset-0 flex items-center justify-center">
+            <div className="heart-loader animate-pulse" />
+          </div>
+          {/* Sparkles */}
+          {[...Array(8)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute bg-pink-400 rounded-full"
+              style={{
+                width: `${Math.random() * 4 + 2}px`,
+                height: `${Math.random() * 4 + 2}px`,
+                top: '50%',
+                left: '50%',
+                transform: `translate(-50%, -50%) rotate(${i * 45}deg) translateX(${60 + Math.random() * 20}px)`,
+                animation: `sparkle ${1.5 + Math.random()}s infinite`,
+                opacity: 0,
+                animationDelay: `${Math.random()}s`,
+              }}
+            />
+          ))}
         </div>
-      </div>
-    </div>
-  )
-}
 
+        <h2 className="text-2xl font-extrabold mb-2 bg-gradient-to-r from-pink-500 to-red-500 bg-clip-text text-transparent">
+          Loading {name}...
+        </h2>
+        <p className="text-gray-400">Getting your game ready!</p>
+      </div>
+
+    </div>
+  );
+}

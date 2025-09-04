@@ -1,23 +1,30 @@
-
 import React from 'react'
 
 export default function SimpleLoader() {
   return (
-    <div className="fixed inset-0 bg-gradient-to-br from-[#0f0f23] via-[#1a1a2e] to-[#16213e] flex items-center justify-center z-50">
-      <div className="text-center">
-        {/* Company name */}
-        <h2 className="text-xl font-semibold bg-gradient-to-r from-[#2563eb] via-[#06b6d4] to-[#7c3aed] bg-clip-text text-transparent mb-2">
-          Love Meet
-        </h2>
-        
-        {/* Loading dots */}
-        <div className="flex justify-center space-x-1">
-          <div className="w-2 h-2 bg-[#2563eb] rounded-full animate-bounce" style={{ animationDelay: '0ms' }}></div>
-          <div className="w-2 h-2 bg-[#06b6d4] rounded-full animate-bounce" style={{ animationDelay: '150ms' }}></div>
-          <div className="w-2 h-2 bg-[#7c3aed] rounded-full animate-bounce" style={{ animationDelay: '300ms' }}></div>
+    <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] flex items-center justify-center z-50">
+
+
+      <div className="relative z-10 text-center">
+        {/* Love Heart Loader */}
+        <div className="w-20 h-20 mx-auto mb-6 relative">
+          {/* Outer Heart Ring */}
+          <div className="absolute inset-0 animate-pulse">
+            <div className="w-full h-full text-6xl text-[var(--accent-pink)] flex items-center justify-center animate-bounce">
+              💖
+            </div>
+          </div>
+          
+          {/* Spinning Ring */}
+          <div className="absolute inset-0 border-4 border-transparent border-t-[var(--primary-cyan)] border-r-[var(--accent-pink)] rounded-full animate-spin"></div>
+          
+          {/* Inner Spinning Ring */}
+          <div className="absolute inset-3 border-2 border-transparent border-b-[var(--primary-purple)] border-l-[var(--accent-orange)] rounded-full animate-spin" 
+               style={{ animationDirection: 'reverse', animationDuration: '1.5s' }}>
+          </div>
         </div>
+      
       </div>
     </div>
   )
 }
-
