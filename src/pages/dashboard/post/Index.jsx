@@ -231,9 +231,19 @@ export default function Post() {
           </p>
         </div>
         <div className="bg-[var(--bg-secondary)] border border-gray-700 rounded-2xl overflow-hidden">
-          {/* Tab Content */}
           <div className="p-6">
-            {activeTab === 'post' ? (
+
+                <PostTab
+                selectedFiles={selectedFiles}
+                onFileSelect={handleFileChange}
+                onRemoveFile={handleRemoveFile}
+                onTextChange={setPostText}
+                text={postText}
+                onDone={handleDone}
+                previewUrls={previewUrls}
+                isLoading={isLoading}
+              />
+            {/* {activeTab === 'post' ? (
               <PostTab
                 selectedFiles={selectedFiles}
                 onFileSelect={handleFileChange}
@@ -255,11 +265,11 @@ export default function Post() {
                 previewUrls={previewUrls}
                 isLoading={isLoading}
               />
-            )}
+            )} */}
           </div>
 
-          {/* Bottom Tab Bar */}
-          <div className="bg-[var(--bg-tertiary)] px-6 py-4 flex justify-center space-x-1">
+      
+          {/* <div className="bg-[var(--bg-tertiary)] px-6 py-4 flex justify-center space-x-1">
             <button
               onClick={() => setActiveTab('post')}
               className={`
@@ -286,7 +296,7 @@ export default function Post() {
               <FaVideo className="inline mr-2" />
               Story
             </button>
-          </div>
+          </div> */}
         </div>
       </div>
       <FileUploadButton
