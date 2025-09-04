@@ -15,6 +15,7 @@ const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Mines = lazy(() => import('./games/mines/Mines'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
+const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
 
 // Protected Route - Lazy loaded
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
@@ -117,6 +118,15 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
+
+  {
+  path: '/games',
+  element: <GamesHub />,
+  name: 'Games Hub',
+  showInNav: false,
+  protected: false,
+},
+
   // {
   //   path: '/transactions',
   //   element: <ProtectedRoute><Transactions /></ProtectedRoute>,
