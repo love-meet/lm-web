@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaCrown, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe, FaFan } from 'react-icons/fa';
+import { FaArrowLeft, FaCrown, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe, FaFan, FaShare } from 'react-icons/fa';
+import { useAffiliate } from '../../../context/AffiliateContext';
 
 const Profile = () => {
   const navigate = useNavigate();
@@ -8,6 +9,7 @@ const Profile = () => {
   const [isEditingBio, setIsEditingBio] = useState(false);
   const [isCopied, setIsCopied] = useState(false);
   const [currentPlan, setCurrentPlan] = useState({ name: 'Blossom', icon: FaFan });
+  const { isUserAffiliate } = useAffiliate();
 
   const affiliateLink = 'https://love-meet.com/ref/user12345678901234567890';
 
@@ -107,48 +109,75 @@ const Profile = () => {
         </div>
 
         {/* Affiliate Section */}
-        <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-          <div className="flex justify-between items-center mb-4">
-            <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Affiliate Program</h3>
-            <Link to="/affiliate/dashboard" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <FaTachometerAlt className="text-white" />
-            </Link>
-          </div>
-          <div className="flex items-center justify-between">
-            <div>
-              <p className="text-[var(--text-muted)]">Your affiliate link:</p>
-              <div className="flex items-center space-x-2 mt-2">
-                <FaLink className="text-[var(--accent-pink)] flex-shrink-0" />
-                <span className="text-white font-mono truncate w-48">{affiliateLink}</span>
+        {isUserAffiliate ? (
+          <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Affiliate Program</h3>
+              <Link to="/affiliate/dashboard" className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors" title="View Dashboard">
+                <FaTachometerAlt className="text-white" />
+              </Link>
+            </div>
+            <div className="flex items-center justify-between">
+              <div>
+                <p className="text-[var(--text-muted)]">Your affiliate link:</p>
+                <div className="flex items-center space-x-2 mt-2">
+                  <FaLink className="text-[var(--accent-pink)] flex-shrink-0" />
+                  <span className="text-white font-mono truncate w-48">{affiliateLink}</span>
+                </div>
+              </div>
+              <button 
+                onClick={handleCopy}
+                className={`p-2 rounded-full transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-white/10 hover:bg-white/20'}`}>
+                {isCopied ? <FaCheck className="text-white" /> : <FaCopy className="text-white" />}
+              </button>
+            </div>
+            <div className="mt-6 border-t border-white/10 pt-4">
+              <div className="flex justify-between items-center">
+                  <div className="flex items-center space-x-2">
+                      <FaUsers className="text-[var(--accent-pink)]" />
+                      <span>123 Referrals</span>
+                  </div>
+                  <div className="text-right">
+                      <h4 className="text-lg font-semibold">Earnings</h4>
+                      <div className="flex items-center space-x-2 mt-1">
+                          <FaWallet className="text-[var(--accent-pink)]" />
+                          <span className="text-2xl font-bold">₦1,234.56</span>
+                      </div>
+                  </div>
+              </div>
+              <button className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition-all duration-300">
+                  Withdraw
+              </button>
+              
+              
+              <div className="flex justify-center mt-3">
+                <button 
+                  onClick={handleCopy}
+                  className="flex items-center justify-center space-x-2 py-2 px-6 bg-[var(--accent-pink)] hover:bg-[var(--accent-pink)]/80 rounded-full transition-colors text-white font-medium text-sm"
+                >
+                  <FaShare size={14} />
+                  <span>Share Link</span>
+                </button>
               </div>
             </div>
-            <button 
-              onClick={handleCopy}
-              className={`p-2 rounded-full transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-white/10 hover:bg-white/20'}`}>
-              {isCopied ? <FaCheck className="text-white" /> : <FaCopy className="text-white" />}
-            </button>
           </div>
-          <div className="mt-6 border-t border-white/10 pt-4">
-            <div className="flex justify-between items-center">
-                <div className="flex items-center space-x-2">
-                    <FaUsers className="text-[var(--accent-pink)]" />
-                    <span>123 Referrals</span>
-                </div>
-                <div className="text-right">
-                    <h4 className="text-lg font-semibold">Earnings</h4>
-                    <div className="flex items-center space-x-2 mt-1">
-                        <FaWallet className="text-[var(--accent-pink)]" />
-                        <span className="text-2xl font-bold">₦1,234.56</span>
-                    </div>
-                </div>
+        ) : (
+          <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
+            <div className="text-center">
+              <h3 className="text-xl font-semibold text-[var(--primary-cyan)] mb-4">Join Our Affiliate Program</h3>
+              <p className="text-gray-300 mb-6">Start earning money by referring new users to our platform</p>
+              <Link
+                to="/affiliate/create"
+                className="inline-flex items-center space-x-2 bg-gradient-to-r from-[var(--primary-cyan)] to-[var(--accent-pink)] hover:from-[var(--accent-pink)] hover:to-[var(--primary-cyan)] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
+              >
+                <FaUsers className="text-lg" />
+                <span>Become an Affiliate</span>
+              </Link>
             </div>
-            <button className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition-all duration-300">
-                Withdraw
-            </button>
           </div>
-        </div>
+        )}
 
-        {/* Upgrade Plan Section */}
+        
         <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
           <h3 className="text-xl font-semibold mb-4 text-[var(--primary-cyan)]">Upgrade Your Plan</h3>
           <p className="text-[var(--text-muted)] mb-4">Unlock more features and increase your earnings potential.</p>

@@ -10,6 +10,7 @@ const Posts = lazy(() => import('./pages/dashboard/post/Index'));
 const PostDetails = lazy(() => import('./pages/dashboard/postDetails/Index'));
 const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
 const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'));
+const CreateAffiliate = lazy(() => import('./pages/dashboard/affiliate/CreateAffiliate'));
 const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
 const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
@@ -85,6 +86,14 @@ export const routes = [
     path: '/affiliate/dashboard',
     element: <AffiliateDashboard />,
     name: 'Affiliate Dashboard',
+    showInNav: false,
+    protected: false,
+  },
+
+  {
+    path: '/affiliate/create',
+    element: <CreateAffiliate />,
+    name: 'Become an Affiliate',
     showInNav: false,
     protected: false,
   },
