@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef } from "react";
-import { ArrowLeft, Trash, Plus } from "lucide-react";
+import { ArrowLeft, Trash, Plus, Send } from "lucide-react";
+
 
 // Helper: format "time ago"
 const formatTimeAgo = (timestamp) => {
@@ -17,8 +18,8 @@ const storiesData = [
     username: "alex",
     createdAt: Date.now() - 1000 * 60 * 5, // 5 mins ago
     slides: [
-      { type: "image", url: "https://picsum.photos/400/700?random=1" },
-      { type: "image", url: "https://picsum.photos/400/700?random=2" }
+      { type: "image", url: "https://picsum.photos/400/700?random=1", caption: "Chillin' outside" },
+      { type: "image", url: "https://picsum.photos/400/700?random=2", caption: "Another shot" }
     ]
   },
   {
@@ -26,8 +27,8 @@ const storiesData = [
     username: "maria",
     createdAt: Date.now() - 1000 * 60 * 60, // 1 hour ago
     slides: [
-      { type: "image", url: "https://picsum.photos/400/700?random=3" },
-      { type: "image", url: "https://picsum.photos/400/700?random=4" }
+      { type: "image", url: "https://picsum.photos/400/700?random=3", caption: "Coffee time" },
+      { type: "image", url: "https://picsum.photos/400/700?random=4", caption: "Evening vibes" }
     ]
   }
 ];
@@ -37,7 +38,10 @@ function StoryViewer({ story, onClose, onNext, onPrev, isMyStory }) {
   const [slideIndex, setSlideIndex] = useState(0);
   const [progress, setProgress] = useState(0);
   const timerRef = useRef(null);
-  const [animate, setAnimate] = useState(false);
+  const [paused, setPaused] = useState(false);
+  const holdTimeout = useRef(null);
+  const holdStart = useRef(null);
+  const [reply, setReply] = useState("");
 
   const currentSlide = story.slides[slideIndex];
 
@@ -48,50 +52,60 @@ function StoryViewer({ story, onClose, onNext, onPrev, isMyStory }) {
     setProgress(0);
     clearInterval(timerRef.current);
 
-    timerRef.current = setInterval(() => {
-      setProgress((p) => {
-        if (p >= 100) {
-          clearInterval(timerRef.current);
-          handleNext();
-          return 0;
-        }
-        return p + 2; // ~5s per slide
-      });
-    }, 100);
+    if (!paused) {
+      timerRef.current = setInterval(() => {
+        setProgress((p) => {
+          if (p >= 100) {
+            clearInterval(timerRef.current);
+            handleNext();
+            return 0;
+          }
+          return p + 2; // ~5s per slide
+        });
+      }, 100);
+    }
 
     return () => clearInterval(timerRef.current);
-  }, [slideIndex, isMyStory]);
+  }, [slideIndex, isMyStory, paused]);
 
   const handleNext = () => {
-    setAnimate(true);
-    setTimeout(() => {
-      if (slideIndex < story.slides.length - 1) {
-        setSlideIndex(slideIndex + 1);
-      } else {
-        onNext();
-      }
-      setAnimate(false);
-    }, 200);
+    if (slideIndex < story.slides.length - 1) {
+      setSlideIndex(slideIndex + 1);
+    } else {
+      onNext();
+    }
   };
 
   const handlePrev = () => {
-    setAnimate(true);
-    setTimeout(() => {
-      if (slideIndex > 0) {
-        setSlideIndex(slideIndex - 1);
-      } else {
-        onPrev();
-      }
-      setAnimate(false);
-    }, 200);
+    if (slideIndex > 0) {
+      setSlideIndex(slideIndex - 1);
+    } else {
+      onPrev();
+    }
   };
 
-  // Tap zones
-  const handleTap = (e) => {
+  // Tap / Hold zones
+  const handlePressStart = (e) => {
+    holdStart.current = Date.now();
+    holdTimeout.current = setTimeout(() => {
+      setPaused(true);
+    }, 300); // hold threshold
+  };
+
+  const handlePressEnd = (e) => {
+    const holdDuration = Date.now() - holdStart.current;
+    clearTimeout(holdTimeout.current);
+
+    if (paused) {
+      setPaused(false); // resume
+      return;
+    }
+
+    // Quick tap → navigate
     const x = e.clientX / window.innerWidth;
     const y = e.clientY / window.innerHeight;
     if (y < 0.15) {
-      onClose(); // top tap closes
+      onClose();
     } else if (x < 0.5) {
       handlePrev();
     } else {
@@ -126,10 +140,11 @@ function StoryViewer({ story, onClose, onNext, onPrev, isMyStory }) {
 
       {/* Media */}
       <div
-        className={`flex-1 flex items-center justify-center transition-all duration-300 ${
-          animate ? "opacity-0" : "opacity-100"
-        }`}
-        onClick={handleTap}
+        className="flex-1 flex items-center justify-center"
+        onMouseDown={handlePressStart}
+        onMouseUp={handlePressEnd}
+        onTouchStart={handlePressStart}
+        onTouchEnd={handlePressEnd}
       >
         {currentSlide.type === "image" ? (
           <img
@@ -147,14 +162,34 @@ function StoryViewer({ story, onClose, onNext, onPrev, isMyStory }) {
         )}
       </div>
 
+      {/* Caption */}
+      {currentSlide.caption && (
+        <div className="px-4 pb-2 text-white text-sm italic">
+          {currentSlide.caption}
+        </div>
+      )}
+
       {/* Bottom reply + like */}
       {!isMyStory && (
         <div className="p-3 border-t border-gray-700 flex items-center gap-3">
           <input
             type="text"
             placeholder="Reply..."
+            value={reply}
+            onChange={(e) => setReply(e.target.value)}
             className="flex-1 bg-gray-800 text-white px-3 py-2 rounded-lg text-sm"
           />
+          <button
+            onClick={() => {
+              if (reply.trim()) {
+                alert(`Reply sent: ${reply}`);
+                setReply("");
+              }
+            }}
+            className="text-blue-400"
+          >
+            <Send size={18} />
+          </button>
           <button className="text-pink-500 font-bold">❤️</button>
         </div>
       )}
@@ -258,8 +293,16 @@ export default function Stories() {
   const [activeStory, setActiveStory] = useState(null);
   const [storyIndex, setStoryIndex] = useState(0);
   const [showMyStories, setShowMyStories] = useState(false);
-  const [myStories, setMyStories] = useState([]);
+  const [myStories, setMyStories] = useState(() => {
+    const saved = localStorage.getItem("myStories");
+    return saved ? JSON.parse(saved) : [];
+  });
   const [addFile, setAddFile] = useState(null);
+
+  // Persist my stories
+  useEffect(() => {
+    localStorage.setItem("myStories", JSON.stringify(myStories));
+  }, [myStories]);
 
   // Auto-delete after 24h
   useEffect(() => {
@@ -267,7 +310,7 @@ export default function Stories() {
       setMyStories((prev) =>
         prev.filter((s) => Date.now() - s.createdAt < 24 * 60 * 60 * 1000)
       );
-    }, 60000); // check every minute
+    }, 60000);
     return () => clearInterval(interval);
   }, []);
 
@@ -393,3 +436,4 @@ export default function Stories() {
     </>
   );
 }
+<div/>

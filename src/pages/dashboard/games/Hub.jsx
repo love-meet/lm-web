@@ -1,12 +1,13 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
+import { ArrowLeft } from "lucide-react";
 
 export default function GamesHub() {
   const navigate = useNavigate();
 
   const games = [
-    { name: "Love In Words", path: "/games/love", icon: "/assets/love.png" },
-    { name: "Mines", path: "/games/mines", icon: "/assets/mines.png" },
+    { name: "Love In Words", path: "/games/love", icon: "/assets/jesse.jpg" },
+    { name: "Mines", path: "/games/mines", icon: "/assets/miness.jpg" },
   ];
 
   return (
@@ -17,24 +18,36 @@ export default function GamesHub() {
         <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/4 animate-bounce"></div>
         <div className="absolute w-1.5 h-1.5 bg-yellow-400 rounded-full bottom-1/3 right-1/4 animate-pulse"></div>
       </div>
+{/* 
+      Back Button
+      <button
+        onClick={() => navigate(-1)}
+        className="absolute top-6 left-6 flex items-center gap-2 px-3 py-2 bg-white/10 rounded-lg hover:bg-white/20 transition"
+      >
+        <ArrowLeft size={18} />
+        <span className="text-sm">Back</span>
+      </button> */}
 
       {/* Title */}
-      <h1 className="text-2xl font-bold mb-8 relative z-10"> Choose a Game</h1>
+      <h1 className="text-2xl font-bold mb-8 relative z-10 mt-10">Choose a Game</h1>
 
       {/* Games Grid */}
-      <div className="grid grid-cols-2 gap-6 relative z-10">
+      <div className="grid grid-cols-2 gap-14 relative z-10">
         {games.map((game) => (
           <div
             key={game.name}
             onClick={() => navigate(game.path)}
-            className="flex flex-col items-center p-4 bg-gradient-to-br from-[#1c1c34] to-[#121228] rounded-xl shadow-lg border border-white/10 cursor-pointer hover:scale-105 hover:from-[#23234a] hover:to-[#18182f] transition-transform"
+            className="flex flex-col items-center p-8 bg-gradient-to-br from-[#1c1c34] to-[#121228] rounded-2xl shadow-lg border border-white/10 cursor-pointer hover:scale-110 hover:from-[#23234a] hover:to-[#18182f] transition-transform"
           >
-            <img
-              src= {game.icon}
-              alt={game.name}
-              className="w-20 h-20 object-cover rounded-lg mb-2"
-            />
-            <p className="text-sm font-medium">{game.name}</p>
+            {/* Icon wrapper ensures square */}
+            <div className="w-40 h-40 flex items-center justify-center bg-black/20 rounded-2xl mb-4">
+              <img
+                src={game.icon}
+                alt={game.name}
+                className="max-w-full max-h-full object-contain"
+              />
+            </div>
+            <p className="text-lg font-bold">{game.name}</p>
           </div>
         ))}
       </div>
