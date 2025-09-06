@@ -22,7 +22,8 @@ const About = lazy(() => import('./pages/dashboard/settings/About.jsx'));
 const Help = lazy(() => import('./pages/dashboard/settings/Help.jsx'));
 const Feedback = lazy(() => import('./pages/dashboard/settings/Feedback.jsx'));
 const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
-
+const Terms = lazy(() => import('./pages/Terms.jsx'));
+const Privacy = lazy(() => import('./pages/Privacy.jsx'));
 // Protected Route - Lazy loaded
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
@@ -180,6 +181,20 @@ export const routes = [
   protected: false,
 },
 
+{
+  path: '/terms',
+  element: <Terms />,
+  name: 'Terms',
+  showInNav: false,
+  protected: false,
+},
+{
+  path: '/privacy',
+  element: <Privacy />,
+  name: 'Privacy',
+  showInNav: false,
+  protected: false,
+},
 
 
 

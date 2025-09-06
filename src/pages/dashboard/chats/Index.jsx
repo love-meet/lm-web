@@ -151,15 +151,16 @@ export default function Chats() {
         </div>
 
       </div>
-      {/* Floating Games Button */}
-<div className="fixed bottom-6 right-6 z-50">
+ {/* Floating Games Button - moved to top right */}
+<div className="fixed top-6 right-6 z-50">
   <button
     onClick={() => navigate("/games")}
-    className="w-14 h-14 rounded-full bg-pink-600 flex items-center justify-center shadow-lg hover:bg-pink-700 transition"
+    className="w-14 h-14 rounded-full bg-gradient-to-r from-pink-600 to-pink-700 flex items-center justify-center shadow-lg hover:scale-110 transition transform"
   >
     🎮
   </button>
 </div>
+
 
     </div>
   );
