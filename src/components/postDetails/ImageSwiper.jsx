@@ -17,7 +17,7 @@ const ImageSwiper = ({ images }) => {
     return (
       <div className="relative w-full h-80 md:h-96 rounded-xl overflow-hidden">
         <img 
-          src={images[0]} 
+          src={images[0]?.data} 
           alt="Post"
           className="w-full h-full object-cover"
         />

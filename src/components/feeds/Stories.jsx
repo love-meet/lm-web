@@ -17,8 +17,8 @@ const storiesData = [
     username: "alex",
     createdAt: Date.now() - 1000 * 60 * 5, // 5 mins ago
     slides: [
-      { type: "image", url: "https://picsum.photos/400/700?random=1" },
-      { type: "image", url: "https://picsum.photos/400/700?random=2" }
+      { type: "image", url: "/gallery/DSC_7975.jpeg" },
+      { type: "image", url: "/gallery/DSC_9900.jpeg" }
     ]
   },
   {
@@ -26,8 +26,8 @@ const storiesData = [
     username: "maria",
     createdAt: Date.now() - 1000 * 60 * 60, // 1 hour ago
     slides: [
-      { type: "image", url: "https://picsum.photos/400/700?random=3" },
-      { type: "image", url: "https://picsum.photos/400/700?random=4" }
+      { type: "image", url: "/gallery/IMG-20241027-WA0044.jpg" },
+      { type: "image", url: "/gallery/photo_2024-12-05_00-48-44.jpg" }
     ]
   }
 ];
