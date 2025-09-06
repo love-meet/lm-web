@@ -16,7 +16,6 @@ const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
-const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
 const GamesHubWrapper = lazy(() => import('./pages/dashboard/games/GamesHubWrapper'));
 
 // Settings sub-pages
