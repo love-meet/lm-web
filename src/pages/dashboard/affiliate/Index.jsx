@@ -19,7 +19,7 @@ const referredUsers = [
 
 
 
-const AffiliateDashboard = () => {
+const AffiliateDashboard = ({ onClose }) => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
@@ -51,7 +51,7 @@ const AffiliateDashboard = () => {
     <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white z-50 flex flex-col">
       {/* Header */}
       <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center flex-shrink-0">
-        <button onClick={() => navigate(-1)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+        <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
           <FaArrowLeft className="text-white" />
         </button>
         <h1 className="text-xl font-bold ml-4">{isUserAffiliate ? 'Affiliate Dashboard' : 'Affiliate Program'}</h1>

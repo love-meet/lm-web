@@ -1,32 +1,33 @@
 import React, { useState } from 'react';
 import { useNavigate } from "react-router-dom";
 import { 
-  User, 
-  Shield, 
-  Bell, 
-  Heart, 
-  Lock, 
-  Globe, 
-  HelpCircle, 
-  LogOut,
-  ChevronRight,
-  Camera,
-  Mail,
-  Phone,
-  MapPin,
-  Palette,
-  Moon,
-  Sun,
-  Volume2,
-  Eye,
-  UserX,
-  AlertTriangle,
-  Info
-} from 'lucide-react';
+  FaUser, 
+  FaShieldAlt, 
+  FaBell, 
+  FaHeart, 
+  FaLock, 
+  FaGlobe, 
+  FaQuestionCircle, 
+  FaSignOutAlt,
+  FaChevronRight,
+  FaCamera,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaPalette,
+  FaMoon,
+  FaSun,
+  FaVolumeUp,
+  FaEye,
+  FaUserSecret,
+  FaExclamationTriangle,
+  FaInfoCircle,
+  FaTimes
+} from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
+// import addNotification from 'react-push-notification';
 
 export default function Settings() {
-  const navigate = useNavigate(); // ✅ moved inside the component
   const { handleLogOut } = useAuth()
   const [darkMode, setDarkMode] = useState(true);
   const [notifications, setNotifications] = useState({
@@ -42,37 +43,47 @@ export default function Settings() {
     showAge: true,
     incognito: false
   });
+  
 
+    const buttonClick = () => {
+      addNotification({
+          title: 'Warning',
+          subtitle: 'This is a subtitle',
+          message: 'This is a very long message',
+          theme: 'darkblue',
+          native: true // when using native, your OS will handle theming.
+      });
+  };
   const settingsSections = [
     {
       title: "Profile",
-      icon: User,
+      icon: FaUser,
       color: "var(--primary-blue)",
       items: [
-        { id: "edit-profile", label: "Edit Profile", icon: User, action: () => console.log("Edit Profile") },
-        { id: "photos", label: "Manage Photos", icon: Camera, action: () => console.log("Manage Photos") },
-        { id: "verification", label: "Profile Verification", icon: Shield, badge: "New", action: () => console.log("Verification") }
+        { id: "edit-profile", label: "Edit Profile", icon: FaUser, action: () => console.log("Edit Profile") },
+        { id: "photos", label: "Manage Photos", icon: FaCamera, action: () => console.log("Manage Photos") },
+        { id: "verification", label: "Profile Verification", icon: FaShieldAlt, badge: "New", action: () => console.log("Verification") }
       ]
     },
     {
       title: "Matching Preferences",
-      icon: Heart,
+      icon: FaHeart,
       color: "var(--accent-pink)",
       items: [
-        { id: "age-range", label: "Age Range", icon: Heart, subtitle: "18 - 35", action: () => console.log("Age Range") },
-        { id: "distance", label: "Maximum Distance", icon: MapPin, subtitle: "50 km", action: () => console.log("Distance") },
-        { id: "interests", label: "Interests & Hobbies", icon: Heart, action: () => console.log("Interests") }
+        { id: "age-range", label: "Age Range", icon: FaHeart, subtitle: "18 - 35", action: () => console.log("Age Range") },
+        { id: "distance", label: "Maximum Distance", icon: FaMapMarkerAlt, subtitle: "50 km", action: () => console.log("Distance") },
+        { id: "interests", label: "Interests & Hobbies", icon: FaHeart, action: () => console.log("Interests") }
       ]
     },
     {
       title: "Privacy & Safety",
-      icon: Shield,
+      icon: FaShieldAlt,
       color: "var(--primary-purple)",
       items: [
         { 
           id: "show-online", 
           label: "Show Online Status", 
-          icon: Eye, 
+          icon: FaEye, 
           toggle: true, 
           value: privacy.showOnline,
           onChange: (val) => setPrivacy(prev => ({...prev, showOnline: val}))
@@ -80,7 +91,7 @@ export default function Settings() {
         { 
           id: "show-distance", 
           label: "Show Distance", 
-          icon: MapPin, 
+          icon: FaMapMarkerAlt, 
           toggle: true, 
           value: privacy.showDistance,
           onChange: (val) => setPrivacy(prev => ({...prev, showDistance: val}))
@@ -88,24 +99,24 @@ export default function Settings() {
         { 
           id: "incognito", 
           label: "Incognito Mode", 
-          icon: UserX, 
+          icon: FaUserSecret, 
           toggle: true, 
           value: privacy.incognito,
           onChange: (val) => setPrivacy(prev => ({...prev, incognito: val}))
         },
-        { id: "blocked-users", label: "Blocked Users", icon: UserX, action: () => console.log("Blocked Users") },
-        { id: "report-safety", label: "Report & Safety", icon: AlertTriangle, action: () => console.log("Report Safety") }
+        { id: "blocked-users", label: "Blocked Users", icon: FaUserSecret, action: () => console.log("Blocked Users") },
+        { id: "report-safety", label: "Report & Safety", icon: FaExclamationTriangle, action: () => console.log("Report Safety") }
       ]
     },
     {
       title: "Notifications",
-      icon: Bell,
+      icon: FaBell,
       color: "var(--accent-orange)",
       items: [
         { 
           id: "push-notifications", 
           label: "Push Notifications", 
-          icon: Bell, 
+          icon: FaBell, 
           toggle: true, 
           value: notifications.push,
           onChange: (val) => setNotifications(prev => ({...prev, push: val}))
@@ -113,7 +124,7 @@ export default function Settings() {
         { 
           id: "email-notifications", 
           label: "Email Notifications", 
-          icon: Mail, 
+          icon: FaEnvelope, 
           toggle: true, 
           value: notifications.email,
           onChange: (val) => setNotifications(prev => ({...prev, email: val}))
@@ -121,7 +132,7 @@ export default function Settings() {
         { 
           id: "message-alerts", 
           label: "Message Alerts", 
-          icon: Volume2, 
+          icon: FaVolumeUp, 
           toggle: true, 
           value: notifications.messages,
           onChange: (val) => setNotifications(prev => ({...prev, messages: val}))
@@ -129,7 +140,7 @@ export default function Settings() {
         { 
           id: "match-alerts", 
           label: "New Match Alerts", 
-          icon: Heart, 
+          icon: FaHeart, 
           toggle: true, 
           value: notifications.matches,
           onChange: (val) => setNotifications(prev => ({...prev, matches: val}))
@@ -138,40 +149,40 @@ export default function Settings() {
     },
     {
       title: "Account",
-      icon: Lock,
+      icon: FaLock,
       color: "var(--primary-indigo)",
       items: [
-        { id: "change-email", label: "Change Email", icon: Mail, subtitle: "your@email.com", action: () => console.log("Change Email") },
-        { id: "change-phone", label: "Change Phone", icon: Phone, subtitle: "+1 (555) 123-4567", action: () => console.log("Change Phone") },
-        { id: "change-password", label: "Change Password", icon: Lock, action: () => console.log("Change Password") },
-        { id: "subscription", label: "Subscription & Billing", icon: Heart, subtitle: "Premium Plan", action: () => console.log("Subscription") }
+        { id: "change-email", label: "Change Email", icon: FaEnvelope, subtitle: "your@email.com", action: () => console.log("Change Email") },
+        { id: "change-phone", label: "Change Phone", icon: FaPhone, subtitle: "+1 (555) 123-4567", action: () => buttonClick("Change Phone") },
+        { id: "change-password", label: "Change Password", icon: FaLock, action: () => console.log("Change Password") },
+        { id: "subscription", label: "Subscription & Billing", icon: FaHeart, subtitle: "Premium Plan", action: () => console.log("Subscription") }
       ]
     },
     {
       title: "App Preferences",
-      icon: Palette,
+      icon: FaPalette,
       color: "var(--primary-cyan)",
       items: [
         { 
           id: "dark-mode", 
           label: "Dark Mode", 
-          icon: darkMode ? Moon : Sun, 
+          icon: darkMode ? FaMoon : FaSun, 
           toggle: true, 
           value: darkMode,
           onChange: setDarkMode
         },
-        { id: "language", label: "Language", icon: Globe, subtitle: "English", action: () => console.log("Language") }
+        { id: "language", label: "Language", icon: FaGlobe, subtitle: "English", action: () => console.log("Language") }
       ]
     },
     {
       title: "Help & Support",
-      icon: HelpCircle,
+      icon: FaQuestionCircle,
       color: "var(--accent-green)",
       items: [
-        { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => navigate("/help") },
-        { id: "contact-us", label: "Contact Support", icon: Mail, action: () => navigate("/Contact") },
-        { id: "feedback", label: "Send Feedback", icon: Heart, action: () => navigate("/feedback") },
-        { id: "about", label: "About Love Meet", icon: Info, action: () => navigate("/about") }
+        { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => console.log("Help Center") },
+        { id: "contact-us", label: "Contact Support", icon: Mail, action: () => console.log("Contact Support") },
+        { id: "feedback", label: "Send Feedback", icon: Heart, action: () => console.log("Feedback") },
+        { id: "about", label: "About Love Meet", icon: Info, action: () => console.log("About") }
       ]
     }
   ];
@@ -252,55 +263,21 @@ export default function Settings() {
             )}
           </div>
         </div>
-        <ChevronRight size={16} className="text-[var(--text-muted)] group-hover:text-white transition-colors" />
+        <FaChevronRight size={16} className="text-[var(--text-muted)] group-hover:text-white transition-colors" />
       </button>
     );
   };
 
 
   return (
-    <div className="relative min-h-screen">
-      {/* Streaming Animation Background */}
-      <div className="absolute inset-0">
-        {/* Floating particles */}
-        <div className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-[var(--primary-cyan)] rounded-full opacity-15"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `floatParticles ${6 + Math.random() * 4}s infinite ${Math.random() * 3}s`,
-                filter: 'blur(0.5px)'
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Floating love icons */}
-        <div className="absolute inset-0">
-          {[...Array(4)].map((_, i) => (
-            <div
-              key={`heart-${i}`}
-              className="absolute text-[var(--accent-pink)] opacity-10"
-              style={{
-                left: `${Math.random() * 95}%`,
-                top: `${Math.random() * 95}%`,
-                fontSize: `${6 + Math.random() * 4}px`,
-                animation: `float ${8 + Math.random() * 4}s infinite ${Math.random() * 3}s`
-              }}
-            >
-              💖
-            </div>
-          ))}
-        </div>
+    <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white z-50 flex flex-col">
+      <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center justify-between flex-shrink-0">
+        <h1 className="text-xl font-bold">Settings</h1>
+        <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+          <FaTimes className="text-white" />
+        </button>
       </div>
-
-      {/* Content */}
-      <div className="relative z-10 p-4 space-y-6">
- 
-
+      <div className="overflow-y-auto p-4 pb-20">
         {/* Profile Summary Card */}
         <div className="bg-gradient-to-r from-[var(--bg-secondary)]/80 to-[var(--bg-tertiary)]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-6 mb-6 ">
           <div className="flex items-center space-x-4">
@@ -382,7 +359,7 @@ export default function Settings() {
             onClick={handleLogOut}
             className="w-full flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-red-600/80 to-red-700/80 hover:from-red-600 hover:to-red-700 rounded-2xl transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-red-500/30"
           >
-            <LogOut size={20} className="text-white group-hover:animate-bounce" />
+            <FaSignOutAlt size={20} className="text-white group-hover:animate-bounce" />
             <span className="text-white font-semibold text-lg">Logout</span>
           </button>
           

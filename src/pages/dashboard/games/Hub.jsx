@@ -12,7 +12,6 @@ export default function GamesHub() {
 
   return (
     <div className="relative min-h-screen bg-gradient-to-b from-[#0a071e] via-[#0d0d2e] to-[#0a071e] text-white flex flex-col items-center p-6 overflow-hidden">
-      {/* Floating Particles */}
       <div className="absolute inset-0 overflow-hidden">
         <div className="absolute w-2 h-2 bg-pink-500 rounded-full top-10 left-1/3 animate-pulse"></div>
         <div className="absolute w-1 h-1 bg-blue-400 rounded-full top-1/2 left-1/4 animate-bounce"></div>

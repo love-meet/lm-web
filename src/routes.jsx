@@ -7,7 +7,7 @@ const Feeds = lazy(() => import('./pages/dashboard/feeds/Index'));
 const Chats = lazy(() => import('./pages/dashboard/chats/Index'));
 const Settings = lazy(() => import('./pages/dashboard/settings/Index'));
 const Posts = lazy(() => import('./pages/dashboard/post/Index'));
-const PostDetails = lazy(() => import('./pages/dashboard/postDetails/Index'));
+const PostDetails = lazy(() => import('./pages/dashboard/postDetails/PostDetails.jsx'));
 const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
 const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'));
 const CreateAffiliate = lazy(() => import('./pages/dashboard/affiliate/CreateAffiliate'));
@@ -87,7 +87,7 @@ export const routes = [
 },
 
   {
-    path: '/chat/:chatId',
+    path: '/chat/:userId',
     element: <ProtectedRoute> <ChatDetails /> </ProtectedRoute>  ,
     name: 'Chat Details',
     showInNav: false,

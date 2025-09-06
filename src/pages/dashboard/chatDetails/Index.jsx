@@ -2,11 +2,19 @@ import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Phone, Video, MoreHorizontal } from 'lucide-react';
 import { chatsData, currentUserId } from '../../../data/chatsData';
+import { io } from 'socket.io-client';
+import { useAuth } from '../../../context/AuthContext';
 import ChatBubble from '../../../components/chat/ChatBubble';
 import ChatInput from '../../../components/chat/ChatInput';
+import { backendUrl } from '../../../api/axios';
+
+const socket = io(backendUrl(), {
+  withCredentials: true
+});
 
 export default function ChatDetails() {
-  const { chatId } = useParams();
+  const { user } = useAuth();
+  const { userId } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [chat, setChat] = useState(null);
@@ -17,29 +25,39 @@ export default function ChatDetails() {
   };
 
   useEffect(() => {
-    const foundChat = chatsData.find(c => c.id === parseInt(chatId));
-    if (foundChat) {
-      setChat(foundChat);
-      setMessages(foundChat.messages);
-    }
-  }, [chatId]);
+    if (!user?.userId) return;
+    socket.emit('join', user.userId);
+
+    // Open chat with the other user
+    socket.emit('open_chat', { userId: user.userId, otherUserId: userId });
+
+    socket.on('chat_opened', (chatData) => {
+      setChat(chatData);
+      setMessages(chatData.messages || []);
+    });
+
+    socket.on('new_message', ({ chatId, message }) => {
+      setMessages(prev => [...prev, message]);
+    });
+
+    return () => {
+      socket.off('chat_opened');
+      socket.off('new_message');
+    };
+  }, [userId, user?.userId]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const handleSendMessage = (content) => {
-    const newMessage = {
-      id: messages.length + 1,
-      senderId: currentUserId,
-      receiverId: chat.id,
-      content,
-      timestamp: new Date(),
-      isRead: false,
-      isSent: true
-    };
-    
-    setMessages(prev => [...prev, newMessage]);
+    if (!chat || !user?.userId) return;
+    socket.emit('send_message', {
+      chatId: chat._id,
+      senderId: user.userId,
+      receiverId: userId,
+      content
+    });
   };
 
   if (!chat) {
@@ -103,7 +121,7 @@ export default function ChatDetails() {
           <div className="flex items-center space-x-4">
             {/* Back Button */}
             <button 
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/chats")}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
