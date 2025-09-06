@@ -83,7 +83,7 @@ export const routes = [
 },
 
   {
-    path: '/chat/:chatId',
+    path: '/chat/:userId',
     element: <ProtectedRoute> <ChatDetails /> </ProtectedRoute>  ,
     name: 'Chat Details',
     showInNav: false,

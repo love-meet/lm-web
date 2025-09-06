@@ -2,10 +2,12 @@ import React, { useState } from 'react';
 import { Heart, MessageCircle, Send } from 'lucide-react';
 import api from '../../../api/axios';
 import { useAuth } from '../../../context/AuthContext';
+import { useNavigate } from 'react-router-dom';
 
 export default function ActionButtons({ post }) {
   const { user } = useAuth();
   const activeUserId = user?.userId;
+  const navigate = useNavigate();
 
   // Check if the active user has liked the post
   const initialLiked = Array.isArray(post.likedBy) && post.likedBy.some(u => u.userId === activeUserId);
@@ -52,7 +54,10 @@ export default function ActionButtons({ post }) {
         <MessageCircle size={20} className="group-hover:scale-110 transition-transform" />
         <span className="font-medium">{totalComments}</span>
       </button>
-      <button className="flex items-center space-x-3 px-6 py-3 rounded-full bg-white/10 hover:bg-[var(--primary-purple)]/20 hover:text-[var(--primary-purple)] transition-all duration-300 group">
+      <button
+        className="flex items-center space-x-3 px-6 py-3 rounded-full bg-white/10 hover:bg-[var(--primary-purple)]/20 hover:text-[var(--primary-purple)] transition-all duration-300 group"
+        onClick={() => navigate(`/chat/${post.user.userId}`)}
+      >
         <Send size={20} className="group-hover:scale-110 transition-transform" />
         <span className="font-medium">Message</span>
       </button>
