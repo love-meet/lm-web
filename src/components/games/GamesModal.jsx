@@ -30,20 +30,21 @@ const GamesModal = ({ isOpen, onClose }) => {
     }, 200);
   };
 
-  const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    setMounted(true);
-    return () => setMounted(false);
-  }, []);
-
-  if (!isOpen || !mounted) return null;
+  if (!isOpen) {
+    console.log('GamesModal not rendering because isOpen is false');
+    return null;
+  }
 
   const modalRoot = document.getElementById('modal-root');
-  if (!modalRoot) return null;
+  if (!modalRoot) {
+    console.error('modal-root element not found in the DOM');
+    return null;
+  }
 
+  console.log('Rendering GamesModal with isOpen:', isOpen);
+  
   return createPortal(
-    <div className="fixed inset-0 z-[1000] flex items-center justify-center p-0">
+    <div className="fixed inset-0 z-[10000] flex items-center justify-center p-0">
       <div 
         className={`fixed inset-0 bg-black/80 backdrop-blur-sm transition-opacity duration-200 ${
           isClosing ? 'opacity-0' : 'opacity-100'
@@ -119,7 +120,7 @@ const GamesModal = ({ isOpen, onClose }) => {
         )}
       </div>
     </div>,
-    document.body
+    modalRoot
   );
 };
 

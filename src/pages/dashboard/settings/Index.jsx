@@ -27,9 +27,12 @@ import {
 import { useAuth } from '../../../context/AuthContext';
 import addNotification from 'react-push-notification';
 
-export default function Settings({onClose}) {
+export default function Settings({ onClose }) {
   const { user, handleLogOut, preferences, updatePreferences } = useAuth();
   const navigate = useNavigate();
+  
+  // Handle close - use onClose if provided, otherwise navigate back
+  const handleClose = onClose || (() => navigate(-1));
   
   const [privacy, setPrivacy] = useState({
     showOnline: preferences?.showOnline !== false,
@@ -257,7 +260,11 @@ export default function Settings({onClose}) {
     <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white z-50 flex flex-col">
       <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center justify-between flex-shrink-0">
         <h1 className="text-xl font-bold">Settings</h1>
-        <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+        <button 
+          onClick={handleClose} 
+          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+          aria-label="Close settings"
+        >
           <FaTimes className="text-white" />
         </button>
       </div>

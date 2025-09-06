@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, Video, MoreHorizontal, Gamepad2, X } from 'lucide-react';
+import { ArrowLeft, Phone, Video, Gamepad2 } from 'lucide-react';
 import { chatsData, currentUserId } from '../../../data/chatsData';
 import { io } from 'socket.io-client';
 import { useAuth } from '../../../context/AuthContext';
@@ -19,23 +19,9 @@ export default function ChatDetails() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [chat, setChat] = useState(null);
-  const [showActions, setShowActions] = useState(false);
   const [showGamesModal, setShowGamesModal] = useState(false);
   const messagesEndRef = useRef(null);
-  const dropdownRef = useRef(null);
 
-  // Close dropdown when clicking outside
-  useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setShowActions(false);
-      }
-    }
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => {
-      document.removeEventListener('mousedown', handleClickOutside);
-    };
-  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -169,37 +155,26 @@ export default function ChatDetails() {
           </div>
           
           {/* Action Buttons */}
-          <div className="relative" ref={dropdownRef}>
+          <div className="flex items-center gap-2">
             <button 
-              onClick={() => setShowActions(!showActions)}
+              onClick={() => setShowGamesModal(true)}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              title="Play Games"
             >
-              <MoreHorizontal size={18} className="text-white" />
+              <Gamepad2 size={18} className="text-white" />
             </button>
-            
-            {/* Dropdown Menu */}
-            {showActions && (
-              <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-secondary)] rounded-lg shadow-lg border border-white/10 z-50">
-                <button className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2">
-                  <Phone size={16} />
-                  <span>Voice Call</span>
-                </button>
-                <button className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2">
-                  <Video size={16} />
-                  <span>Video Call</span>
-                </button>
-                <button 
-                  onClick={() => {
-                    setShowActions(false);
-                    setShowGamesModal(true);
-                  }}
-                  className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2"
-                >
-                  <Gamepad2 size={16} />
-                  <span>Play Games</span>
-                </button>
-              </div>
-            )}
+            <button 
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              title="Voice Call"
+            >
+              <Phone size={18} className="text-white" />
+            </button>
+            <button 
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+              title="Video Call"
+            >
+              <Video size={18} className="text-white" />
+            </button>
           </div>
         </div>
       </div>
@@ -226,8 +201,12 @@ export default function ChatDetails() {
       {/* Games Modal */}
       <GamesModal 
         isOpen={showGamesModal} 
-        onClose={() => setShowGamesModal(false)} 
+        onClose={() => {
+          console.log('Closing GamesModal');
+          setShowGamesModal(false);
+        }} 
       />
+      
     </div>
   );
 }

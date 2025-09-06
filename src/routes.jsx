@@ -16,8 +16,8 @@ const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
-const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
-const GamesHubWrapper = lazy(() => import('./pages/dashboard/games/GamesHubWrapper'));
+// const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
+// const GamesHubWrapper = lazy(() => import('./pages/dashboard/games/GamesHubWrapper'));
 
 // Settings sub-pages
 const EditProfile = lazy(() => import('./pages/dashboard/settings/EditProfile'));
@@ -127,13 +127,13 @@ export const routes = [
     protected: false,
   },
 
-  {
-    path: '/games/love',
-    element: <Love />,
-    name: 'Love In Words',
-    showInNav: false, 
-    protected: false,  
-  },
+  // {
+  //   path: '/games/love',
+  //   element: <Love />,
+  //   name: 'Love In Words',
+  //   showInNav: false, 
+  //   protected: false,  
+  // },
 
   {
     path: '/chat/:userId',
@@ -189,13 +189,13 @@ export const routes = [
     protected: false,
   },
 
-  {
-  path: '/games',
-  element: <ProtectedRoute><GamesHubWrapper /></ProtectedRoute>,
-  name: 'Games Hub',
-  showInNav: false,
-  protected: true,
-},
+//   {
+//   path: '/games',
+//   element: <ProtectedRoute><GamesHubWrapper /></ProtectedRoute>,
+//   name: 'Games Hub',
+//   showInNav: false,
+//   protected: true,
+// },
 
   // {
   //   path: '/transactions',
