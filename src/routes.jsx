@@ -239,25 +239,6 @@ export const routes = [
   showInNav: false,
   protected: false,
 },
-
-
-
-  
-
-  // {
-  //   path: '/transactions',
-  //   element: <ProtectedRoute><Transactions /></ProtectedRoute>,
-  //   name: 'Transactions',
-  //   showInNav: true,
-  //   protected: true,
-  //   children: [
-  //     {
-  //       index: true,
-  //       element: <DepositsTable />,
-  //     },
- 
-  //   ],
-  // },
   {
     path: '*',
     element: <NotFound />,
