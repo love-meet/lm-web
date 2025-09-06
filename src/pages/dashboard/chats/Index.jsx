@@ -2,10 +2,12 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { MessageCircle, Search } from 'lucide-react';
 import { chatsData } from '../../../data/chatsData';
+import GamesModal from '../../../components/games/GamesModal';
 
 export default function Chats() {
   const [chats, setChats] = useState([]);
   const [searchQuery, setSearchQuery] = useState('');
+  const [showGamesModal, setShowGamesModal] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -152,14 +154,20 @@ export default function Chats() {
 
       </div>
       {/* Floating Games Button */}
-<div className="fixed bottom-6 right-6 z-50">
-  <button
-    onClick={() => navigate("/games")}
-    className="w-14 h-14 rounded-full bg-pink-600 flex items-center justify-center shadow-lg hover:bg-pink-700 transition"
-  >
-    🎮
-  </button>
-</div>
+      <div className="fixed bottom-6 right-6 z-50">
+        <button
+          onClick={() => setShowGamesModal(true)}
+          className="w-14 h-14 rounded-full bg-pink-600 flex items-center justify-center shadow-lg hover:bg-pink-700 transition"
+        >
+          🎮
+        </button>
+      </div>
+
+      {/* Games Modal */}
+      <GamesModal 
+        isOpen={showGamesModal} 
+        onClose={() => setShowGamesModal(false)} 
+      />
 
     </div>
   );

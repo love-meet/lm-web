@@ -17,6 +17,7 @@ const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
 const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
+const GamesHubWrapper = lazy(() => import('./pages/dashboard/games/GamesHubWrapper'));
 
 // Settings sub-pages
 const EditProfile = lazy(() => import('./pages/dashboard/settings/EditProfile'));
@@ -190,7 +191,7 @@ export const routes = [
 
   {
   path: '/games',
-  element: <ProtectedRoute><GamesHub /></ProtectedRoute>,
+  element: <ProtectedRoute><GamesHubWrapper /></ProtectedRoute>,
   name: 'Games Hub',
   showInNav: false,
   protected: true,

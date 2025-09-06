@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft, Phone, Video, MoreHorizontal, Gamepad2, X } from 'lucide-react';
 import { chatsData, currentUserId } from '../../../data/chatsData';
@@ -7,9 +7,7 @@ import { useAuth } from '../../../context/AuthContext';
 import ChatBubble from '../../../components/chat/ChatBubble';
 import ChatInput from '../../../components/chat/ChatInput';
 import { backendUrl } from '../../../api/axios';
-
-// Lazy load the GamesHub component
-const GamesHub = lazy(() => import('../games/Hub'));
+import GamesModal from '../../../components/games/GamesModal';
 
 const socket = io(backendUrl(), {
   withCredentials: true
@@ -226,25 +224,10 @@ export default function ChatDetails() {
       </div>
 
       {/* Games Modal */}
-      {showGamesModal && (
-        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
-          <div className="relative w-full max-w-4xl h-[80vh] bg-[#0a071e] rounded-2xl overflow-hidden border border-white/10">
-            <button
-              onClick={() => setShowGamesModal(false)}
-              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-            >
-              <X size={20} className="text-white" />
-            </button>
-            <Suspense fallback={
-              <div className="flex items-center justify-center h-full">
-                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary-cyan)]"></div>
-              </div>
-            }>
-              <GamesHub />
-            </Suspense>
-          </div>
-        </div>
-      )}
+      <GamesModal 
+        isOpen={showGamesModal} 
+        onClose={() => setShowGamesModal(false)} 
+      />
     </div>
   );
 }
