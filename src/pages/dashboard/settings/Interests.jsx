@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Save, Plus, X } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import { updateHobbies } from '../../../api/admin';
 
 export default function Interests() {
   const navigate = useNavigate();
@@ -57,13 +58,17 @@ export default function Interests() {
   const handleSave = async () => {
     setIsLoading(true);
     try {
-      // TODO: Implement API call to save interests/hobbies
-      // Based on your admin API endpoints, this should use PATCH /api/admin/update-hobbies/:userId
-      console.log('Saving interests:', selectedInterests);
-      console.log('User ID for API:', user?._id || user?.userId || user?.id);
+      // Get user ID for API call
+      const userId = user?.userId || user?.id || user?._id;
+      if (!userId) {
+        console.error('No user ID found for interests update');
+        return;
+      }
       
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      // Call admin API to update hobbies/interests
+      console.log('Saving interests:', selectedInterests);
+      const response = await updateHobbies(userId, selectedInterests);
+      console.log('Interests updated successfully:', response);
       
       navigate('/settings');
     } catch (error) {

@@ -1,28 +1,64 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostCard from '../../../components/feeds/PostCard';
-import { postsData } from '../../../data/postsData';
+import Stories from '../../../components/feeds/Stories';
+import api from "../../../api/axios"
+// import PageLoader from '../../../components/PageLoader';
+import PostCardLoader from '../../../components/feeds/PostCardLoader';
 
 const FeedsPage = () => {
   const [posts, setPosts] = useState([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
+  const loaderRef = useRef(null);
 
   const handlePostClick = (postId) => {
     navigate(`/post/${postId}`);
   };
 
+  const fetchPosts = async (nextPage = page) => {
+    if (loading || !hasMore) return;
+    setLoading(true);
+    try {
+      const response = await api.get(`/post/get-feeds?page=${nextPage}`);
+      const newFeeds = response.feeds || [];
+      setPosts(newFeeds);
+      setHasMore(response.pagination.hasMore);
+      setPage(nextPage + 1);
+    } catch (error) {
+      console.log(error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
   useEffect(() => {
-    setPosts(postsData);
+    fetchPosts(1);
   }, []);
+
+  useEffect(() => {
+    if (!hasMore) return;
+    const observer = new IntersectionObserver(
+      entries => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          fetchPosts(page);
+        }
+      },
+      { threshold: 1 }
+    );
+    if (loaderRef.current) observer.observe(loaderRef.current);
+    return () => {
+      if (loaderRef.current) observer.unobserve(loaderRef.current);
+    };
+
+  }, [loaderRef.current, hasMore, loading, page]);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
-      {/* Streaming Animation Background */}
       <div className="fixed inset-0 z-0">
-        {/* Animated background gradient */}
         <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)]" />
-        
-        {/* Floating particles */}
         <div className="absolute inset-0">
           {[...Array(20)].map((_, i) => (
             <div
@@ -37,9 +73,6 @@ const FeedsPage = () => {
             />
           ))}
         </div>
-        
-        
-        {/* Floating love icons */}
         <div className="absolute inset-0">
           {[...Array(6)].map((_, i) => (
             <div
@@ -57,9 +90,7 @@ const FeedsPage = () => {
           ))}
         </div>
       </div>
-
-      {/* Main Content */}
-      <div className="relative z-10 p-4 space-y-6">
+      <div className="relative z-10 p-0 space-y-6">
         <div 
           className="px-0 space-y-6 max-h-screen overflow-y-auto scrollbar-hide"
           style={{
@@ -67,18 +98,29 @@ const FeedsPage = () => {
             msOverflowStyle: 'none'
           }}
         >
+          <div className=''>
+            <Stories />
+          </div>
+     
           {posts.map((post, index) => (
             <div 
-              key={post.id}
+              key={post.postId || post.id}
               className="opacity-0 animate-fadeIn"
               style={{
                 animationDelay: `${index * 0.1}s`,
                 animationFillMode: 'forwards'
               }}
             >
-              <PostCard post={post} onClick={() => handlePostClick(post.id)} />
+              <PostCard post={post} loading={loading} onClick={() => handlePostClick(post.postId || post.id)} />
             </div>
           ))}
+          {hasMore && (
+            <div ref={loaderRef} className="w-full  py-4">
+              <PostCardLoader />
+              <PostCardLoader />
+              <PostCardLoader />
+            </div>
+          )}
         </div>
       </div>
     </div>

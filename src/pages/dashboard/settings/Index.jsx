@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
   User, 
@@ -20,14 +20,23 @@ import {
 import { useAuth } from '../../../context/AuthContext';
 
 export default function Settings() {
-  const { handleLogOut } = useAuth();
+  const { user, handleLogOut, preferences, updatePreferences } = useAuth();
   const navigate = useNavigate();
   
   const [privacy, setPrivacy] = useState({
-    showOnline: true,
-    showDistance: true,
-    showAge: true
+    showOnline: preferences?.showOnline !== false,
+    showDistance: preferences?.showDistance !== false,
+    showAge: preferences?.showAge !== false
   });
+
+  // Update local state when preferences change
+  useEffect(() => {
+    setPrivacy({
+      showOnline: preferences?.showOnline !== false,
+      showDistance: preferences?.showDistance !== false,
+      showAge: preferences?.showAge !== false
+    });
+  }, [preferences]);
   const [notifications, setNotifications] = useState({
     push: true,
     email: false,
@@ -50,7 +59,15 @@ export default function Settings() {
       color: "var(--accent-pink)",
       items: [
         { id: "age-range", label: "Age Range", icon: Heart, subtitle: "18 - 35", action: () => navigate('/settings/age-range') },
-        { id: "distance", label: "Location & Distance", icon: MapPin, subtitle: "50 km", action: () => navigate('/settings/max-distance') },
+        { 
+          id: "distance", 
+          label: "Location & Distance", 
+          icon: MapPin, 
+          subtitle: preferences?.showDistance 
+            ? `${preferences?.distance || 50} ${preferences?.unit || 'km'}${preferences?.city ? ` • ${preferences.city}` : ''}` 
+            : 'Hidden', 
+          action: () => navigate('/settings/max-distance') 
+        },
         { id: "interests", label: "Interests & Hobbies", icon: Heart, action: () => navigate('/settings/interests') }
       ]
     },
@@ -65,7 +82,10 @@ export default function Settings() {
           icon: Eye, 
           toggle: true, 
           value: privacy.showOnline,
-          onChange: (val) => setPrivacy(prev => ({...prev, showOnline: val}))
+          onChange: (val) => {
+            setPrivacy(prev => ({...prev, showOnline: val}));
+            updatePreferences({ showOnline: val });
+          }
         },
         { 
           id: "show-distance", 
@@ -73,7 +93,10 @@ export default function Settings() {
           icon: MapPin, 
           toggle: true, 
           value: privacy.showDistance,
-          onChange: (val) => setPrivacy(prev => ({...prev, showDistance: val}))
+          onChange: (val) => {
+            setPrivacy(prev => ({...prev, showDistance: val}));
+            updatePreferences({ showDistance: val });
+          }
         },
         { id: "blocked-users", label: "Blocked Users", icon: UserX, action: () => navigate('/settings/blocked-users') }
       ]
@@ -114,7 +137,7 @@ export default function Settings() {
       icon: Lock,
       color: "var(--primary-indigo)",
       items: [
-        { id: "change-email", label: "Change Email", icon: Mail, subtitle: "your@email.com", action: () => navigate('/settings/change-email') },
+        { id: "change-email", label: "Change Email", icon: Mail, subtitle: user?.email || "Set your email", action: () => navigate('/settings/change-email') },
         { id: "change-password", label: "Change Password", icon: Lock, action: () => navigate('/settings/change-password') }
       ]
     },
@@ -266,15 +289,28 @@ export default function Settings() {
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[var(--accent-green)] border-2 border-[var(--bg-primary)] rounded-full animate-pulse" />
+              <div 
+          className={`absolute -bottom-1 -right-1 w-5 h-5 border-2 border-[var(--bg-primary)] rounded-full ${
+            privacy.showOnline 
+              ? 'bg-[var(--accent-green)] animate-pulse' 
+              : 'bg-gray-500'
+          }`} 
+        />
             </div>
             <div className="flex-1">
               <h3 className="text-white font-bold text-lg">John Doe</h3>
               
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="w-2 h-2 bg-[var(--accent-green)] rounded-full"></div>
-                <span className="text-[var(--accent-green)] text-xs font-medium">Active now</span>
-              </div>
+              {privacy.showOnline ? (
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-2 h-2 bg-[var(--accent-green)] rounded-full"></div>
+                  <span className="text-[var(--accent-green)] text-xs font-medium">Active now</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                  <span className="text-gray-400 text-xs font-medium">Offline</span>
+                </div>
+              )}
             </div>
             <div className="text-center">
             </div>

@@ -2,17 +2,28 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Mail, Save, AlertCircle, Shield } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import { sendEmailResetOtp, resetEmailWithOtp } from '../../../api/admin';
 
 export default function ChangeEmail() {
   const navigate = useNavigate();
   const { user } = useAuth();
   const [step, setStep] = useState(1); // 1: Form, 2: OTP
   const [formData, setFormData] = useState({
-    currentEmail: user?.email || 'your@email.com',
+    currentEmail: '',
     newEmail: '',
     confirmEmail: '',
     password: ''
   });
+
+  // Update form data when user data is available
+  useEffect(() => {
+    if (user?.email) {
+      setFormData(prev => ({
+        ...prev,
+        currentEmail: user.email
+      }));
+    }
+  }, [user]);
   const [otp, setOtp] = useState(['', '', '', '', '', '']);
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -116,10 +127,11 @@ export default function ChangeEmail() {
       if (validateForm()) {
         setIsLoading(true);
         try {
-          // TODO: Implement API call to send OTP to new email
+          // Call admin API to send email reset OTP
           console.log('Sending OTP to:', formData.newEmail);
-          // Simulate API call
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          const response = await sendEmailResetOtp(formData.currentEmail, formData.newEmail);
+          console.log('Email reset OTP sent successfully:', response);
+          
           setStep(2);
           setTimer(300);
           setCanResend(false);
@@ -135,10 +147,11 @@ export default function ChangeEmail() {
       if (otpString.length === 6) {
         setIsLoading(true);
         try {
-          // TODO: Implement API call to verify OTP and change email
-          console.log('Verifying OTP and changing email:', { ...formData, otp: otpString });
-          // Simulate API call
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Call admin API to reset email with OTP
+          console.log('Verifying OTP and changing email:', { currentEmail: formData.currentEmail, newEmail: formData.newEmail, otp: '***' });
+          const response = await resetEmailWithOtp(formData.currentEmail, formData.newEmail, otpString);
+          console.log('Email reset successfully:', response);
+          
           navigate('/settings');
         } catch (error) {
           console.error('Failed to verify OTP:', error);
@@ -155,9 +168,11 @@ export default function ChangeEmail() {
   const handleResendOtp = async () => {
     setIsLoading(true);
     try {
-      // TODO: Implement API call to resend OTP
+      // Call admin API to resend email reset OTP
       console.log('Resending OTP to:', formData.newEmail);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await sendEmailResetOtp(formData.currentEmail, formData.newEmail);
+      console.log('Email reset OTP resent successfully:', response);
+      
       setTimer(300);
       setCanResend(false);
       setOtp(['', '', '', '', '', '']);

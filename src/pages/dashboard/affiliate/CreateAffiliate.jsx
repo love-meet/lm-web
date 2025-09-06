@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAffiliate } from '../../../context/AffiliateContext';
 import { toast } from 'sonner';
+import { createUser } from '../../../api/admin';
 import { 
   FaArrowLeft, 
   FaUser, 
@@ -77,11 +78,14 @@ const CreateAffiliate = () => {
     setIsSubmitting(true);
     
     try {
-      // TODO: Replace with actual API call to POST /api/affiliate/apply
-      // const response = await api.post('/affiliate/apply', formData);
-      
-      // Simulate API call for now
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      // Call admin API to create user (affiliate application)
+      console.log('Submitting affiliate application:', formData);
+      const response = await createUser({
+        ...formData,
+        userType: 'affiliate',
+        status: 'pending'
+      });
+      console.log('Affiliate application submitted successfully:', response);
       
       toast.success('Affiliate application submitted successfully! You will receive an email confirmation within 24 hours.');
       

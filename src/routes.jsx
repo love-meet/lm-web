@@ -7,7 +7,7 @@ const Feeds = lazy(() => import('./pages/dashboard/feeds/Index'));
 const Chats = lazy(() => import('./pages/dashboard/chats/Index'));
 const Settings = lazy(() => import('./pages/dashboard/settings/Index'));
 const Posts = lazy(() => import('./pages/dashboard/post/Index'));
-const PostDetails = lazy(() => import('./pages/dashboard/postDetails/Index'));
+const PostDetails = lazy(() => import('./pages/dashboard/postDetails/PostDetails.jsx'));
 const ChatDetails = lazy(() => import('./pages/dashboard/chatDetails/Index'));
 const AffiliateDashboard = lazy(() => import('./pages/dashboard/affiliate/Index'));
 const CreateAffiliate = lazy(() => import('./pages/dashboard/affiliate/CreateAffiliate'));
@@ -15,8 +15,8 @@ const SubscriptionPlans = lazy(() => import('./pages/subscription/Plans'));
 const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
-const Mines = lazy(() => import('./games/mines/Mines'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
+const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
 
 // Settings sub-pages
 const EditProfile = lazy(() => import('./pages/dashboard/settings/EditProfile'));
@@ -26,8 +26,6 @@ const Interests = lazy(() => import('./pages/dashboard/settings/Interests'));
 const BlockedUsers = lazy(() => import('./pages/dashboard/settings/BlockedUsers'));
 const ChangeEmail = lazy(() => import('./pages/dashboard/settings/ChangeEmail'));
 const ChangePassword = lazy(() => import('./pages/dashboard/settings/ChangePassword'));
-
-
 
 // Protected Route - Lazy loaded
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
@@ -129,22 +127,15 @@ export const routes = [
   },
 
   {
-  path: '/games/mines',
-  element: <Mines />,
-  name: 'Mines',
-  showInNav: false, 
-  protected: false,  
-},
-{
-  path: '/games/love',
-  element: <Love />,
-  name: 'Love In Words',
-  showInNav: false, 
-  protected: false,  
-},
+    path: '/games/love',
+    element: <Love />,
+    name: 'Love In Words',
+    showInNav: false, 
+    protected: false,  
+  },
 
   {
-    path: '/chat/:chatId',
+    path: '/chat/:userId',
     element: <ProtectedRoute> <ChatDetails /> </ProtectedRoute>  ,
     name: 'Chat Details',
     showInNav: false,
@@ -196,6 +187,15 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
+
+  {
+  path: '/games',
+  element: <ProtectedRoute><GamesHub /></ProtectedRoute>,
+  name: 'Games Hub',
+  showInNav: false,
+  protected: true,
+},
+
   // {
   //   path: '/transactions',
   //   element: <ProtectedRoute><Transactions /></ProtectedRoute>,

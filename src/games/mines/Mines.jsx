@@ -1,5 +1,5 @@
 import React, { Suspense, useState, useEffect } from 'react'
-import { Heart, ArrowRightFromLine, Send } from 'lucide-react'
+import { Heart, X, Send } from 'lucide-react'
 import MinesLoader from './Loader'
 
 function FitText({ text, className = '', suffix = '....', title }) {
@@ -72,7 +72,7 @@ function FitText({ text, className = '', suffix = '....', title }) {
   )
 }
 
-export default function Mines() {
+export default function Mines({ onClose }) {
   const [guess, setGuess] = useState('')
   const [roundState, setRoundState] = useState('playing')
   const [winner, setWinner] = useState(null)
@@ -142,20 +142,11 @@ export default function Mines() {
   return (
     <Suspense fallback={<MinesLoader name={"Mines Game"} />}>
       <div
-        className="fixed inset-0 z-[999] flex flex-col text-slate-200 bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424] overflow-y-auto overscroll-y-none"
+        className="w-full h-full flex flex-col text-slate-200 bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424] overflow-y-auto overscroll-y-none"
         role="dialog"
         aria-modal="true"
       >
-        
-        <div className="px-4 pt-4 pb-6 flex items-center justify-end">
-          <button className="flex items-center gap-1 text-sm text-rose-400 hover:text-rose-300 transition-colors">
-            <span>Leave</span>
-            <ArrowRightFromLine size={16} />
-          </button>
-        </div>
-
-        
-        <div className="px-4 mt-4 mb-2">
+        <div className="px-4 pt-4 mb-2">
           <div className="grid grid-cols-3 items-center gap-0">
            
             <div className="w-full">
@@ -222,6 +213,7 @@ export default function Mines() {
                     src="/gallery/FB_IMG_1702736841815_1.jpg"
                     alt="puzzle"
                     className="w-full h-44 object-cover rounded-lg"
+                    style={{ imageRendering: 'auto' }}
                   />
                 </div>
               </>

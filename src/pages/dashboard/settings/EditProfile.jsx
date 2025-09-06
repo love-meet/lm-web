@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ArrowLeft, User, Camera, Save, MapPin, Heart } from 'lucide-react'
 import { useAuth } from '../../../context/AuthContext'
+import { editUserProfile, getUserById } from '../../../api/admin'
 
 export default function EditProfile() {
   const navigate = useNavigate()
@@ -25,9 +26,25 @@ export default function EditProfile() {
     }))
   }
 
-  const handleSave = () => {
-    console.log('Saving profile:', formData)
-    navigate('/settings')
+  const handleSave = async () => {
+    try {
+      console.log('Saving profile:', formData)
+      
+      // Get user ID for API call
+      const userId = user?.userId || user?.id || user?._id
+      if (!userId) {
+        console.error('No user ID found for profile update')
+        return
+      }
+      
+      // Call admin API to edit user profile
+      const response = await editUserProfile(userId, formData)
+      console.log('Profile updated successfully:', response)
+      
+      navigate('/settings')
+    } catch (error) {
+      console.error('Failed to update profile:', error)
+    }
   }
 
   return (

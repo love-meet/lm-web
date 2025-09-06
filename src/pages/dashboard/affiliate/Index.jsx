@@ -3,7 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft, FaWallet, FaLink, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaDollarSign } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { useAffiliate } from '../../../context/AffiliateContext';
-import { getUserReferrals } from '../../../api/affiliate';
+import { getUserReferrals, getUserAffiliates } from '../../../api/admin';
 import { toast } from 'sonner';
 
 const AffiliateDashboard = () => {
@@ -32,7 +32,17 @@ const AffiliateDashboard = () => {
 
       setReferralsLoading(true);
       try {
-        const response = await getUserReferrals(user, currentPage, usersPerPage);  // Pass entire user object
+        // Get user ID for API call
+        const userId = user?.userId || user?.id || user?._id;
+        if (!userId) {
+          console.error('No user ID found for referrals fetch');
+          setReferrals([]);
+          return;
+        }
+        
+        // Call admin API to get user referrals
+        const response = await getUserReferrals(userId, currentPage, usersPerPage);
+        console.log('Referrals fetched successfully:', response);
         
         // Adjust based on actual API response structure
         setReferrals(response.referrals || response.data || response || []);

@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Lock, Save, Eye, EyeOff, AlertCircle, Check, Shield } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
+import { sendPasswordResetOtp, resetPasswordWithOtp } from '../../../api/admin';
 
 export default function ChangePassword() {
   const navigate = useNavigate();
@@ -148,10 +149,11 @@ export default function ChangePassword() {
       if (validateForm()) {
         setIsLoading(true);
         try {
-          // TODO: Implement API call to send OTP to user's email
+          // Call admin API to send password reset OTP
           console.log('Sending OTP to:', user?.email);
-          // Simulate API call
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          const response = await sendPasswordResetOtp(user?.email);
+          console.log('OTP sent successfully:', response);
+          
           setStep(2);
           setTimer(300);
           setCanResend(false);
@@ -167,10 +169,11 @@ export default function ChangePassword() {
       if (otpString.length === 6) {
         setIsLoading(true);
         try {
-          // TODO: Implement API call to verify OTP and change password
-          console.log('Verifying OTP and changing password:', { ...formData, otp: otpString });
-          // Simulate API call
-          await new Promise(resolve => setTimeout(resolve, 2000));
+          // Call admin API to reset password with OTP
+          console.log('Verifying OTP and changing password:', { email: user?.email, otp: '***' });
+          const response = await resetPasswordWithOtp(user?.email, otpString, formData.newPassword);
+          console.log('Password reset successfully:', response);
+          
           navigate('/settings');
         } catch (error) {
           console.error('Failed to verify OTP:', error);
@@ -187,9 +190,11 @@ export default function ChangePassword() {
   const handleResendOtp = async () => {
     setIsLoading(true);
     try {
-      // TODO: Implement API call to resend OTP
+      // Call admin API to resend password reset OTP
       console.log('Resending OTP to:', user?.email);
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      const response = await sendPasswordResetOtp(user?.email);
+      console.log('OTP resent successfully:', response);
+      
       setTimer(300);
       setCanResend(false);
       setOtp(['', '', '', '', '', '']);

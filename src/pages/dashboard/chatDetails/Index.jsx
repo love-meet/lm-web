@@ -1,45 +1,78 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, Video, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Phone, Video, MoreHorizontal, Gamepad2 } from 'lucide-react';
 import { chatsData, currentUserId } from '../../../data/chatsData';
+import { io } from 'socket.io-client';
+import { useAuth } from '../../../context/AuthContext';
 import ChatBubble from '../../../components/chat/ChatBubble';
 import ChatInput from '../../../components/chat/ChatInput';
+import { backendUrl } from '../../../api/axios';
+
+const socket = io(backendUrl(), {
+  withCredentials: true
+});
 
 export default function ChatDetails() {
-  const { chatId } = useParams();
+  const { user } = useAuth();
+  const { userId } = useParams();
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [chat, setChat] = useState(null);
+  const [showActions, setShowActions] = useState(false);
   const messagesEndRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowActions(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
   };
 
   useEffect(() => {
-    const foundChat = chatsData.find(c => c.id === parseInt(chatId));
-    if (foundChat) {
-      setChat(foundChat);
-      setMessages(foundChat.messages);
-    }
-  }, [chatId]);
+    if (!user?.userId) return;
+    socket.emit('join', user.userId);
+
+    // Open chat with the other user
+    socket.emit('open_chat', { userId: user.userId, otherUserId: userId });
+
+    socket.on('chat_opened', (chatData) => {
+      setChat(chatData);
+      setMessages(chatData.messages || []);
+    });
+
+    socket.on('new_message', ({ chatId, message }) => {
+      setMessages(prev => [...prev, message]);
+    });
+
+    return () => {
+      socket.off('chat_opened');
+      socket.off('new_message');
+    };
+  }, [userId, user?.userId]);
 
   useEffect(() => {
     scrollToBottom();
   }, [messages]);
 
   const handleSendMessage = (content) => {
-    const newMessage = {
-      id: messages.length + 1,
-      senderId: currentUserId,
-      receiverId: chat.id,
-      content,
-      timestamp: new Date(),
-      isRead: false,
-      isSent: true
-    };
-    
-    setMessages(prev => [...prev, newMessage]);
+    if (!chat || !user?.userId) return;
+    socket.emit('send_message', {
+      chatId: chat._id,
+      senderId: user.userId,
+      receiverId: userId,
+      content
+    });
   };
 
   if (!chat) {
@@ -103,7 +136,7 @@ export default function ChatDetails() {
           <div className="flex items-center space-x-4">
             {/* Back Button */}
             <button 
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/chats")}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             >
               <ArrowLeft size={20} className="text-white" />
@@ -134,16 +167,34 @@ export default function ChatDetails() {
           </div>
           
           {/* Action Buttons */}
-          <div className="flex items-center space-x-2">
-            <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <Phone size={18} className="text-white" />
-            </button>
-            <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <Video size={18} className="text-white" />
-            </button>
-            <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={() => setShowActions(!showActions)}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            >
               <MoreHorizontal size={18} className="text-white" />
             </button>
+            
+            {/* Dropdown Menu */}
+            {showActions && (
+              <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-secondary)] rounded-lg shadow-lg border border-white/10 z-50">
+                <button className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2">
+                  <Phone size={16} />
+                  <span>Voice Call</span>
+                </button>
+                <button className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2">
+                  <Video size={16} />
+                  <span>Video Call</span>
+                </button>
+                <button 
+                  onClick={() => navigate('/games')}
+                  className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2"
+                >
+                  <Gamepad2 size={16} />
+                  <span>Play Games</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>

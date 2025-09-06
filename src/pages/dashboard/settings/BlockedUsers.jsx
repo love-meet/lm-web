@@ -1,9 +1,12 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, UserX, Search, MoreVertical } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
+import { updateBlockedUsers, unblockUser, getUserById } from '../../../api/admin';
 
 export default function BlockedUsers() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [searchTerm, setSearchTerm] = useState('');
   
   // Mock blocked users data
@@ -36,9 +39,26 @@ export default function BlockedUsers() {
     user.username.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleUnblock = (userId) => {
-    // TODO: Implement API call to unblock user
-    console.log('Unblocking user:', userId);
+  const handleUnblock = async (userId) => {
+    try {
+      // Get current user ID for API call
+      const currentUserId = user?.userId || user?.id || user?._id;
+      if (!currentUserId) {
+        console.error('No current user ID found for unblock operation');
+        return;
+      }
+      
+      // Call admin API to unblock user
+      console.log('Unblocking user:', userId);
+      const response = await unblockUser(currentUserId, userId);
+      console.log('User unblocked successfully:', response);
+      
+      // TODO: Update local state to remove unblocked user from list
+      // This would typically involve refetching the blocked users list
+      
+    } catch (error) {
+      console.error('Failed to unblock user:', error);
+    }
   };
 
   return (

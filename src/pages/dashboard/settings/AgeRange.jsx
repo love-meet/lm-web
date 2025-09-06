@@ -1,15 +1,37 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Heart, Save } from 'lucide-react';
+import { useAuth } from '../../../context/AuthContext';
+import { editUserProfile } from '../../../api/admin';
 
 export default function AgeRange() {
   const navigate = useNavigate();
+  const { user } = useAuth();
   const [ageRange, setAgeRange] = useState({ min: 18, max: 35 });
 
-  const handleSave = () => {
-    // TODO: Implement API call to save age range preferences
-    console.log('Saving age range:', ageRange);
-    navigate('/settings');
+  const handleSave = async () => {
+    try {
+      // Get user ID for API call
+      const userId = user?.userId || user?.id || user?._id;
+      if (!userId) {
+        console.error('No user ID found for age range update');
+        return;
+      }
+      
+      // Call admin API to update age range preferences
+      console.log('Saving age range:', ageRange);
+      const response = await editUserProfile(userId, { 
+        ageRange: {
+          min: ageRange.min,
+          max: ageRange.max
+        }
+      });
+      console.log('Age range updated successfully:', response);
+      
+      navigate('/settings');
+    } catch (error) {
+      console.error('Failed to update age range:', error);
+    }
   };
 
   const handleRangeChange = (type, value) => {

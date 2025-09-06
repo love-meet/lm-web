@@ -26,6 +26,7 @@ export default function LoveInWords() {
     avatar: "/assets/wisdom.jpg",
   };
 
+
   const nextStep = () => setStep((prev) => prev + 1);
 
   const handleAnswer = () => {
@@ -44,22 +45,7 @@ export default function LoveInWords() {
 
   /** 🔹 Unified Player Header */
   const PlayerHeader = ({ status }) => (
-    <div className="px-4 pt-4 pb-6 w-full flex flex-col">
-      {/* Leave button row */}
-      <div className="flex items-center justify-end mb-4">
-        <button
-          onClick={() => {
-            setStep(0);
-            setPlayer(1);
-            setAnswers({ p1: "", p2: "" });
-          }}
-          className="flex items-center gap-1 text-sm text-rose-400 hover:text-rose-300 transition-colors"
-        >
-          <span>Leave</span>
-          <ArrowRightFromLine size={16} />
-        </button>
-      </div>
-
+    <div className="px-4 pt-4 pb-2 w-full flex flex-col">
       {/* Status text */}
       <div className="text-center text-pink-400 font-semibold mb-3 text-[15px]">
         {status}
@@ -105,8 +91,8 @@ export default function LoveInWords() {
 
   /** 🔹 Game Card Wrapper */
   const GameCard = ({ children }) => (
-    <div className="flex items-center justify-center min-h-[60vh] px-4">
-      <div className="bg-[#111827]/80 border border-white/10 shadow-md w-80 aspect-square flex items-center justify-center text-center p-6">
+    <div className="flex-1 flex items-center justify-center p-4 overflow-auto">
+      <div className="bg-[#111827]/80 border border-white/10 shadow-md w-full max-w-md aspect-square flex items-center justify-center text-center p-6">
         {children}
       </div>
     </div>
@@ -114,35 +100,42 @@ export default function LoveInWords() {
 
   return (
     <Suspense fallback={<SimpleLoader />}>
-      <div className="fixed inset-0 z-[999] flex flex-col text-slate-200 bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424] overflow-hidden">
+      <div className="h-full flex flex-col text-slate-200 bg-gradient-to-br from-[#0b0b1a] via-[#121226] to-[#0d1424] overflow-hidden">
         {/* Step 0 → Start */}
         {step === 0 && (
-          <div className="flex flex-col items-center justify-center min-h-screen text-white">
-            <h1 className="text-5xl font-extrabold text-pink-500 drop-shadow-lg">
+          <div className="flex-1 flex flex-col items-center justify-center text-white p-4">
+            <h1 className="text-4xl md:text-5xl font-extrabold text-pink-500 drop-shadow-lg text-center">
               Love In Words
             </h1>
+            <p className="mt-4 text-gray-300 text-center max-w-md">
+              Connect with a partner and share your thoughts in this fun word game!
+            </p>
             <button
               onClick={nextStep}
-              className="mt-8 bg-pink-600 px-8 py-3 rounded-full hover:bg-pink-700 transition"
+              className="mt-8 bg-pink-600 px-8 py-3 rounded-full hover:bg-pink-700 transition text-lg font-medium"
             >
-              Start
+              Start Game
             </button>
           </div>
         )}
 
         {/* Step 1 → Connecting */}
         {step === 1 && (
-          <div className="flex flex-col items-center min-h-screen">
+          <div className="flex-1 flex flex-col">
             <PlayerHeader status="Waiting for Partner..." />
             <GameCard>
-              <p className="text-blue-400 text-lg">Connecting...</p>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-blue-400 text-lg font-medium">Looking for a partner...</p>
+                <p className="text-gray-400 text-sm mt-2">This may take a moment</p>
+              </div>
             </GameCard>
-            <div className="flex justify-center mt-6">
+            <div className="flex justify-center p-4">
               <button
                 onClick={nextStep}
-                className="bg-green-600 px-6 py-2 rounded-lg shadow hover:bg-green-700 transition"
+                className="bg-green-600 px-6 py-2 rounded-lg shadow hover:bg-green-700 transition font-medium"
               >
-                Connect
+                Find Partner
               </button>
             </div>
           </div>
@@ -150,143 +143,133 @@ export default function LoveInWords() {
 
         {/* Step 2 → Partner picks number */}
         {step === 2 && (
-          <>
+          <div className="flex-1 flex flex-col">
             <PlayerHeader status="Connected" />
             <GameCard>
-              <p className="text-blue-400 text-lg">
-                Your partner is picking a number...
-              </p>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-16 border-4 border-purple-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+                <p className="text-blue-400 text-lg font-medium text-center">
+                  Your partner is picking a number...
+                </p>
+                <p className="text-gray-400 text-sm mt-2 text-center">
+                  Get ready for your turn!
+                </p>
+              </div>
             </GameCard>
-            <div className="flex justify-center mt-4">
+            <div className="flex justify-center p-4">
               <button
                 onClick={nextStep}
-                className="bg-purple-600 px-6 py-2 rounded hover:bg-purple-700"
+                className="bg-purple-600 px-6 py-2 rounded-lg hover:bg-purple-700 transition font-medium"
               >
-                Pick Number
+                My Turn
               </button>
             </div>
-          </>
+          </div>
         )}
 
         {/* Step 3 → Pick number */}
         {step === 3 && (
-          <>
-            <PlayerHeader status="Connected" />
+          <div className="flex-1 flex flex-col">
+            <PlayerHeader status="Your Turn" />
             <GameCard>
               <div className="flex flex-col items-center w-full">
-                <h2 className="mb-6 text-md text-blue-400 font-semibold">
-                  Pick A Number From 1 - 400
+                <h2 className="mb-6 text-lg text-blue-400 font-semibold text-center">
+                  Pick A Number
                 </h2>
-                <div className="relative w-56">
+                <p className="text-gray-300 text-sm mb-4 text-center">Choose a number between 1 and 400</p>
+                <div className="relative w-48">
                   <input
-                    type="tel"
-                    maxLength={3}
+                    type="number"
+                    min="1"
+                    max="400"
                     value={number}
-                    onChange={(e) => setNumber(e.target.value)}
+                    onChange={(e) => {
+                      const val = e.target.value;
+                      if (val === '' || (parseInt(val) >= 1 && parseInt(val) <= 400)) {
+                        setNumber(val);
+                      }
+                    }}
                     placeholder="1 - 400"
-                    className="w-full px-4 py-2 pr-10 text-sm text-white placeholder-white bg-transparent border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full px-4 py-3 pr-12 text-center text-lg text-white bg-white/5 border border-gray-600 rounded-xl focus:ring-2 focus:ring-blue-500 focus:outline-none"
                   />
                   <button
                     onClick={() => {
-                      if (parseInt(number) >= 1 && parseInt(number) <= 400) {
+                      if (number && parseInt(number) >= 1 && parseInt(number) <= 400) {
                         nextStep();
                       }
                     }}
                     disabled={!number}
-                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 disabled:text-gray-600"
+                    className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-blue-400 disabled:text-gray-600 p-1"
                   >
-                    ➤
+                    <svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
+                      <path d="M5 12h14"></path>
+                      <path d="m12 5 7 7-7 7"></path>
+                    </svg>
                   </button>
                 </div>
                 {number && (parseInt(number) < 1 || parseInt(number) > 400) && (
                   <p className="mt-3 text-red-400 text-sm font-medium">
-                    Please enter a valid number between 1 and 400.
+                    Please enter a number between 1 and 400
                   </p>
                 )}
               </div>
             </GameCard>
-          </>
+          </div>
         )}
 
         {/* Step 4 → Answer input */}
         {step === 4 && (
-          <div className="flex flex-col min-h-screen">
-            <PlayerHeader status="Connected" />
-            <div className="flex flex-col items-center justify-center flex-1 px-4">
-              {/* Main Game Content */}
-              <div className="bg-[#191129] border border-white/10 shadow-lg w-80 min-h-80 flex flex-col p-6 rounded-3xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                  <span className="text-sm font-medium text-blue-400">
-                    {questions[(number - 1) % questions.length]}
-                  </span>
-                </div>
-                <div className="bg-[#11111f] rounded-lg p-4 h-36 border border-gray-700/50">
-                  {/* Empty box for partner's answer */}
-                </div>
-              </div>
-            </div>
-            {/* Bottom input bar */}
-            <div className="px-4 pb-4 mt-auto">
-              <div className="w-full bg-[#1b1b2f] rounded-full pl-6 pr-2 py-2 flex items-center border border-white/10 shadow-md">
-                <input
-                  type="text"
-                  placeholder="Type your answer..."
-                  value={answer}
-                  onChange={(e) => setAnswer(e.target.value)}
-                  className="flex-1 bg-transparent text-white placeholder-gray-400 outline-none text-sm"
-                />
-                <button
-                  onClick={handleAnswer}
-                  disabled={!answer.trim()}
-                  className="w-10 h-10 flex items-center justify-center bg-purple-600 rounded-full hover:bg-purple-700 transition disabled:bg-gray-600"
-                >
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    strokeWidth={1.5}
-                    stroke="currentColor"
-                    className="w-5 h-5 text-white -rotate-45"
+          <div className="flex-1 flex flex-col">
+            <PlayerHeader status={`Question #${number}`} />
+            <GameCard>
+              <div className="flex flex-col items-center w-full h-full">
+                <div className="bg-white/5 p-6 rounded-xl w-full max-w-md">
+                  <h2 className="text-xl font-bold text-pink-400 mb-6 text-center">
+                    {questions[number % questions.length]}
+                  </h2>
+                  <textarea
+                    value={answer}
+                    onChange={(e) => setAnswer(e.target.value)}
+                    placeholder="Type your answer here..."
+                    className="w-full h-32 p-3 mb-6 text-white bg-white/10 border border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:outline-none resize-none"
+                  />
+                  <button
+                    onClick={handleAnswer}
+                    disabled={!answer.trim()}
+                    className="w-full bg-pink-600 px-6 py-3 rounded-lg hover:bg-pink-700 transition font-medium disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <path
-                      strokeLinecap="round"
-                      strokeLinejoin="round"
-                      d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"
-                    />
-                  </svg>
-                </button>
+                    Submit Answer
+                  </button>
+                </div>
               </div>
-            </div>
+            </GameCard>
           </div>
         )}
 
         {/* Step 5 → Answer Submitted */}
         {step === 5 && (
-          <div className="flex flex-col min-h-screen">
-            <PlayerHeader status="Connected" />
-            <div className="flex flex-col items-center justify-center flex-1 px-4">
-              {/* Main Game Content */}
-              <div className="bg-[#191129] border border-white/10 shadow-lg w-80 min-h-80 flex flex-col items-center justify-center p-6 rounded-3xl">
-                <div className="flex items-center gap-2 mb-4">
-                  <span className="w-2 h-2 rounded-full bg-blue-400"></span>
-                  <span className="text-sm font-medium text-blue-400">
-                    {questions[(number - 1) % questions.length]}
-                  </span>
-                </div>
-                <div className="bg-[#11111f] rounded-lg p-4 h-36 flex items-center justify-center w-full">
-                  <p className="text-white text-lg font-semibold">
-                    {answers.p1}
+          <div className="flex-1 flex flex-col">
+            <PlayerHeader status="Answer Submitted" />
+            <GameCard>
+              <div className="flex flex-col items-center w-full">
+                <div className="w-full max-w-md bg-white/5 p-6 rounded-xl">
+                  <p className="text-gray-300 mb-2 text-sm font-medium">Question:</p>
+                  <p className="text-pink-400 font-medium mb-6">
+                    {questions[number % questions.length]}
                   </p>
+                  
+                  <p className="text-gray-300 mb-2 text-sm font-medium">Your answer:</p>
+                  <div className="bg-white/10 p-4 rounded-lg mb-8">
+                    <p className="text-white">{player === 1 ? answers.p1 : answers.p2}</p>
+                  </div>
+                  
+                  <div className="flex flex-col items-center">
+                    <div className="w-12 h-12 border-4 border-blue-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+                    <p className="text-gray-400 text-sm">Waiting for partner's answer...</p>
+                  </div>
                 </div>
-                <button
-                  onClick={() => setStep(4)} // Switch to Player 2 answering
-                  className="mt-6 w-full p-3 rounded-xl text-white font-semibold shadow-lg bg-gradient-to-r from-cyan-500 to-purple-500"
-                >
-                  Okay 👍
-                </button>
               </div>
-            </div>
+            </GameCard>
           </div>
         )}
       </div>
