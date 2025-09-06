@@ -27,8 +27,7 @@ const Layout = () => {
   
   const currentRoute = getCurrentRoute();
   const showNavigation = currentRoute?.showInNav;
-  
-  // Check if current route is home page
+
   const isHomePage = location.pathname === '/';
 
   return (
@@ -36,13 +35,9 @@ const Layout = () => {
       {/* Mobile Navigation - Hide on home page */}
       {!isHomePage && (
         <>
-          {/* <MobileNavbar /> */}
           <MobileBottomTabs />
         </>
       )}
-
-      
-      {/* Desktop Sidebar - Hide on home page */}
       {!isHomePage && <DesktopSidebar />}
       
       {/* Main Content Area */}
