@@ -42,7 +42,7 @@ export default function AgeRange() {
   };
 
   return (
-    <div className="relative min-h-screen bg-[var(--bg-primary)]">
+    <div className="fixed inset-0 z-[100] bg-[var(--bg-primary)] overflow-y-auto">
       {/* Header */}
       <div className="sticky top-0 z-50 bg-[var(--bg-secondary)]/80 backdrop-blur-lg border-b border-white/10">
         <div className="flex items-center justify-between p-4">

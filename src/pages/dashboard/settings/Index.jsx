@@ -1,25 +1,33 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { 
-  User, 
-  Shield, 
-  Bell, 
-  Heart, 
-  Lock, 
-  LogOut,
-  ChevronRight,
-  Mail,
-  MapPin,
-  Eye,
-  UserX,
-  HelpCircle,
-  MessageCircle,
-  MessageSquare,
-  Info
-} from 'lucide-react';
+  FaUser, 
+  FaShieldAlt, 
+  FaBell, 
+  FaHeart, 
+  FaLock, 
+  FaGlobe, 
+  FaQuestionCircle, 
+  FaSignOutAlt,
+  FaChevronRight,
+  FaCamera,
+  FaEnvelope,
+  FaPhone,
+  FaMapMarkerAlt,
+  FaPalette,
+  FaMoon,
+  FaSun,
+  FaVolumeUp,
+  FaEye,
+  FaUserSecret,
+  FaExclamationTriangle,
+  FaInfoCircle,
+  FaTimes
+} from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
+import addNotification from 'react-push-notification';
 
-export default function Settings() {
+export default function Settings({onClose}) {
   const { user, handleLogOut, preferences, updatePreferences } = useAuth();
   const navigate = useNavigate();
   
@@ -42,44 +50,54 @@ export default function Settings() {
     email: false,
     matches: true
   });
+  
 
+    const buttonClick = () => {
+      addNotification({
+          title: 'Warning',
+          subtitle: 'This is a subtitle',
+          message: 'This is a very long message',
+          theme: 'darkblue',
+          native: true // when using native, your OS will handle theming.
+      });
+  };
   const settingsSections = [
     {
       title: "Profile",
-      icon: User,
+      icon: FaUser,
       color: "var(--primary-blue)",
       items: [
-        { id: "edit-profile", label: "Edit Profile", icon: User, action: () => navigate('/settings/edit-profile') },
-        { id: "verification", label: "Profile Verification", icon: Shield, badge: "New", action: () => console.log("Verification") }
+        { id: "edit-profile", label: "Edit Profile", icon: FaUser, action: () => navigate('/settings/edit-profile') },
+        { id: "verification", label: "Profile Verification", icon: FaShieldAlt, badge: "New", action: () => console.log("Verification") }
       ]
     },
     {
       title: "Matching Preferences",
-      icon: Heart,
+      icon: FaHeart,
       color: "var(--accent-pink)",
       items: [
-        { id: "age-range", label: "Age Range", icon: Heart, subtitle: "18 - 35", action: () => navigate('/settings/age-range') },
+        { id: "age-range", label: "Age Range", icon: FaHeart, subtitle: "18 - 35", action: () => navigate('/settings/age-range') },
         { 
           id: "distance", 
           label: "Location & Distance", 
-          icon: MapPin, 
+          icon: FaMapMarkerAlt, 
           subtitle: preferences?.showDistance 
             ? `${preferences?.distance || 50} ${preferences?.unit || 'km'}${preferences?.city ? ` • ${preferences.city}` : ''}` 
             : 'Hidden', 
           action: () => navigate('/settings/max-distance') 
         },
-        { id: "interests", label: "Interests & Hobbies", icon: Heart, action: () => navigate('/settings/interests') }
+        { id: "interests", label: "Interests & Hobbies", icon: FaHeart, action: () => navigate('/settings/interests') }
       ]
     },
     {
       title: "Privacy & Safety",
-      icon: Shield,
+      icon: FaShieldAlt,
       color: "var(--primary-purple)",
       items: [
         { 
           id: "show-online", 
           label: "Show Online Status", 
-          icon: Eye, 
+          icon: FaEye, 
           toggle: true, 
           value: privacy.showOnline,
           onChange: (val) => {
@@ -90,7 +108,7 @@ export default function Settings() {
         { 
           id: "show-distance", 
           label: "Show Distance", 
-          icon: MapPin, 
+          icon: FaMapMarkerAlt, 
           toggle: true, 
           value: privacy.showDistance,
           onChange: (val) => {
@@ -98,18 +116,18 @@ export default function Settings() {
             updatePreferences({ showDistance: val });
           }
         },
-        { id: "blocked-users", label: "Blocked Users", icon: UserX, action: () => navigate('/settings/blocked-users') }
+        { id: "blocked-users", label: "Blocked Users", icon: FaUserSecret, action: () => navigate('/settings/blocked-users') }
       ]
     },
     {
       title: "Notifications",
-      icon: Bell,
+      icon: FaBell,
       color: "var(--accent-orange)",
       items: [
         { 
           id: "push-notifications", 
           label: "Push Notifications", 
-          icon: Bell, 
+          icon: FaBell, 
           toggle: true, 
           value: notifications.push,
           onChange: (val) => setNotifications(prev => ({...prev, push: val}))
@@ -117,7 +135,7 @@ export default function Settings() {
         { 
           id: "email-notifications", 
           label: "Email Notifications", 
-          icon: Mail, 
+          icon: FaEnvelope, 
           toggle: true, 
           value: notifications.email,
           onChange: (val) => setNotifications(prev => ({...prev, email: val}))
@@ -125,7 +143,7 @@ export default function Settings() {
         { 
           id: "match-alerts", 
           label: "New Match Alerts", 
-          icon: Heart, 
+          icon: FaHeart, 
           toggle: true, 
           value: notifications.matches,
           onChange: (val) => setNotifications(prev => ({...prev, matches: val}))
@@ -134,22 +152,22 @@ export default function Settings() {
     },
     {
       title: "Account",
-      icon: Lock,
+      icon: FaLock,
       color: "var(--primary-indigo)",
       items: [
-        { id: "change-email", label: "Change Email", icon: Mail, subtitle: user?.email || "Set your email", action: () => navigate('/settings/change-email') },
-        { id: "change-password", label: "Change Password", icon: Lock, action: () => navigate('/settings/change-password') }
+        { id: "change-email", label: "Change Email", icon: FaEnvelope, subtitle: user?.email || "Set your email", action: () => navigate('/settings/change-email') },
+        { id: "change-password", label: "Change Password", icon: FaLock, action: () => navigate('/settings/change-password') }
       ]
     },
     {
       title: "Help & Support",
-      icon: HelpCircle,
+      icon: FaQuestionCircle,
       color: "var(--accent-pink)",
       items: [
-        { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => console.log("Help Center") },
-        { id: "contact-support", label: "Contact Support", icon: MessageCircle, action: () => console.log("Contact Support") },
-        { id: "feedback", label: "Send Feedback", icon: MessageSquare, action: () => console.log("Send Feedback") },
-        { id: "about", label: "About Love Meet", icon: Info, action: () => console.log("About Love Meet") }
+        { id: "help-center", label: "Help Center", icon: FaQuestionCircle, action: () => console.log("Help Center") },
+        { id: "contact-support", label: "Contact Support", icon: FaEnvelope, action: () => console.log("Contact Support") },
+        { id: "feedback", label: "Send Feedback", icon: FaHeart, action: () => console.log("Send Feedback") },
+        { id: "about", label: "About Love Meet", icon: FaInfoCircle, action: () => console.log("About Love Meet") }
       ]
     }
   ];
@@ -229,62 +247,28 @@ export default function Settings() {
             )}
           </div>
         </div>
-        <ChevronRight size={16} className="text-[var(--text-muted)] group-hover:text-white transition-colors" />
+        <FaChevronRight size={16} className="text-[var(--text-muted)] group-hover:text-white transition-colors" />
       </button>
     );
   };
 
 
   return (
-    <div className="relative min-h-screen">
-      {/* Streaming Animation Background */}
-      <div className="absolute inset-0">
-        {/* Floating particles */}
-        <div className="absolute inset-0">
-          {[...Array(12)].map((_, i) => (
-            <div
-              key={i}
-              className="absolute w-1 h-1 bg-[var(--primary-cyan)] rounded-full opacity-15"
-              style={{
-                left: `${Math.random() * 100}%`,
-                top: `${Math.random() * 100}%`,
-                animation: `floatParticles ${6 + Math.random() * 4}s infinite ${Math.random() * 3}s`,
-                filter: 'blur(0.5px)'
-              }}
-            />
-          ))}
-        </div>
-        
-        {/* Floating love icons */}
-        <div className="absolute inset-0">
-          {[...Array(4)].map((_, i) => (
-            <div
-              key={`heart-${i}`}
-              className="absolute text-[var(--accent-pink)] opacity-10"
-              style={{
-                left: `${Math.random() * 95}%`,
-                top: `${Math.random() * 95}%`,
-                fontSize: `${6 + Math.random() * 4}px`,
-                animation: `float ${8 + Math.random() * 4}s infinite ${Math.random() * 3}s`
-              }}
-            >
-              💖
-            </div>
-          ))}
-        </div>
+    <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white z-50 flex flex-col">
+      <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center justify-between flex-shrink-0">
+        <h1 className="text-xl font-bold">Settings</h1>
+        <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+          <FaTimes className="text-white" />
+        </button>
       </div>
-
-      {/* Content */}
-      <div className="relative z-10 p-4 space-y-6">
- 
-
+      <div className="overflow-y-auto p-4 pb-20">
         {/* Profile Summary Card */}
         <div className="bg-gradient-to-r from-[var(--bg-secondary)]/80 to-[var(--bg-tertiary)]/80 backdrop-blur-lg border border-white/10 rounded-2xl p-6 mb-6 ">
           <div className="flex items-center space-x-4">
             <div className="relative">
               <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-[var(--primary-cyan)]">
                 <img 
-                  src="/assets/default-profile.jpg" 
+                  src="/assets/male.jpg" 
                   alt="Your Profile"
                   className="w-full h-full object-cover"
                 />
@@ -370,7 +354,7 @@ export default function Settings() {
             onClick={handleLogOut}
             className="w-full flex items-center justify-center space-x-3 p-4 bg-gradient-to-r from-red-600/80 to-red-700/80 hover:from-red-600 hover:to-red-700 rounded-2xl transition-all duration-300 transform hover:scale-105 group backdrop-blur-sm border border-red-500/30"
           >
-            <LogOut size={20} className="text-white group-hover:animate-bounce" />
+            <FaSignOutAlt size={20} className="text-white group-hover:animate-bounce" />
             <span className="text-white font-semibold text-lg">Logout</span>
           </button>
           
