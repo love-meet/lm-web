@@ -16,8 +16,12 @@ const Profile = lazy(() => import('./pages/dashboard/profile/Index'));
 const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
-// const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
-// const GamesHubWrapper = lazy(() => import('./pages/dashboard/games/GamesHubWrapper'));
+const About = lazy(() => import('./pages/dashboard/settings/About.jsx'));
+const Help = lazy(() => import('./pages/dashboard/settings/Help.jsx'));
+const Feedback = lazy(() => import('./pages/dashboard/settings/Feedback.jsx'));
+const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
+const Terms = lazy(() => import('./pages/Terms.jsx'));
+const Privacy = lazy(() => import('./pages/Privacy.jsx'));
 
 // Settings sub-pages
 const EditProfile = lazy(() => import('./pages/dashboard/settings/EditProfile'));
@@ -189,28 +193,43 @@ export const routes = [
     protected: false,
   },
 
-//   {
-//   path: '/games',
-//   element: <ProtectedRoute><GamesHubWrapper /></ProtectedRoute>,
-//   name: 'Games Hub',
-//   showInNav: false,
-//   protected: true,
-// },
+{ 
+  path: '/help',
+  element: <Help />,
+  showInNav: false,
+  protected: false,
+},
 
-  // {
-  //   path: '/transactions',
-  //   element: <ProtectedRoute><Transactions /></ProtectedRoute>,
-  //   name: 'Transactions',
-  //   showInNav: true,
-  //   protected: true,
-  //   children: [
-  //     {
-  //       index: true,
-  //       element: <DepositsTable />,
-  //     },
- 
-  //   ],
-  // },
+{
+  path: '/feedback',
+  element: <Feedback />,
+  name: 'Feedback',
+  showInNav: false,
+  protected: false,
+},
+
+{
+  path: '/contact',
+  element: <Contact/>,
+  name: 'Contact',
+  showInNav: false,
+  protected: false,
+},
+
+{
+  path: '/terms',
+  element: <Terms />,
+  name: 'Terms',
+  showInNav: false,
+  protected: false,
+},
+{
+  path: '/privacy',
+  element: <Privacy />,
+  name: 'Privacy',
+  showInNav: false,
+  protected: false,
+},
   {
     path: '*',
     element: <NotFound />,

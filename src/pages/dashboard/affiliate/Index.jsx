@@ -6,6 +6,24 @@ import { useAffiliate } from '../../../context/AffiliateContext';
 import { getUserReferrals, getUserAffiliates } from '../../../api/admin';
 import { toast } from 'sonner';
 
+<<<<<<< HEAD
+const referredUsers = [
+  { id: 1, name: 'John Doe', avatar: '/assets/default-profile.jpg', earnings: 5000, plan: 'Premium', date: '2023-10-26' },
+  { id: 2, name: 'Jane Smith', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-25' },
+  { id: 3, name: 'Bob Johnson', avatar: '/assets/default-profile.jpg', earnings: 10000, plan: 'Gold', date: '2023-10-24' },
+  { id: 4, name: 'Alice Williams', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-23' },
+  { id: 5, name: 'Chris Brown', avatar: '/assets/default-profile.jpg', earnings: 7500, plan: 'Premium', date: '2023-10-22' },
+  { id: 6, name: 'Emily Jones', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-21' },
+  { id: 7, name: 'Michael Davis', avatar: '/assets/default-profile.jpg', earnings: 12000, plan: 'Gold', date: '2023-10-20' },
+  { id: 8, name: 'Sarah Miller', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-19' },
+  { id: 9, name: 'David Wilson', avatar: '/assets/default-profile.jpg', earnings: 3000, plan: 'Silver', date: '2023-10-18' },
+  { id: 10, name: 'Laura Taylor', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-17' },
+];
+
+
+
+=======
+>>>>>>> 1ed23aa7e4c024d21210bb90ff15029aa755d2eb
 const AffiliateDashboard = ({ onClose }) => {
   const { user } = useAuth();
   const navigate = useNavigate();

@@ -175,6 +175,7 @@ export default function Settings({ onClose }) {
     }
   ];
 
+
   const ToggleSwitch = ({ value, onChange, disabled = false }) => (
     <button
       onClick={() => !disabled && onChange(!value)}
