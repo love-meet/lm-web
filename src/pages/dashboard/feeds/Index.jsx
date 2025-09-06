@@ -98,7 +98,10 @@ const FeedsPage = () => {
             msOverflowStyle: 'none'
           }}
         >
-          <Stories />
+          <div className=''>
+            <Stories />
+          </div>
+     
           {posts.map((post, index) => (
             <div 
               key={post.postId || post.id}
