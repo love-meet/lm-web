@@ -18,6 +18,10 @@ const Login = lazy(() => import('./pages//auth/Login'));
 const Mines = lazy(() => import('./games/mines/Mines'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
 const GamesHub = lazy(() => import('./pages/dashboard/games/hub.jsx'));
+const About = lazy(() => import('./pages/dashboard/settings/About.jsx'));
+const Help = lazy(() => import('./pages/dashboard/settings/Help.jsx'));
+const Feedback = lazy(() => import('./pages/dashboard/settings/Feedback.jsx'));
+const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
 
 // Protected Route - Lazy loaded
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
@@ -143,6 +147,43 @@ export const routes = [
   showInNav: false,
   protected: false,
 },
+
+{
+  path: '/about',
+  element: <About />,
+  name: 'About',
+  showInNav: false,
+  protected: false,
+},
+
+{ 
+  path: '/help',
+  element: <Help />,
+  name: 'Help',
+  showInNav: false,
+  protected: false,
+},
+
+{
+  path: '/feedback',
+  element: <Feedback />,
+  name: 'Feedback',
+  showInNav: false,
+  protected: false,
+},
+
+{
+  path: '/contact',
+  element: <Contact/>,
+  name: 'Contact',
+  showInNav: false,
+  protected: false,
+},
+
+
+
+
+  
 
   // {
   //   path: '/transactions',

@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { useNavigate } from "react-router-dom";
 import { 
   User, 
   Shield, 
@@ -25,6 +26,7 @@ import {
 import { useAuth } from '../../../context/AuthContext';
 
 export default function Settings() {
+  const navigate = useNavigate(); // ✅ moved inside the component
   const { handleLogOut } = useAuth()
   const [darkMode, setDarkMode] = useState(true);
   const [notifications, setNotifications] = useState({
@@ -166,13 +168,14 @@ export default function Settings() {
       icon: HelpCircle,
       color: "var(--accent-green)",
       items: [
-        { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => console.log("Help Center") },
-        { id: "contact-us", label: "Contact Support", icon: Mail, action: () => console.log("Contact Support") },
-        { id: "feedback", label: "Send Feedback", icon: Heart, action: () => console.log("Feedback") },
-        { id: "about", label: "About Love Meet", icon: Info, action: () => console.log("About") }
+        { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => navigate("/help") },
+        { id: "contact-us", label: "Contact Support", icon: Mail, action: () => navigate("/Contact") },
+        { id: "feedback", label: "Send Feedback", icon: Heart, action: () => navigate("/feedback") },
+        { id: "about", label: "About Love Meet", icon: Info, action: () => navigate("/about") }
       ]
     }
   ];
+
 
   const ToggleSwitch = ({ value, onChange, disabled = false }) => (
     <button
