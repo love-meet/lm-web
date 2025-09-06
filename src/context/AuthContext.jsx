@@ -8,6 +8,13 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [appLoad, setAppLoad] = useState(true)
+  const [preferences, setPreferences] = useState({
+    distance: 50,
+    unit: 'km',
+    city: '',
+    country: '',
+    showDistance: true
+  })
 
   const fetchUserData = async () => {
     try {
@@ -19,7 +26,17 @@ export const AuthProvider = ({ children }) => {
       const response = await api.get('/auth/user')
       console.log(response)
       if (response) {
-        setUser(response)
+        setUser(response);
+        // Initialize preferences with user data if available
+        if (response.city || response.country || response.distancePreference) {
+          setPreferences(prev => ({
+            ...prev,
+            city: response.city || '',
+            country: response.country || '',
+            distance: response.distancePreference?.distance || prev.distance,
+            unit: response.distancePreference?.unit || prev.unit
+          }));
+        }
       } else {
         toast.error('Failed to fetch user data')
       }
@@ -57,6 +74,41 @@ export const AuthProvider = ({ children }) => {
       Cookies.remove("token")
       setUser(null)
     }
+
+    const updatePreferences = async (newPreferences) => {
+      try {
+        // Update local state immediately for better UX
+        setPreferences(prev => ({
+          ...prev,
+          ...newPreferences
+        }));
+        
+        // Save to server
+        const response = await api.put('/user/preferences', newPreferences);
+        
+        if (response && response.success) {
+          // Update user data with the new preferences
+          if (response.user) {
+            setUser(prev => ({
+              ...prev,
+              ...response.user
+            }));
+          }
+        } else {
+          toast.error('Failed to save preferences');
+          // Revert local state on error
+          setPreferences(prev => ({
+            ...prev,
+            ...Object.fromEntries(
+              Object.keys(newPreferences).map(key => [key, prev[key]])
+            )
+          }));
+        }
+      } catch (error) {
+        console.error('Error updating preferences:', error);
+        toast.error('Failed to save preferences');
+      }
+    };
 
   return (
     <AuthContext.Provider value={{ appLoad, user, fetchWithGoogle , handleLogOut, setUser, fetchUserData}}>

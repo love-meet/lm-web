@@ -1,12 +1,15 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useState, useEffect, useRef, lazy, Suspense } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Phone, Video, MoreHorizontal } from 'lucide-react';
+import { ArrowLeft, Phone, Video, MoreHorizontal, Gamepad2, X } from 'lucide-react';
 import { chatsData, currentUserId } from '../../../data/chatsData';
 import { io } from 'socket.io-client';
 import { useAuth } from '../../../context/AuthContext';
 import ChatBubble from '../../../components/chat/ChatBubble';
 import ChatInput from '../../../components/chat/ChatInput';
 import { backendUrl } from '../../../api/axios';
+
+// Lazy load the GamesHub component
+const GamesHub = lazy(() => import('../games/Hub'));
 
 const socket = io(backendUrl(), {
   withCredentials: true
@@ -18,7 +21,23 @@ export default function ChatDetails() {
   const navigate = useNavigate();
   const [messages, setMessages] = useState([]);
   const [chat, setChat] = useState(null);
+  const [showActions, setShowActions] = useState(false);
+  const [showGamesModal, setShowGamesModal] = useState(false);
   const messagesEndRef = useRef(null);
+  const dropdownRef = useRef(null);
+
+  // Close dropdown when clicking outside
+  useEffect(() => {
+    function handleClickOutside(event) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+        setShowActions(false);
+      }
+    }
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => {
+      document.removeEventListener('mousedown', handleClickOutside);
+    };
+  }, []);
 
   const scrollToBottom = () => {
     messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
@@ -152,16 +171,37 @@ export default function ChatDetails() {
           </div>
           
           {/* Action Buttons */}
-          <div className="flex items-center space-x-2">
-            <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <Phone size={18} className="text-white" />
-            </button>
-            <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <Video size={18} className="text-white" />
-            </button>
-            <button className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
+          <div className="relative" ref={dropdownRef}>
+            <button 
+              onClick={() => setShowActions(!showActions)}
+              className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            >
               <MoreHorizontal size={18} className="text-white" />
             </button>
+            
+            {/* Dropdown Menu */}
+            {showActions && (
+              <div className="absolute right-0 mt-2 w-48 bg-[var(--bg-secondary)] rounded-lg shadow-lg border border-white/10 z-50">
+                <button className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2">
+                  <Phone size={16} />
+                  <span>Voice Call</span>
+                </button>
+                <button className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2">
+                  <Video size={16} />
+                  <span>Video Call</span>
+                </button>
+                <button 
+                  onClick={() => {
+                    setShowActions(false);
+                    setShowGamesModal(true);
+                  }}
+                  className="w-full px-4 py-3 text-left text-sm text-white hover:bg-white/5 flex items-center gap-2"
+                >
+                  <Gamepad2 size={16} />
+                  <span>Play Games</span>
+                </button>
+              </div>
+            )}
           </div>
         </div>
       </div>
@@ -184,6 +224,27 @@ export default function ChatDetails() {
       <div className="relative z-10">
         <ChatInput onSendMessage={handleSendMessage} />
       </div>
+
+      {/* Games Modal */}
+      {showGamesModal && (
+        <div className="fixed inset-0 bg-black/80 backdrop-blur-sm z-[60] flex items-center justify-center p-4">
+          <div className="relative w-full max-w-4xl h-[80vh] bg-[#0a071e] rounded-2xl overflow-hidden border border-white/10">
+            <button
+              onClick={() => setShowGamesModal(false)}
+              className="absolute top-4 right-4 z-50 p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
+            >
+              <X size={20} className="text-white" />
+            </button>
+            <Suspense fallback={
+              <div className="flex items-center justify-center h-full">
+                <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-[var(--primary-cyan)]"></div>
+              </div>
+            }>
+              <GamesHub />
+            </Suspense>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

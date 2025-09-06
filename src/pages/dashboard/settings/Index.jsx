@@ -1,5 +1,5 @@
-import React, { useState } from 'react';
-import { useNavigate } from "react-router-dom";
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   FaUser, 
   FaShieldAlt, 
@@ -25,23 +25,30 @@ import {
   FaTimes
 } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
-// import addNotification from 'react-push-notification';
+import addNotification from 'react-push-notification';
 
-export default function Settings() {
-  const { handleLogOut } = useAuth()
-  const [darkMode, setDarkMode] = useState(true);
+export default function Settings({onClose}) {
+  const { user, handleLogOut, preferences, updatePreferences } = useAuth();
+  const navigate = useNavigate();
+  
+  const [privacy, setPrivacy] = useState({
+    showOnline: preferences?.showOnline !== false,
+    showDistance: preferences?.showDistance !== false,
+    showAge: preferences?.showAge !== false
+  });
+
+  // Update local state when preferences change
+  useEffect(() => {
+    setPrivacy({
+      showOnline: preferences?.showOnline !== false,
+      showDistance: preferences?.showDistance !== false,
+      showAge: preferences?.showAge !== false
+    });
+  }, [preferences]);
   const [notifications, setNotifications] = useState({
     push: true,
     email: false,
-    messages: true,
-    matches: true,
-    likes: false
-  });
-  const [privacy, setPrivacy] = useState({
-    showOnline: true,
-    showDistance: true,
-    showAge: true,
-    incognito: false
+    matches: true
   });
   
 
@@ -60,8 +67,7 @@ export default function Settings() {
       icon: FaUser,
       color: "var(--primary-blue)",
       items: [
-        { id: "edit-profile", label: "Edit Profile", icon: FaUser, action: () => console.log("Edit Profile") },
-        { id: "photos", label: "Manage Photos", icon: FaCamera, action: () => console.log("Manage Photos") },
+        { id: "edit-profile", label: "Edit Profile", icon: FaUser, action: () => navigate('/settings/edit-profile') },
         { id: "verification", label: "Profile Verification", icon: FaShieldAlt, badge: "New", action: () => console.log("Verification") }
       ]
     },
@@ -70,9 +76,17 @@ export default function Settings() {
       icon: FaHeart,
       color: "var(--accent-pink)",
       items: [
-        { id: "age-range", label: "Age Range", icon: FaHeart, subtitle: "18 - 35", action: () => console.log("Age Range") },
-        { id: "distance", label: "Maximum Distance", icon: FaMapMarkerAlt, subtitle: "50 km", action: () => console.log("Distance") },
-        { id: "interests", label: "Interests & Hobbies", icon: FaHeart, action: () => console.log("Interests") }
+        { id: "age-range", label: "Age Range", icon: FaHeart, subtitle: "18 - 35", action: () => navigate('/settings/age-range') },
+        { 
+          id: "distance", 
+          label: "Location & Distance", 
+          icon: FaMapMarkerAlt, 
+          subtitle: preferences?.showDistance 
+            ? `${preferences?.distance || 50} ${preferences?.unit || 'km'}${preferences?.city ? ` • ${preferences.city}` : ''}` 
+            : 'Hidden', 
+          action: () => navigate('/settings/max-distance') 
+        },
+        { id: "interests", label: "Interests & Hobbies", icon: FaHeart, action: () => navigate('/settings/interests') }
       ]
     },
     {
@@ -86,7 +100,10 @@ export default function Settings() {
           icon: FaEye, 
           toggle: true, 
           value: privacy.showOnline,
-          onChange: (val) => setPrivacy(prev => ({...prev, showOnline: val}))
+          onChange: (val) => {
+            setPrivacy(prev => ({...prev, showOnline: val}));
+            updatePreferences({ showOnline: val });
+          }
         },
         { 
           id: "show-distance", 
@@ -94,18 +111,12 @@ export default function Settings() {
           icon: FaMapMarkerAlt, 
           toggle: true, 
           value: privacy.showDistance,
-          onChange: (val) => setPrivacy(prev => ({...prev, showDistance: val}))
+          onChange: (val) => {
+            setPrivacy(prev => ({...prev, showDistance: val}));
+            updatePreferences({ showDistance: val });
+          }
         },
-        { 
-          id: "incognito", 
-          label: "Incognito Mode", 
-          icon: FaUserSecret, 
-          toggle: true, 
-          value: privacy.incognito,
-          onChange: (val) => setPrivacy(prev => ({...prev, incognito: val}))
-        },
-        { id: "blocked-users", label: "Blocked Users", icon: FaUserSecret, action: () => console.log("Blocked Users") },
-        { id: "report-safety", label: "Report & Safety", icon: FaExclamationTriangle, action: () => console.log("Report Safety") }
+        { id: "blocked-users", label: "Blocked Users", icon: FaUserSecret, action: () => navigate('/settings/blocked-users') }
       ]
     },
     {
@@ -130,14 +141,6 @@ export default function Settings() {
           onChange: (val) => setNotifications(prev => ({...prev, email: val}))
         },
         { 
-          id: "message-alerts", 
-          label: "Message Alerts", 
-          icon: FaVolumeUp, 
-          toggle: true, 
-          value: notifications.messages,
-          onChange: (val) => setNotifications(prev => ({...prev, messages: val}))
-        },
-        { 
           id: "match-alerts", 
           label: "New Match Alerts", 
           icon: FaHeart, 
@@ -152,37 +155,19 @@ export default function Settings() {
       icon: FaLock,
       color: "var(--primary-indigo)",
       items: [
-        { id: "change-email", label: "Change Email", icon: FaEnvelope, subtitle: "your@email.com", action: () => console.log("Change Email") },
-        { id: "change-phone", label: "Change Phone", icon: FaPhone, subtitle: "+1 (555) 123-4567", action: () => buttonClick("Change Phone") },
-        { id: "change-password", label: "Change Password", icon: FaLock, action: () => console.log("Change Password") },
-        { id: "subscription", label: "Subscription & Billing", icon: FaHeart, subtitle: "Premium Plan", action: () => console.log("Subscription") }
-      ]
-    },
-    {
-      title: "App Preferences",
-      icon: FaPalette,
-      color: "var(--primary-cyan)",
-      items: [
-        { 
-          id: "dark-mode", 
-          label: "Dark Mode", 
-          icon: darkMode ? FaMoon : FaSun, 
-          toggle: true, 
-          value: darkMode,
-          onChange: setDarkMode
-        },
-        { id: "language", label: "Language", icon: FaGlobe, subtitle: "English", action: () => console.log("Language") }
+        { id: "change-email", label: "Change Email", icon: FaEnvelope, subtitle: user?.email || "Set your email", action: () => navigate('/settings/change-email') },
+        { id: "change-password", label: "Change Password", icon: FaLock, action: () => navigate('/settings/change-password') }
       ]
     },
     {
       title: "Help & Support",
       icon: FaQuestionCircle,
-      color: "var(--accent-green)",
+      color: "var(--accent-pink)",
       items: [
-        { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => console.log("Help Center") },
-        { id: "contact-us", label: "Contact Support", icon: Mail, action: () => console.log("Contact Support") },
-        { id: "feedback", label: "Send Feedback", icon: Heart, action: () => console.log("Feedback") },
-        { id: "about", label: "About Love Meet", icon: Info, action: () => console.log("About") }
+        { id: "help-center", label: "Help Center", icon: FaQuestionCircle, action: () => console.log("Help Center") },
+        { id: "contact-support", label: "Contact Support", icon: FaEnvelope, action: () => console.log("Contact Support") },
+        { id: "feedback", label: "Send Feedback", icon: FaHeart, action: () => console.log("Send Feedback") },
+        { id: "about", label: "About Love Meet", icon: FaInfoCircle, action: () => console.log("About Love Meet") }
       ]
     }
   ];
@@ -284,24 +269,35 @@ export default function Settings() {
             <div className="relative">
               <div className="w-16 h-16 rounded-full overflow-hidden border-3 border-[var(--primary-cyan)]">
                 <img 
-                  src="/assets/default-profile.jpg" 
+                  src="/assets/male.jpg" 
                   alt="Your Profile"
                   className="w-full h-full object-cover"
                 />
               </div>
-              <div className="absolute -bottom-1 -right-1 w-5 h-5 bg-[var(--accent-green)] border-2 border-[var(--bg-primary)] rounded-full animate-pulse" />
+              <div 
+          className={`absolute -bottom-1 -right-1 w-5 h-5 border-2 border-[var(--bg-primary)] rounded-full ${
+            privacy.showOnline 
+              ? 'bg-[var(--accent-green)] animate-pulse' 
+              : 'bg-gray-500'
+          }`} 
+        />
             </div>
             <div className="flex-1">
               <h3 className="text-white font-bold text-lg">John Doe</h3>
-              <p className="text-[var(--text-secondary)] text-sm">@johndoe • Premium Member</p>
-              <div className="flex items-center space-x-2 mt-1">
-                <div className="w-2 h-2 bg-[var(--accent-green)] rounded-full"></div>
-                <span className="text-[var(--accent-green)] text-xs font-medium">Active now</span>
-              </div>
+              
+              {privacy.showOnline ? (
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-2 h-2 bg-[var(--accent-green)] rounded-full"></div>
+                  <span className="text-[var(--accent-green)] text-xs font-medium">Active now</span>
+                </div>
+              ) : (
+                <div className="flex items-center space-x-2 mt-1">
+                  <div className="w-2 h-2 bg-gray-500 rounded-full"></div>
+                  <span className="text-gray-400 text-xs font-medium">Offline</span>
+                </div>
+              )}
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gradient-accent">4.9</div>
-              <div className="text-[var(--text-muted)] text-xs">Rating</div>
             </div>
           </div>
         </div>

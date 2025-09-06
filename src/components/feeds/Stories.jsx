@@ -14,24 +14,24 @@ const formatTimeAgo = (timestamp) => {
 
 // Fake stories for testing
 const storiesData = [
-  {
-    id: 1,
-    username: "alex",
-    createdAt: Date.now() - 1000 * 60 * 5,
-    slides: [
-      { type: "image", url: "https://picsum.photos/400/700?random=1", caption: "Chillin' outside" },
-      { type: "image", url: "https://picsum.photos/400/700?random=2", caption: "Another shot" }
-    ]
-  },
-  {
-    id: 2,
-    username: "maria",
-    createdAt: Date.now() - 1000 * 60 * 60,
-    slides: [
-      { type: "image", url: "https://picsum.photos/400/700?random=3", caption: "Coffee time" },
-      { type: "image", url: "https://picsum.photos/400/700?random=4", caption: "Evening vibes" }
-    ]
-  }
+  {
+    id: 1,
+    username: "alex",
+    createdAt: Date.now() - 1000 * 60 * 5,
+    slides: [
+      { type: "image", url: "/gallery/DSC_7975.jpeg" },
+      { type: "image", url: "/gallery/DSC_9900.jpeg" }
+    ]
+  },
+  {
+    id: 2,
+    username: "maria",
+    createdAt: Date.now() - 1000 * 60 * 60,
+    slides: [
+      { type: "image", url: "/gallery/IMG-20241027-WA0044.jpg" },
+      { type: "image", url: "/gallery/photo_2024-12-05_00-48-44.jpg" }
+    ]
+  }
 ];
 
 // Reply Sent Modal
