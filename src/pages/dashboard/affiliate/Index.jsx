@@ -1,33 +1,54 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import { FaArrowLeft, FaWallet, FaLink, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaDollarSign } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { useAffiliate } from '../../../context/AffiliateContext';
-
-const referredUsers = [
-  { id: 1, name: 'John Doe', avatar: '/assets/default-profile.jpg', earnings: 5000, plan: 'Premium', date: '2023-10-26' },
-  { id: 2, name: 'Jane Smith', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-25' },
-  { id: 3, name: 'Bob Johnson', avatar: '/assets/default-profile.jpg', earnings: 10000, plan: 'Gold', date: '2023-10-24' },
-  { id: 4, name: 'Alice Williams', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-23' },
-  { id: 5, name: 'Chris Brown', avatar: '/assets/default-profile.jpg', earnings: 7500, plan: 'Premium', date: '2023-10-22' },
-  { id: 6, name: 'Emily Jones', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-21' },
-  { id: 7, name: 'Michael Davis', avatar: '/assets/default-profile.jpg', earnings: 12000, plan: 'Gold', date: '2023-10-20' },
-  { id: 8, name: 'Sarah Miller', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-19' },
-  { id: 9, name: 'David Wilson', avatar: '/assets/default-profile.jpg', earnings: 3000, plan: 'Silver', date: '2023-10-18' },
-  { id: 10, name: 'Laura Taylor', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-17' },
-];
-
-
+import { getUserReferrals } from '../../../api/affiliate';
+import { toast } from 'sonner';
 
 const AffiliateDashboard = () => {
   const { user } = useAuth();
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(1);
   const [usersPerPage] = useState(5);
-  const { isUserAffiliate } = useAffiliate();
+  const { isUserAffiliate, loading: affiliateLoading } = useAffiliate();
+  
+  // Referrals data state
+  const [referrals, setReferrals] = useState([]);
+  const [referralsLoading, setReferralsLoading] = useState(false);
+  const [totalReferrals, setTotalReferrals] = useState(0);
+  const [totalPages, setTotalPages] = useState(1);
 
   const [isCopied, setIsCopied] = useState(false);
   const affiliateLink = `https://love-meet.com/ref/${user?._id}`;
+
+  // Fetch referrals data when user is affiliate
+  useEffect(() => {
+    const fetchReferrals = async () => {
+      if (!user?._id || !isUserAffiliate) {
+        setReferrals([]);
+        return;
+      }
+
+      setReferralsLoading(true);
+      try {
+        const response = await getUserReferrals(user, currentPage, usersPerPage);  // Pass entire user object
+        
+        // Adjust based on actual API response structure
+        setReferrals(response.referrals || response.data || response || []);
+        setTotalReferrals(response.totalCount || response.total || 0);
+        setTotalPages(response.totalPages || Math.ceil((response.totalCount || 0) / usersPerPage));
+      } catch (error) {
+        console.error('Failed to fetch referrals:', error);
+        toast.error('Failed to load referrals data');
+        setReferrals([]);
+      } finally {
+        setReferralsLoading(false);
+      }
+    };
+
+    fetchReferrals();
+  }, [user?._id, isUserAffiliate, currentPage, usersPerPage]);
 
   const handleCopy = () => {
       navigator.clipboard.writeText(affiliateLink);
@@ -36,13 +57,6 @@ const AffiliateDashboard = () => {
           setIsCopied(false);
       }, 2000);
   };
-
-
-
-  // Get current users
-  const indexOfLastUser = currentPage * usersPerPage;
-  const indexOfFirstUser = indexOfLastUser - usersPerPage;
-  const currentUsers = referredUsers.slice(indexOfFirstUser, indexOfLastUser);
 
   // Change page
   const paginate = (pageNumber) => setCurrentPage(pageNumber);
@@ -60,7 +74,12 @@ const AffiliateDashboard = () => {
 
       {/* Scrollable Body */}
       <div className="overflow-y-auto p-4 pb-20">
-        {isUserAffiliate ? (
+        {affiliateLoading ? (
+          <div className="flex justify-center items-center py-20">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-white"></div>
+            <span className="ml-3 text-lg">Loading affiliate data...</span>
+          </div>
+        ) : isUserAffiliate ? (
           // Existing Affiliate Dashboard
           <>
             <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
@@ -104,63 +123,87 @@ const AffiliateDashboard = () => {
         
             <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-4">
               <h2 className="text-2xl font-bold mb-4 text-[var(--primary-cyan)]">Referred Users</h2>
-              <div className="overflow-x-auto">
-                <table className="w-full text-left table-auto">
-                  <thead>
-                    <tr className="border-b border-white/10">
-                      <th className="p-2 whitespace-nowrap">User</th>
-                      <th className="p-2 whitespace-nowrap">Earnings</th>
-                      <th className="p-2 whitespace-nowrap">Plan</th>
-                      <th className="p-2 whitespace-nowrap">Date</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {currentUsers.map((user) => (
-                      <tr key={user.id} className="border-b border-white/10 last:border-b-0">
-                        <td className="p-2 whitespace-nowrap flex items-center space-x-2">
-                          <img src={user.avatar} alt={user.name} className="w-6 h-6 rounded-full" />
-                          <span>{user.name}</span>
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          {user.plan ? (
-                            <span className="text-green-400">₦{user.earnings.toLocaleString()}</span>
-                          ) : (
-                            <span className="text-gray-400">no plan</span>
-                          )}
-                        </td>
-                        <td className="p-2 whitespace-nowrap">
-                          {user.plan ? (
-                            <span className="bg-[var(--accent-pink)] text-white text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
-                              {user.plan}
-                            </span>
-                          ) : (
-                            <span className="text-gray-400">-</span>
-                          )}
-                        </td>
-                        <td className="p-2 whitespace-nowrap text-gray-400">{user.date}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
-              </div>
-              {/* Pagination */}
-              <div className="flex justify-between items-center mt-4">
-                <button 
-                  onClick={() => paginate(currentPage - 1)} 
-                  disabled={currentPage === 1}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Previous
-                </button>
-                <span>Page {currentPage} of {Math.ceil(referredUsers.length / usersPerPage)}</span>
-                <button 
-                  onClick={() => paginate(currentPage + 1)} 
-                  disabled={currentPage === Math.ceil(referredUsers.length / usersPerPage)}
-                  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
-                >
-                  Next
-                </button>
-              </div>
+              
+              {referralsLoading ? (
+                <div className="flex justify-center items-center py-8">
+                  <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-white"></div>
+                  <span className="ml-2">Loading referrals...</span>
+                </div>
+              ) : referrals.length > 0 ? (
+                <>
+                  <div className="overflow-x-auto">
+                    <table className="w-full text-left table-auto">
+                      <thead>
+                        <tr className="border-b border-white/10">
+                          <th className="p-2 whitespace-nowrap">User</th>
+                          <th className="p-2 whitespace-nowrap">Earnings</th>
+                          <th className="p-2 whitespace-nowrap">Plan</th>
+                          <th className="p-2 whitespace-nowrap">Date</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {referrals.map((referral, index) => (
+                          <tr key={referral._id || referral.id || index} className="border-b border-white/10 last:border-b-0">
+                            <td className="p-2 whitespace-nowrap flex items-center space-x-2">
+                              <img 
+                                src={referral.picture || referral.avatar || '/assets/default-profile.jpg'} 
+                                alt={referral.username || referral.name || 'User'} 
+                                className="w-6 h-6 rounded-full" 
+                              />
+                              <span>{referral.username || referral.name || 'Unknown User'}</span>
+                            </td>
+                            <td className="p-2 whitespace-nowrap">
+                              {referral.subscriptionPlan || referral.plan ? (
+                                <span className="text-green-400">₦{(referral.commission || referral.earnings || 0).toLocaleString()}</span>
+                              ) : (
+                                <span className="text-gray-400">no plan</span>
+                              )}
+                            </td>
+                            <td className="p-2 whitespace-nowrap">
+                              {referral.subscriptionPlan?.planName || referral.plan ? (
+                                <span className="bg-[var(--accent-pink)] text-white text-xs font-semibold mr-2 px-2.5 py-0.5 rounded-full">
+                                  {referral.subscriptionPlan?.planName || referral.plan}
+                                </span>
+                              ) : (
+                                <span className="text-gray-400">-</span>
+                              )}
+                            </td>
+                            <td className="p-2 whitespace-nowrap text-gray-400">
+                              {referral.dateJoined || referral.date ? 
+                                new Date(referral.dateJoined || referral.date).toLocaleDateString() : 
+                                '-'
+                              }
+                            </td>
+                          </tr>
+                        ))}
+                      </tbody>
+                    </table>
+                  </div>
+                  {/* Pagination */}
+                  <div className="flex justify-between items-center mt-4">
+                    <button 
+                      onClick={() => paginate(currentPage - 1)} 
+                      disabled={currentPage === 1}
+                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Previous
+                    </button>
+                    <span>Page {currentPage} of {totalPages}</span>
+                    <button 
+                      onClick={() => paginate(currentPage + 1)} 
+                      disabled={currentPage === totalPages}
+                      className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+                    >
+                      Next
+                    </button>
+                  </div>
+                </>
+              ) : (
+                <div className="text-center py-8">
+                  <FaUsers className="text-4xl text-gray-400 mx-auto mb-4" />
+                  <p className="text-gray-400">No referrals yet. Share your affiliate link to start earning!</p>
+                </div>
+              )}
             </div>
           </>
         ) : (

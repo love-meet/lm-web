@@ -1,5 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useAffiliate } from '../../../context/AffiliateContext';
+import { toast } from 'sonner';
 import { 
   FaArrowLeft, 
   FaUser, 
@@ -13,6 +15,7 @@ import {
 
 const CreateAffiliate = () => {
   const navigate = useNavigate();
+  const { refreshAffiliateStatus } = useAffiliate();
   
   const [formData, setFormData] = useState({
     firstName: '',
@@ -74,14 +77,21 @@ const CreateAffiliate = () => {
     setIsSubmitting(true);
     
     try {
-      // Simulate API call
+      // TODO: Replace with actual API call to POST /api/affiliate/apply
+      // const response = await api.post('/affiliate/apply', formData);
+      
+      // Simulate API call for now
       await new Promise(resolve => setTimeout(resolve, 2000));
       
-      alert('Affiliate application submitted successfully! You will receive an email confirmation within 24 hours.');
+      toast.success('Affiliate application submitted successfully! You will receive an email confirmation within 24 hours.');
+      
+      // Refresh affiliate status to check if user is now an affiliate
+      await refreshAffiliateStatus();
+      
       navigate('/affiliate/dashboard');
     } catch (error) {
       console.error('Submission error:', error);
-      alert('Failed to submit application. Please try again.');
+      toast.error('Failed to submit application. Please try again.');
     } finally {
       setIsSubmitting(false);
     }

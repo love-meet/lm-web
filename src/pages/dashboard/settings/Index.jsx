@@ -1,44 +1,37 @@
 import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { 
   User, 
   Shield, 
   Bell, 
   Heart, 
   Lock, 
-  Globe, 
-  HelpCircle, 
   LogOut,
   ChevronRight,
-  Camera,
   Mail,
-  Phone,
   MapPin,
-  Palette,
-  Moon,
-  Sun,
-  Volume2,
   Eye,
   UserX,
-  AlertTriangle,
+  HelpCircle,
+  MessageCircle,
+  MessageSquare,
   Info
 } from 'lucide-react';
 import { useAuth } from '../../../context/AuthContext';
 
 export default function Settings() {
-  const { handleLogOut } = useAuth()
-  const [darkMode, setDarkMode] = useState(true);
-  const [notifications, setNotifications] = useState({
-    push: true,
-    email: false,
-    messages: true,
-    matches: true,
-    likes: false
-  });
+  const { handleLogOut } = useAuth();
+  const navigate = useNavigate();
+  
   const [privacy, setPrivacy] = useState({
     showOnline: true,
     showDistance: true,
-    showAge: true,
-    incognito: false
+    showAge: true
+  });
+  const [notifications, setNotifications] = useState({
+    push: true,
+    email: false,
+    matches: true
   });
 
   const settingsSections = [
@@ -47,8 +40,7 @@ export default function Settings() {
       icon: User,
       color: "var(--primary-blue)",
       items: [
-        { id: "edit-profile", label: "Edit Profile", icon: User, action: () => console.log("Edit Profile") },
-        { id: "photos", label: "Manage Photos", icon: Camera, action: () => console.log("Manage Photos") },
+        { id: "edit-profile", label: "Edit Profile", icon: User, action: () => navigate('/settings/edit-profile') },
         { id: "verification", label: "Profile Verification", icon: Shield, badge: "New", action: () => console.log("Verification") }
       ]
     },
@@ -57,9 +49,9 @@ export default function Settings() {
       icon: Heart,
       color: "var(--accent-pink)",
       items: [
-        { id: "age-range", label: "Age Range", icon: Heart, subtitle: "18 - 35", action: () => console.log("Age Range") },
-        { id: "distance", label: "Maximum Distance", icon: MapPin, subtitle: "50 km", action: () => console.log("Distance") },
-        { id: "interests", label: "Interests & Hobbies", icon: Heart, action: () => console.log("Interests") }
+        { id: "age-range", label: "Age Range", icon: Heart, subtitle: "18 - 35", action: () => navigate('/settings/age-range') },
+        { id: "distance", label: "Location & Distance", icon: MapPin, subtitle: "50 km", action: () => navigate('/settings/max-distance') },
+        { id: "interests", label: "Interests & Hobbies", icon: Heart, action: () => navigate('/settings/interests') }
       ]
     },
     {
@@ -83,16 +75,7 @@ export default function Settings() {
           value: privacy.showDistance,
           onChange: (val) => setPrivacy(prev => ({...prev, showDistance: val}))
         },
-        { 
-          id: "incognito", 
-          label: "Incognito Mode", 
-          icon: UserX, 
-          toggle: true, 
-          value: privacy.incognito,
-          onChange: (val) => setPrivacy(prev => ({...prev, incognito: val}))
-        },
-        { id: "blocked-users", label: "Blocked Users", icon: UserX, action: () => console.log("Blocked Users") },
-        { id: "report-safety", label: "Report & Safety", icon: AlertTriangle, action: () => console.log("Report Safety") }
+        { id: "blocked-users", label: "Blocked Users", icon: UserX, action: () => navigate('/settings/blocked-users') }
       ]
     },
     {
@@ -117,14 +100,6 @@ export default function Settings() {
           onChange: (val) => setNotifications(prev => ({...prev, email: val}))
         },
         { 
-          id: "message-alerts", 
-          label: "Message Alerts", 
-          icon: Volume2, 
-          toggle: true, 
-          value: notifications.messages,
-          onChange: (val) => setNotifications(prev => ({...prev, messages: val}))
-        },
-        { 
           id: "match-alerts", 
           label: "New Match Alerts", 
           icon: Heart, 
@@ -139,37 +114,19 @@ export default function Settings() {
       icon: Lock,
       color: "var(--primary-indigo)",
       items: [
-        { id: "change-email", label: "Change Email", icon: Mail, subtitle: "your@email.com", action: () => console.log("Change Email") },
-        { id: "change-phone", label: "Change Phone", icon: Phone, subtitle: "+1 (555) 123-4567", action: () => console.log("Change Phone") },
-        { id: "change-password", label: "Change Password", icon: Lock, action: () => console.log("Change Password") },
-        { id: "subscription", label: "Subscription & Billing", icon: Heart, subtitle: "Premium Plan", action: () => console.log("Subscription") }
-      ]
-    },
-    {
-      title: "App Preferences",
-      icon: Palette,
-      color: "var(--primary-cyan)",
-      items: [
-        { 
-          id: "dark-mode", 
-          label: "Dark Mode", 
-          icon: darkMode ? Moon : Sun, 
-          toggle: true, 
-          value: darkMode,
-          onChange: setDarkMode
-        },
-        { id: "language", label: "Language", icon: Globe, subtitle: "English", action: () => console.log("Language") }
+        { id: "change-email", label: "Change Email", icon: Mail, subtitle: "your@email.com", action: () => navigate('/settings/change-email') },
+        { id: "change-password", label: "Change Password", icon: Lock, action: () => navigate('/settings/change-password') }
       ]
     },
     {
       title: "Help & Support",
       icon: HelpCircle,
-      color: "var(--accent-green)",
+      color: "var(--accent-pink)",
       items: [
         { id: "help-center", label: "Help Center", icon: HelpCircle, action: () => console.log("Help Center") },
-        { id: "contact-us", label: "Contact Support", icon: Mail, action: () => console.log("Contact Support") },
-        { id: "feedback", label: "Send Feedback", icon: Heart, action: () => console.log("Feedback") },
-        { id: "about", label: "About Love Meet", icon: Info, action: () => console.log("About") }
+        { id: "contact-support", label: "Contact Support", icon: MessageCircle, action: () => console.log("Contact Support") },
+        { id: "feedback", label: "Send Feedback", icon: MessageSquare, action: () => console.log("Send Feedback") },
+        { id: "about", label: "About Love Meet", icon: Info, action: () => console.log("About Love Meet") }
       ]
     }
   ];
@@ -313,15 +270,13 @@ export default function Settings() {
             </div>
             <div className="flex-1">
               <h3 className="text-white font-bold text-lg">John Doe</h3>
-              <p className="text-[var(--text-secondary)] text-sm">@johndoe • Premium Member</p>
+              
               <div className="flex items-center space-x-2 mt-1">
                 <div className="w-2 h-2 bg-[var(--accent-green)] rounded-full"></div>
                 <span className="text-[var(--accent-green)] text-xs font-medium">Active now</span>
               </div>
             </div>
             <div className="text-center">
-              <div className="text-2xl font-bold text-gradient-accent">4.9</div>
-              <div className="text-[var(--text-muted)] text-xs">Rating</div>
             </div>
           </div>
         </div>

@@ -18,6 +18,17 @@ const Login = lazy(() => import('./pages//auth/Login'));
 const Mines = lazy(() => import('./games/mines/Mines'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
 
+// Settings sub-pages
+const EditProfile = lazy(() => import('./pages/dashboard/settings/EditProfile'));
+const AgeRange = lazy(() => import('./pages/dashboard/settings/AgeRange'));
+const MaxDistance = lazy(() => import('./pages/dashboard/settings/MaxDistance'));
+const Interests = lazy(() => import('./pages/dashboard/settings/Interests'));
+const BlockedUsers = lazy(() => import('./pages/dashboard/settings/BlockedUsers'));
+const ChangeEmail = lazy(() => import('./pages/dashboard/settings/ChangeEmail'));
+const ChangePassword = lazy(() => import('./pages/dashboard/settings/ChangePassword'));
+
+
+
 // Protected Route - Lazy loaded
 const ProtectedRoute = lazy(() => import('./components/ProtectedRoute'));
 
@@ -50,6 +61,57 @@ export const routes = [
     showInNav: true,
     protected: false,
   },
+  {
+    path: '/settings/edit-profile',
+    element: <ProtectedRoute> <EditProfile /> </ProtectedRoute>,
+    name: 'Edit Profile',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/settings/age-range',
+    element: <ProtectedRoute> <AgeRange /> </ProtectedRoute>,
+    name: 'Age Range',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/settings/max-distance',
+    element: <ProtectedRoute> <MaxDistance /> </ProtectedRoute>,
+    name: 'Maximum Distance',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/settings/interests',
+    element: <ProtectedRoute> <Interests /> </ProtectedRoute>,
+    name: 'Interests & Hobbies',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/settings/blocked-users',
+    element: <ProtectedRoute> <BlockedUsers /> </ProtectedRoute>,
+    name: 'Blocked Users',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/settings/change-email',
+    element: <ProtectedRoute> <ChangeEmail /> </ProtectedRoute>,
+    name: 'Change Email',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/settings/change-password',
+    element: <ProtectedRoute> <ChangePassword /> </ProtectedRoute>,
+    name: 'Change Password',
+    showInNav: false,
+    protected: false,
+  },
+
+
   {
     path: '/chats',
     element: <ProtectedRoute> <Chats /> </ProtectedRoute> ,
