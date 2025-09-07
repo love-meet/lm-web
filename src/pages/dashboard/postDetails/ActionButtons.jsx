@@ -1,36 +1,27 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Heart, MessageCircle, Send } from 'lucide-react';
-import api from '../../../api/axios';
 import { useAuth } from '../../../context/AuthContext';
 import { useNavigate } from 'react-router-dom';
+import { usePost } from '../../../context/PostContext';
 
-export default function ActionButtons({ post }) {
+export default function ActionButtons({ postId }) {
   const { user } = useAuth();
+  const { toggleLike, posts } = usePost();
   const activeUserId = user?.userId;
   const navigate = useNavigate();
 
-  // Check if the active user has liked the post
-  const initialLiked = Array.isArray(post.likedBy) && post.likedBy.some(u => u.userId === activeUserId);
-  const [liked, setLiked] = useState(initialLiked);
-  const [likes, setLikes] = useState(post.likes);
+  const post = posts.find(p => p.postId === postId); // Find the post from context
 
-  const handleLike = async (e) => {
+  if (!post) {
+    return null; // Or handle the case where post is not found
+  }
+
+  const liked = Array.isArray(post.likedBy) && post.likedBy.some(u => u.userId === activeUserId);
+  const likes = post.likes;
+
+  const handleLike = (e) => {
     e.stopPropagation();
-    setLiked(prev => !prev);
-    setLikes(prev => liked ? prev - 1 : prev + 1);
-
-    try {
-      const res = await api.put(`/post/toggle-like/${post.postId}`, {
-        userId: activeUserId,
-        username: user?.username,
-        picture: user?.picture || "/assets/male.jpg"
-      });
-      setLiked(res.liked);
-      setLikes(res.likes);
-    } catch (err) {
-      setLiked(prev => !prev);
-      setLikes(prev => liked ? prev + 1 : prev - 1);
-    }
+    toggleLike(post.postId);
   };
 
   const totalComments = (post.comments || []).reduce((acc, comment) => {

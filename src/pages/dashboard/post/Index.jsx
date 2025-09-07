@@ -1,8 +1,8 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useContext } from 'react';
 import { FaImage, FaTimes, FaVideo, FaUpload } from 'react-icons/fa';
 import { Toaster, toast } from 'sonner';
 import { useNavigate } from 'react-router-dom';
-import api from '../../../api/axios';
+import { PostContext } from '../../../context/PostContext';
 import PostTab from './PostTab';
 import StoryTab from './StoryTab';
 import FileUploadButton from './FileUploadButton';
@@ -16,6 +16,7 @@ export default function Post() {
   const [previewUrls, setPreviewUrls] = useState([]);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const { createPost } = useContext(PostContext);
 
   // Video duration validation helper
   const checkVideoDuration = (file) => {
@@ -129,18 +130,10 @@ export default function Post() {
     setIsLoading(true);
 
     try {
-      // Convert all files to base64 strings
-      console.log('Converting files to base64 strings...');
       const fileStrings = await Promise.all(
-        selectedFiles.map(async (fileObj, index) => {
+        selectedFiles.map(async (fileObj) => {
           if (fileObj && fileObj.file && fileObj.file instanceof File) {
             const base64String = await fileToBase64(fileObj.file);
-            console.log(`Converting file ${index} to base64:`, {
-              name: fileObj.file.name,
-              size: fileObj.file.size,
-              type: fileObj.file.type,
-              base64Preview: base64String.substring(0, 100) + '...'
-            });
             return {
               name: fileObj.file.name,
               size: fileObj.file.size,
@@ -150,13 +143,11 @@ export default function Post() {
               fileType: fileObj.type
             };
           } else {
-            console.error(`Invalid file at index ${index}:`, fileObj);
             return null;
           }
         })
       );
 
-      // Filter out invalid files
       const validFileStrings = fileStrings.filter(file => file !== null);
 
       if (validFileStrings.length === 0) {
@@ -165,52 +156,27 @@ export default function Post() {
         return;
       }
 
-      // Log the inputs before sending
-      console.log('Creating post with data:', {
-        postType: activeTab,
-        text: postText,
-        textLength: postText?.length || 0,
-        fileCount: validFileStrings.length,
-        fileDetails: validFileStrings.map(f => ({
-          name: f.name,
-          size: f.size,
-          type: f.type,
-          dataLength: f.data.length
-        }))
-      });
-
-      // Prepare JSON payload instead of FormData
       const postData = {
         postType: activeTab,
         text: postText || '',
         media: validFileStrings
       };
 
-      console.log('Sending JSON payload to /post/create...');
-      console.log('Payload size:', JSON.stringify(postData).length, 'characters');
-
-      const response = await api.post('/post/create', postData, {
-        headers: {
-          'Content-Type': 'application/json'
+      createPost(postData, (response) => {
+        setIsLoading(false);
+        if (response.error) {
+          toast.error(response.error);
+        } else {
+          toast.success(`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} created successfully!`);
+          setPostText('');
+          setSelectedFiles([]);
+          setPreviewUrls([]);
         }
       });
       
-      console.log('Post created successfully:', response.data);
-      toast.success(`${activeTab.charAt(0).toUpperCase() + activeTab.slice(1)} created successfully!`);
-      
-      // Clear form after successful creation
-      setPostText('');
-      setSelectedFiles([]);
-      setPreviewUrls([]);
-      
     } catch (error) {
-      console.error('Error creating post:', error);
-      console.error('Error response:', error.response?.data);
-      console.error('Error status:', error.response?.status);
-      console.error('Error headers:', error.response?.headers);
-      toast.error(error?.response?.data?.message || `Error creating ${activeTab}. Please try again.`);
-    } finally {
       setIsLoading(false);
+      toast.error(`Error creating ${activeTab}. Please try again.`);
     }
   };
 
@@ -308,3 +274,4 @@ export default function Post() {
     </div>
   );
 }
+

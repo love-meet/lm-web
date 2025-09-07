@@ -1,8 +1,8 @@
-import React, { useRef, useState, useEffect } from 'react';
+import React, { useRef, useState, useEffect, useContext } from 'react';
 import { Heart, MessageCircle, Send, Images } from 'lucide-react';
 import { FaUser, FaLeaf, FaSeedling, FaFan, FaTree, FaWater, FaSun, FaStar, FaGem } from 'react-icons/fa';
-import api from "../../api/axios";
 import { useAuth } from "../../context/AuthContext";
+import { PostContext } from '../../context/PostContext';
 
 const planIcons = {
   'Free': FaUser,
@@ -30,15 +30,14 @@ const planColors = {
 
 const PostCard = ({ post, loading, onClick }) => {
   const { user } = useAuth();
+  const { toggleLike } = useContext(PostContext);
   const activeUserId = user?.userId;
-
   const videoRef = useRef(null);
   const [videoLoading, setVideoLoading] = useState(true);
   const [showPlay, setShowPlay] = useState(true);
 
-  const initialLiked = Array.isArray(post.likedBy) && post.likedBy.some(u => u.userId === activeUserId);
-  const [liked, setLiked] = useState(initialLiked);
-  const [likes, setLikes] = useState(post.likes);
+  const liked = Array.isArray(post.likedBy) && post.likedBy.some(u => u.userId === activeUserId);
+  
 
   useEffect(() => {
     if (videoRef.current) {
@@ -60,22 +59,8 @@ const PostCard = ({ post, loading, onClick }) => {
     setVideoLoading(false);
   };
 
-  const handleLike = async () => {
-    setLiked(prev => !prev);
-    setLikes(prev => liked ? prev - 1 : prev + 1);
-
-    try {
-      const res = await api.put(`/post/toggle-like/${post.postId}`, {
-        userId: activeUserId,
-        username: user?.username,
-        picture: user?.picture || "/assets/male.jpg"
-      });
-      setLiked(res.liked);
-      setLikes(res.likes);
-    } catch (err) {
-      setLiked(prev => !prev);
-      setLikes(prev => liked ? prev + 1 : prev - 1);
-    }
+  const handleLike = () => {
+    toggleLike(post.postId);
   };
 
   const getTimeAgo = (timestamp) => {
@@ -104,7 +89,7 @@ const PostCard = ({ post, loading, onClick }) => {
           <div className="flex items-center space-x-3">
             <div className="w-10 h-10 rounded-full overflow-hidden border-2 border-[var(--primary-cyan)]">
               <img 
-                src={post.userAvatar || "/assets/male.jpg"} 
+                src={post?.user?.userAvatar || "/assets/male.jpg"} 
                 alt={post?.user?.username}
                 className="w-full h-full object-cover"
               />
@@ -210,14 +195,14 @@ const PostCard = ({ post, loading, onClick }) => {
               size={18} 
               className={`transition-all duration-300 ${liked ? 'fill-current scale-110' : ''}`}
             />
-            <span className="text-sm font-medium">{likes}</span>
+            <span className="text-sm font-medium">{post.likes}</span>
           </button>
           <button 
-            onClick={(e) => e.stopPropagation()}
+            onClick={onClick}
             className="flex items-center space-x-2 px-4 py-2 rounded-full text-[var(--text-muted)] hover:bg-white/10 hover:text-white transition-all duration-300"
           >
             <MessageCircle size={18} />
-            <span className="text-sm font-medium">{Array.isArray(post.comments) ? post.comments.length : post.comments || 0}</span>
+            <span className="text-sm font-medium">{post.comments ? post.comments.reduce((acc, comment) => acc + 1 + (comment.replies ? comment.replies.length : 0), 0) : 0}</span>
           </button>
           <button 
             onClick={(e) => e.stopPropagation()}

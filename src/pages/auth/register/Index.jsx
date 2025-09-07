@@ -88,7 +88,7 @@ export default function Register() {
       case 4:
         if (!formData.bio.trim()) errors.bio = 'Tell us about yourself! 📝';
         if (formData.hobbies.length < 3) errors.hobbies = 'Add at least 3 hobbies to help find your match! 🎯';
-        if (formData.interests.length < 3) errors.interests = 'Add at least 3 interests to connect with like-minded people! 💖';
+        if (formData.interests.length < 1) errors.interests = 'Add at least 3 interests to connect with like-minded people! 💖';
         break;
       case 5:
         // No validation needed for preferences
@@ -178,7 +178,7 @@ export default function Register() {
   return (
     <div className="min-h-screen w-full flex items-center justify-center fixed top-0 left-0 right-0 z-9989  inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] overflow-hidden ">
       <div className="relative z-10 w-full max-w-2xl mx-auto">
-        <div className="bg-black/30 backdrop-blur-xl w-screen h-screen rounded-2xl shadow-2xl p-8 border border-white/10">
+        <div className="bg-black/30 backdrop-blur-xl w-screen h-screen rounded-2xl shadow-2xl p-4 border border-white/10">
           <h1 className="text-3xl font-bold text-center mb-2 text-gradient-accent">💕 Join Love Meet 💕</h1>
           <p className="text-center text-text-muted mb-6">✨ Create your magical profile and let love find you! ✨</p>
           
@@ -206,7 +206,7 @@ export default function Register() {
               <button 
                 onClick={handleRegister} 
                 disabled={!isStepValid(5)}
-                className="px-6 py-2 rounded-full text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
+                className="px-2 py-4 rounded-full text-white bg-gradient-to-r from-green-400 to-blue-500 hover:from-green-500 hover:to-blue-600 disabled:opacity-50 disabled:cursor-not-allowed"
               >
                 💕 Find My Soulmate 💕
               </button>

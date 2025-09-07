@@ -6,7 +6,6 @@ import { useAffiliate } from '../../../context/AffiliateContext';
 import { getUserReferrals, getUserAffiliates } from '../../../api/admin';
 import { toast } from 'sonner';
 
-<<<<<<< HEAD
 const referredUsers = [
   { id: 1, name: 'John Doe', avatar: '/assets/default-profile.jpg', earnings: 5000, plan: 'Premium', date: '2023-10-26' },
   { id: 2, name: 'Jane Smith', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-25' },
@@ -20,10 +19,6 @@ const referredUsers = [
   { id: 10, name: 'Laura Taylor', avatar: '/assets/default-profile.jpg', earnings: 0, plan: null, date: '2023-10-17' },
 ];
 
-
-
-=======
->>>>>>> 1ed23aa7e4c024d21210bb90ff15029aa755d2eb
 const AffiliateDashboard = ({ onClose }) => {
   const { user } = useAuth();
   const navigate = useNavigate();

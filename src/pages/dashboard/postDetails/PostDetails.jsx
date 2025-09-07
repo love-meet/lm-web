@@ -170,7 +170,7 @@ export default function PostDetails() {
           <MediaSection post={post} />
           <div className="space-y-4">
            
-            <ActionButtons post={post} />
+            <ActionButtons postId={post.postId} />
           </div>
           <CommentSection comments={post.comments || []} post={post} postId={post.postId} />
         </div>

@@ -1,5 +1,6 @@
 import React from 'react';
 import InterestsSelector from './InterestsSelector';
+import HobbiesSelector from './HobbiesSelector';
 
 const Step4 = ({ formData, setFormData, validationErrors }) => (
   <div className="space-y-6 animate-fadeIn flex-1 relative z-10 overflow-y-auto scrollbar-hide h-[60vh] pb-10">
@@ -22,13 +23,21 @@ const Step4 = ({ formData, setFormData, validationErrors }) => (
         {validationErrors.bio && <p className="text-red-400 text-sm mt-1">{validationErrors.bio}</p>}
       </div>
       
-      <InterestsSelector
+      <HobbiesSelector
         label="🎨 Hobbies & Interests"
         selectedItems={formData.hobbies}
         onSelect={(newHobbies) => setFormData(prev => ({...prev, hobbies: newHobbies}))}
         minRequired={3}
         error={validationErrors.hobbies}
       />
+
+        <InterestsSelector
+          label="🎨 What kind relationship do you want ?"
+          selectedItems={formData.interests}
+          onSelect={(newInterest) => setFormData(prev => ({...prev, interests: newInterest}))}
+          minRequired={1}
+          error={validationErrors.interests}
+        />
       
       <div className="bg-gradient-to-r from-pink-500/10 to-purple-500/10 rounded-lg p-4 border border-pink-500/20">
         <p className="text-sm text-text-muted">

@@ -1,16 +1,12 @@
-import React, { useState, useEffect, useRef } from 'react';
+import React, { useContext, useEffect, useRef } from 'react';
 import { useNavigate } from 'react-router-dom';
 import PostCard from '../../../components/feeds/PostCard';
 import Stories from '../../../components/feeds/Stories';
-import api from "../../../api/axios"
-// import PageLoader from '../../../components/PageLoader';
 import PostCardLoader from '../../../components/feeds/PostCardLoader';
+import { PostContext } from '../../../context/PostContext';
 
 const FeedsPage = () => {
-  const [posts, setPosts] = useState([]);
-  const [page, setPage] = useState(1);
-  const [hasMore, setHasMore] = useState(true);
-  const [loading, setLoading] = useState(false);
+  const { posts, loading, pagination, fetchPosts, error } = useContext(PostContext);
   const navigate = useNavigate();
   const loaderRef = useRef(null);
 
@@ -18,32 +14,12 @@ const FeedsPage = () => {
     navigate(`/post/${postId}`);
   };
 
-  const fetchPosts = async (nextPage = page) => {
-    if (loading || !hasMore) return;
-    setLoading(true);
-    try {
-      const response = await api.get(`/post/get-feeds?page=${nextPage}`);
-      const newFeeds = response.feeds || [];
-      setPosts(newFeeds);
-      setHasMore(response.pagination.hasMore);
-      setPage(nextPage + 1);
-    } catch (error) {
-      console.log(error);
-    } finally {
-      setLoading(false);
-    }
-  };
-
   useEffect(() => {
-    fetchPosts(1);
-  }, []);
-
-  useEffect(() => {
-    if (!hasMore) return;
+    if (!pagination || !pagination.hasMore || loading) return;
     const observer = new IntersectionObserver(
       entries => {
-        if (entries[0].isIntersecting && hasMore && !loading) {
-          fetchPosts(page);
+        if (entries[0].isIntersecting) {
+          fetchPosts(pagination.page + 1);
         }
       },
       { threshold: 1 }
@@ -53,7 +29,7 @@ const FeedsPage = () => {
       if (loaderRef.current) observer.unobserve(loaderRef.current);
     };
 
-  }, [loaderRef.current, hasMore, loading, page]);
+  }, [loaderRef.current, pagination, loading]);
 
   return (
     <div className="relative min-h-screen overflow-hidden">
@@ -104,7 +80,7 @@ const FeedsPage = () => {
      
           {posts.map((post, index) => (
             <div 
-              key={post.postId || post.id}
+              key={index}
               className="opacity-0 animate-fadeIn"
               style={{
                 animationDelay: `${index * 0.1}s`,
@@ -114,13 +90,14 @@ const FeedsPage = () => {
               <PostCard post={post} loading={loading} onClick={() => handlePostClick(post.postId || post.id)} />
             </div>
           ))}
-          {hasMore && (
+          {loading && (
             <div ref={loaderRef} className="w-full  py-4">
               <PostCardLoader />
               <PostCardLoader />
               <PostCardLoader />
             </div>
           )}
+          {error && <p>{error}</p>}
         </div>
       </div>
     </div>

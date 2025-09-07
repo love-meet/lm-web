@@ -1,28 +1,28 @@
-import React, { useState, useRef, useEffect } from 'react';
+import React, { useState, useRef, useEffect, useContext } from 'react';
 import { Heart, MessageCircle, ChevronDown, ChevronUp, Send } from 'lucide-react';
-import api from '../../api/axios';
 import { useAuth } from '../../context/AuthContext';
+import { PostContext } from '../../context/PostContext';
 
-const CommentSection = ({ comments: initialComments, postId }) => {
+const CommentSection = ({ postId }) => {
   const { user } = useAuth();
+  const { addComment, replyComment, commentLoading, getPostComments } = useContext(PostContext);
   const [collapsedComments, setCollapsedComments] = useState(new Set());
   const [newComment, setNewComment] = useState('');
   const [replyTo, setReplyTo] = useState(null);
   const [newReply, setNewReply] = useState('');
-  const [comments, setComments] = useState(initialComments || []);
-  const [commentLoading, setCommentLoading] = useState(false);
   const commentsEndRef = useRef(null);
 
+  const comments = getPostComments(postId);
+
   useEffect(() => {
-    setComments(initialComments || []);
     const newCollapsed = new Set();
-    (initialComments || []).forEach(comment => {
+    (comments || []).forEach(comment => {
       if (comment.replies && comment.replies.length > 0) {
         newCollapsed.add(comment.id);
       }
     });
     setCollapsedComments(newCollapsed);
-  }, [initialComments]);
+  }, [comments]);
 
   // useEffect(() => {
   //   // Scroll to bottom when comments update
@@ -56,48 +56,25 @@ const CommentSection = ({ comments: initialComments, postId }) => {
   const handleSubmitComment = async (e) => {
     e.preventDefault();
     if (!newComment.trim()) return;
-    setCommentLoading(true);
-    try {
-      const res = await api.post(`/post/comment/${postId}`, {
-        username: user?.username,
-        userAvatar: user?.picture || "/assets/male.jpg",
-        content: newComment.trim()
-      });
-      setComments(res.comments);
-      setNewComment('');
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCommentLoading(false);
-    }
+    addComment(postId, newComment.trim(), (response) => {
+      if (response.error) {
+        console.error(response.error);
+      } else {
+        setNewComment('');
+      }
+    });
   };
 
  const handleSubmitReply = async (e, commentId) => {
     e.preventDefault();
     if (!newReply.trim()) return;
-    setCommentLoading(true);
-    try {
-      const res = await api.post(
-        `/post/replay-comment/${postId}`,
-        { 
-          commentId,
-          username: user?.username,
-          userAvatar: user?.picture || "/assets/male.jpg",
-          content: newReply.trim()
-        }
-      );
-      setComments(comments =>
-        comments.map(c =>
-          c.id === commentId ? { ...c, replies: res.replies } : c
-        )
-      );
+    replyComment(postId, commentId, newReply.trim(), (response) => {
+      if (response.error) {
+        console.error(response.error);
+      }
       setNewReply('');
       setReplyTo(null);
-    } catch (err) {
-      console.error(err);
-    } finally {
-      setCommentLoading(false);
-    }
+    });
   };
 
   return (
