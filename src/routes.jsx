@@ -193,9 +193,24 @@ export const routes = [
     protected: false,
   },
 
-{ 
+{
   path: '/help',
   element: <Help />,
+  name: 'Help Center',
+  showInNav: false,
+  protected: false,
+},
+{
+  path: '/contact',
+  element: <Contact />,
+  name: 'Contact Support',
+  showInNav: false,
+  protected: false,
+},
+{
+  path: '/about',
+  element: <About />,
+  name: 'About Love Meet',
   showInNav: false,
   protected: false,
 },
@@ -208,13 +223,6 @@ export const routes = [
   protected: false,
 },
 
-{
-  path: '/contact',
-  element: <Contact/>,
-  name: 'Contact',
-  showInNav: false,
-  protected: false,
-},
 
 {
   path: '/terms',

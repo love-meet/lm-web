@@ -27,12 +27,9 @@ import {
 import { useAuth } from '../../../context/AuthContext';
 import addNotification from 'react-push-notification';
 
-export default function Settings({ onClose }) {
+export default function Settings({onClose}) {
   const { user, handleLogOut, preferences, updatePreferences } = useAuth();
   const navigate = useNavigate();
-  
-  // Handle close - use onClose if provided, otherwise navigate back
-  const handleClose = onClose || (() => navigate(-1));
   
   const [privacy, setPrivacy] = useState({
     showOnline: preferences?.showOnline !== false,
@@ -162,18 +159,22 @@ export default function Settings({ onClose }) {
         { id: "change-password", label: "Change Password", icon: FaLock, action: () => navigate('/settings/change-password') }
       ]
     },
-    {
-      title: "Help & Support",
-      icon: FaQuestionCircle,
-      color: "var(--accent-pink)",
-      items: [
-        { id: "help-center", label: "Help Center", icon: FaQuestionCircle, action: () => console.log("Help Center") },
-        { id: "contact-support", label: "Contact Support", icon: FaEnvelope, action: () => console.log("Contact Support") },
-        { id: "feedback", label: "Send Feedback", icon: FaHeart, action: () => console.log("Send Feedback") },
-        { id: "about", label: "About Love Meet", icon: FaInfoCircle, action: () => console.log("About Love Meet") }
-      ]
-    }
-  ];
+
+
+  {
+    title: "Help & Support",
+    icon: FaQuestionCircle,
+    color: "var(--accent-pink)",
+    items: [
+      { id: "help-center", label: "Help Center", icon: FaQuestionCircle, action: () => navigate("/help") },
+      { id: "contact-support", label: "Contact Support", icon: FaEnvelope, action: () => navigate("/contact") },
+      { id: "feedback", label: "Send Feedback", icon: FaHeart, action: () => navigate("/feedback") },
+      { id: "about", label: "About Love Meet", icon: FaInfoCircle, action: () => navigate("/about") },
+    ],
+  },
+];
+
+
 
 
   const ToggleSwitch = ({ value, onChange, disabled = false }) => (
@@ -261,11 +262,7 @@ export default function Settings({ onClose }) {
     <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white z-50 flex flex-col">
       <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center justify-between flex-shrink-0">
         <h1 className="text-xl font-bold">Settings</h1>
-        <button 
-          onClick={handleClose} 
-          className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
-          aria-label="Close settings"
-        >
+        <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
           <FaTimes className="text-white" />
         </button>
       </div>

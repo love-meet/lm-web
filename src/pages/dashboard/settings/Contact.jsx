@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { ArrowLeft, Mail, MessageSquare, Send } from 'lucide-react';
+import { ArrowLeft, Mail, MessageSquare, Send, Check, X } from 'lucide-react';
 import { Link } from 'react-router-dom';
 
 export default function GetInTouch() {
