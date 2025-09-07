@@ -38,7 +38,6 @@ const PostCard = ({ post, loading, onClick }) => {
 
   const liked = Array.isArray(post.likedBy) && post.likedBy.some(u => u.userId === activeUserId);
   
-
   useEffect(() => {
     if (videoRef.current) {
       videoRef.current.currentTime = 5;
@@ -78,6 +77,7 @@ const PostCard = ({ post, loading, onClick }) => {
   const postBadge = post.user?.badge || 'Free';
   const PlanIcon = planIcons[postBadge];
   const iconColor = planColors[postBadge];
+
 
   return (
     <div 

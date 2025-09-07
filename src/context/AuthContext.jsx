@@ -8,6 +8,7 @@ export const AuthContext = createContext();
 export const AuthProvider = ({ children }) => {
   const [user, setUser] = useState(null)
   const [appLoad, setAppLoad] = useState(true)
+  const [loadSingleUser, setLoadSingleUser] = useState(true)
   const [preferences, setPreferences] = useState({
     distance: 50,
     unit: 'km',
@@ -110,8 +111,28 @@ export const AuthProvider = ({ children }) => {
       }
     };
 
+    const getUserById = async (userId) => {
+      try {
+        setLoadSingleUser(true)
+        const response = await api.get(`/auth/user/${userId}`);
+          if (response) {
+            return response;
+          } 
+          else {
+            toast.error('Failed to fetch user data');
+          }
+        }
+        catch(err){
+          toast.error('Failed to fetch user data');
+        }
+        finally{
+          setLoadSingleUser(false)
+        }
+    }
+
   return (
-    <AuthContext.Provider value={{ appLoad, user, fetchWithGoogle , handleLogOut, setUser, fetchUserData}}>
+    <AuthContext.Provider value={{ appLoad, user, fetchWithGoogle ,
+    getUserById,loadSingleUser, handleLogOut, setUser, fetchUserData}}>
       {children}
     </AuthContext.Provider>
   );

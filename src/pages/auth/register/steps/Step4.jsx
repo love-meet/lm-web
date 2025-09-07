@@ -35,7 +35,6 @@ const Step4 = ({ formData, setFormData, validationErrors }) => (
           label="🎨 What kind relationship do you want ?"
           selectedItems={formData.interests}
           onSelect={(newInterest) => setFormData(prev => ({...prev, interests: newInterest}))}
-          minRequired={1}
           error={validationErrors.interests}
         />
       

@@ -127,7 +127,7 @@ export default function MediaSection({ post }) {
           <img
             src={post.media[0].data}
             alt=""
-            className="w-full max-h-[400px] rounded-lg object-contain cursor-pointer"
+            className="w-full h-full rounded-lg object-contain cursor-pointer"
             onClick={() => openFullscreen('image', post.media[0].data)}
           />
         )

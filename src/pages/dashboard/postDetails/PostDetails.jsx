@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import { ArrowLeft } from 'lucide-react';
-import api from '../../../api/axios';
 import ContentLoader from 'react-content-loader';
 import UserHeader from './UserHeader';
 import MediaSection from './MediaSection';
 import ActionButtons from './ActionButtons';
 import CommentSection from '../../../components/postDetails/CommentSection';
+import api from '../../../api/axios';
 
 const getBadgeColor = (badge) => {
     switch ((badge || '').toLowerCase()) {
@@ -18,7 +18,7 @@ const getBadgeColor = (badge) => {
       default: return '#CD7F32';
     }
   };
-    const getTimeAgo = (timestamp) => {
+  const getTimeAgo = (timestamp) => {
     const now = new Date();
     const postTime = new Date(timestamp);
     const diffInMinutes = Math.floor((now - postTime) / (1000 * 60));
@@ -30,8 +30,8 @@ const getBadgeColor = (badge) => {
   };
 
 
-export default function PostDetails() {
-  const { postId } = useParams();
+export default function PostDetails({postId}) {
+  // const { postId } = useParams();
   const navigate = useNavigate();
   const [post, setPost] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -59,8 +59,8 @@ export default function PostDetails() {
           width={400}
           height={600}
           viewBox="0 0 400 600"
-          backgroundColor="#f3f3f3"
-          foregroundColor="#ecebeb"
+          backgroundColor="var(--bg-secondary)"
+          foregroundColor="var(--bg-tertiary)"
         >
           <rect x="20" y="20" rx="8" ry="8" width="60" height="60" />
           <rect x="100" y="30" rx="4" ry="4" width="200" height="20" />
@@ -133,43 +133,43 @@ export default function PostDetails() {
         <div className="sticky top-0 bg-[var(--bg-primary)]/80 backdrop-blur-lg border-b border-white/10 p-4 z-20">
           <div className="flex items-center space-x-2">
             <button 
-              onClick={() => navigate(-1)}
+              onClick={() => navigate("/feeds")}
               className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors"
             >
               <ArrowLeft size={16} className="text-white" />
             </button>
             <div className='relative '>
               <div className='flex items-center space-x-4'>
-                        <div className="w-9 h-9 rounded-full overflow-hidden border-2 border-[var(--primary-cyan)]">
-                            <img 
-                            src={post?.user?.userAvatar || "/assets/male.jpg"} 
-                            alt={post?.user.username}
-                            className="w-full h-full object-cover"
-                            />
-                        </div>
-                        <div className="flex-1">
-                            <div className="flex items-center space-x-3">
-                            <span className="text-white font-semibold text-lg">{post?.user.username}</span>
-                            <div 
-                                className="px-3 py-1 rounded-full text-xs font-bold text-black"
-                                style={{ backgroundColor: getBadgeColor(post.badge) }}
-                            >
-                                {post.badge?.toUpperCase()}
-                            </div>
-                            </div>
-                            <p className="text-[var(--text-muted)] text-sm">{getTimeAgo(post.timestamp)}</p>
-                        </div>
+                    <div 
+                        className="w-9 h-9 rounded-full overflow-hidden border-2 border-[var(--primary-cyan)] cursor-pointer"
+                        onClick={() => navigate(`?modal=public-profile&userId=${post?.user?.userId}`)}
+                    >
+                        <img 
+                          src={post?.user?.userAvatar || "/assets/male.jpg"} 
+                          alt={post?.user.username}
+                          className="w-full h-full object-cover"
+                        />
                     </div>
+                    <div className="flex-1 cursor-pointer" onClick={() => navigate(`?modal=public-profile&userId=${post?.user?.userId}`)}>
+                        <div className="flex items-center space-x-3">
+                        <span className="text-white font-semibold text-lg">{post?.user.username}</span>
+                        <div 
+                            className="px-3 py-1 rounded-full text-xs font-bold text-black"
+                            style={{ backgroundColor: getBadgeColor(post.badge) }}
+                        >
+                            {post.badge?.toUpperCase()}
+                        </div>
+                        </div>
+                        <p className="text-[var(--text-muted)] text-sm">{getTimeAgo(post.timestamp)}</p>
+                    </div>
+                </div>
             </div>
           </div>
         </div>
-
-        {/* Post Content */}
         <div className="max-w-2xl mx-auto p-2 space-y-2">
           <UserHeader post={post} />
           <MediaSection post={post} />
           <div className="space-y-4">
-           
             <ActionButtons postId={post.postId} />
           </div>
           <CommentSection comments={post.comments || []} post={post} postId={post.postId} />

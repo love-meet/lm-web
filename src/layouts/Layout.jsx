@@ -3,6 +3,7 @@ import MobileNavbar from '../components/layout/MobileNavbar';
 import MobileBottomTabs from '../components/layout/MobileBottomTabs';
 import DesktopSidebar from '../components/layout/DesktopSidebar';
 import { routes } from '../routes';
+import LayoutModal from '../components/modals/Layout.modal';
 
 const Layout = () => {
   const location = useLocation();
@@ -54,6 +55,7 @@ const Layout = () => {
           <Outlet />
         </div>
       </main>
+      <LayoutModal />
     </div>
   );
 };

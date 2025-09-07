@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Heart, Plus, X } from 'lucide-react';
 
-const InterestsSelector = ({ label, selectedItems, onSelect, minRequired, error }) => {
+const InterestsSelector = ({ label, selectedItems, onSelect, error }) => {
   const [customItem, setCustomItem] = useState('');
   const [isAdding, setIsAdding] = useState(false);
 
@@ -10,15 +10,14 @@ const InterestsSelector = ({ label, selectedItems, onSelect, minRequired, error 
   ].filter((item, index, self) => self.indexOf(item) === index);
 
   const handleItemToggle = (item) => {
-    const newItems = selectedItems.includes(item)
-      ? selectedItems.filter(i => i !== item)
-      : [...selectedItems, item];
+    // If the item is already selected, deselect it. Otherwise, select only this item.
+    const newItems = selectedItems.includes(item) ? [] : [item];
     onSelect(newItems);
   };
 
   const handleAddCustomItem = () => {
-    if (customItem.trim() && !selectedItems.includes(customItem.trim())) {
-      onSelect([...selectedItems, customItem.trim()]);
+    if (customItem.trim()) { // No need to check if already included, as it will replace
+      onSelect([customItem.trim()]); // Select only the custom item
       setCustomItem('');
       setIsAdding(false);
     }
@@ -32,12 +31,12 @@ const InterestsSelector = ({ label, selectedItems, onSelect, minRequired, error 
     <div className="space-y-4">
       <div className="flex items-center justify-between">
         <label className="block text-text-secondary">{label}</label>
-        <span className={`text-xs ${selectedItems.length >= minRequired ? 'text-green-400' : 'text-red-400'}`}>
-          {selectedItems.length}/{minRequired} selected
+        <span className={`text-xs ${selectedItems.length > 0 ? 'text-green-400' : 'text-red-400'}`}>
+          {selectedItems.length} selected
         </span>
       </div>
       
-      {error && selectedItems.length < minRequired && (
+      {error && selectedItems.length === 0 && (
         <p className="text-red-400 text-sm -mt-2">{error}</p>
       )}
 

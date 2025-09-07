@@ -1,6 +1,5 @@
 import React from 'react';
-import InputRange from 'react-input-range';
-import 'react-input-range/lib/css/index.css';
+import { Slider } from '@mui/material';
 
 const Step5 = ({ formData, setFormData, handleChange }) => (
   <div className="space-y-6 animate-fadeIn flex-1 relative z-10 overflow-y-auto scrollbar-hiden h-[50vh] ">
@@ -10,11 +9,24 @@ const Step5 = ({ formData, setFormData, handleChange }) => (
     <div>
       <label className="block mb-4 text-text-secondary">💘 Preferred Age Range</label>
       <div className="px-2">
-        <InputRange
-            maxValue={50}
-            minValue={18}
-            value={{ min: formData.ageRange.start, max: formData.ageRange.end }}
-            onChange={value => setFormData(prev => ({...prev, ageRange: { start: value.min, end: value.max }}))}
+        <Slider
+            value={[formData.ageRange.start, formData.ageRange.end]}
+            onChange={(event, newValue) => setFormData(prev => ({...prev, ageRange: { start: newValue[0], end: newValue[1] }}))}
+            min={18}
+            max={50}
+            valueLabelDisplay="auto"
+            sx={{
+              color: 'var(--primary-pink)', // Custom color for the slider
+              '& .MuiSlider-thumb': {
+                backgroundColor: 'var(--primary-pink)', // Thumb color
+              },
+              '& .MuiSlider-track': {
+                backgroundColor: 'var(--primary-pink)', // Track color
+              },
+              '& .MuiSlider-rail': {
+                backgroundColor: 'rgba(255, 255, 255, 0.3)', // Rail color
+              },
+            }}
         />
         <div className="flex justify-between text-sm text-text-muted mt-2">
             <span></span>

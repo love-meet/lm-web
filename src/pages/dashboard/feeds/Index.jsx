@@ -11,7 +11,8 @@ const FeedsPage = () => {
   const loaderRef = useRef(null);
 
   const handlePostClick = (postId) => {
-    navigate(`/post/${postId}`);
+    navigate(`?modal=post-details&postId=${postId}`);
+    // navigate(`/post/${postId}`);
   };
 
   useEffect(() => {

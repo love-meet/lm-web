@@ -1,4 +1,3 @@
-
 import React, { createContext, useState, useEffect, useContext } from 'react';
 import io from 'socket.io-client';
 import { backendUrl } from '../api/axios';
@@ -39,7 +38,9 @@ export const PostProvider = ({ children }) => {
         });
 
         socket.on('postUpdated', (updatedPost) => {
-            setPosts(prevPosts => prevPosts.map(post => post.postId === updatedPost.postId ? updatedPost : post));
+            setPosts(prevPosts => prevPosts.map(post => 
+                post.postId === updatedPost.postId ? updatedPost : post
+            ));
         });
 
         socket.on('postDeleted', ({ postId }) => {
@@ -107,13 +108,26 @@ export const PostProvider = ({ children }) => {
 
     const toggleLike = (postId, callback) => {
         if (!user) return;
+
+        const post = posts.find(p => p.postId === postId);
+        if (!post) return;
+
+        const liked = post.likedBy.some(u => u.userId === user.userId);
+        const optimisticPost = {
+            ...post,
+            likes: liked ? post.likes - 1 : post.likes + 1,
+            likedBy: liked
+                ? post.likedBy.filter(u => u.userId !== user.userId)
+                : [...post.likedBy, { userId: user.userId, picture: user.picture, username: user.username }]
+        };
+
+        setPosts(prevPosts => prevPosts.map(p => p.postId === postId ? optimisticPost : p));
+
         socket.emit('toggleLike', { postId, userId: user.userId }, (response) => {
             if (response.error) {
                 setError(response.error);
-            } else if (response.updatedPost) {
-                setPosts(prevPosts => prevPosts.map(post =>
-                    post.postId === response.updatedPost.postId ? response.updatedPost : post
-                ));
+                // Revert optimistic update on error
+                setPosts(prevPosts => prevPosts.map(p => p.postId === postId ? post : p));
             }
             if (callback) callback(response);
         });
@@ -161,9 +175,76 @@ export const PostProvider = ({ children }) => {
 
     const likeComment = (postId, commentId, callback) => {
         if (!user) return;
-        socket.emit('likeComment', { postId, commentId }, (response) => {
+
+        const post = posts.find(p => p.postId === postId);
+        if (!post) return;
+
+        const comment = post.comments.find(c => c.id === commentId);
+        if (!comment) return;
+
+        const liked = comment.likedBy && comment.likedBy.some(u => u.userId === user.userId);
+        const optimisticComment = {
+            ...comment,
+            likes: liked ? comment.likes - 1 : comment.likes + 1,
+            likedBy: liked
+                ? comment.likedBy.filter(u => u.userId !== user.userId)
+                : [...(comment.likedBy || []), { userId: user.userId, picture: user.picture, username: user.username }]
+        };
+
+        const optimisticPost = {
+            ...post,
+            comments: post.comments.map(c => c.id === commentId ? optimisticComment : c)
+        };
+
+        setPosts(prevPosts => prevPosts.map(p => p.postId === postId ? optimisticPost : p));
+
+        socket.emit('likeComment', { postId, commentId, userId: user.userId }, (response) => {
             if (response.error) {
                 setError(response.error);
+                // Revert optimistic update on error
+                setPosts(prevPosts => prevPosts.map(p => p.postId === postId ? post : p));
+            }
+            if (callback) callback(response);
+        });
+    };
+
+    const likeReply = (postId, commentId, replyId, callback) => {
+        if (!user) return;
+        const post = posts.find(p => p.postId === postId);
+        if (!post) return;
+
+        const comment = post.comments.find(c => c.id === commentId);
+        if (!comment) return;
+
+        const reply = comment.replies.find(r => r.id === replyId);
+        if (!reply) return;
+
+        const liked = reply.likedBy && reply.likedBy.some(u => u.userId === user.userId);
+        const optimisticReply = {
+            ...reply,
+            likes: liked ? reply.likes - 1 : reply.likes + 1,
+            likedBy: liked
+                ? reply.likedBy.filter(u => u.userId !== user.userId)
+                : [...(reply.likedBy || []), { userId: user.userId, picture: user.picture, username: user.username }]
+        };
+
+        const optimisticComment = {
+            ...comment,
+            replies: comment.replies.map(r => r.id === replyId ? optimisticReply : r)
+        };
+
+        const optimisticPost = {
+            ...post,
+            comments: post.comments.map(c => c.id === commentId ? optimisticComment : c)
+        };
+
+        setPosts(prevPosts => prevPosts.map(p => p.postId === postId ? optimisticPost : p));
+
+        socket.emit('likeReply', { postId, commentId, replyId, userId: user.userId }, (response) => {
+            if (response.error) {
+                setError(response.error);
+                // Revert optimistic update on error
+                setPosts(prevPosts => prevPosts.map(p => p.postId === postId ? post : p));
             }
             if (callback) callback(response);
         });
@@ -172,6 +253,36 @@ export const PostProvider = ({ children }) => {
     const getPostComments = (postId) => {
         const post = posts.find(p => p.postId === postId);
         return post ? post.comments : [];
+    };
+
+    const fetchPost = (postId, callback) => {
+        setLoading(true);
+        socket.emit('fetchPost', { postId }, (response) => {
+            if (response.error) {
+                setError(response.error);
+            } else {
+                setPosts(prevPosts => {
+                    const postExists = prevPosts.some(p => p.postId === response.post.postId);
+                    if (postExists) {
+                        return prevPosts.map(p => p.postId === response.post.postId ? response.post : p);
+                    }
+                    return [...prevPosts, response.post];
+                });
+            }
+            setLoading(false);
+            if (callback) callback(response);
+        });
+    };
+
+    const fetchUser = (userId, callback) => {
+        setLoading(true);
+        socket.emit('fetchUserById', { userId }, (response) => {
+            if (response.error) {
+                setError(response.error);
+            }
+            setLoading(false);
+            if (callback) callback(response);
+        });
     };
 
     const value = {
@@ -186,7 +297,10 @@ export const PostProvider = ({ children }) => {
         addComment,
         replyComment,
         likeComment,
+        likeReply,
         getPostComments,
+        fetchPost,
+        fetchUser
     };
 
     return (

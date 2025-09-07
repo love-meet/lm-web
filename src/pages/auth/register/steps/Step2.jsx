@@ -22,9 +22,11 @@ const Step2 = ({ formData, setFormData }) => {
 
   // Limited to Nigeria, Ghana, and Kenya
   const allowedCountries = [
-    { id: 161, name: 'Nigeria', states: [] },
-    { id: 82, name: 'Ghana', states: [] },
-    { id: 113, name: 'Kenya', states: [] }
+    { name: "Côte d'Ivoire", isoCode: 'CI' },
+    { name: 'Ghana', isoCode: 'GH' },
+    { name: 'Kenya', isoCode: 'KE' },
+    { name: 'Nigeria', isoCode: 'NG' },
+    { name: 'South Africa', isoCode: 'ZA' }
   ];
 
   const [availableStates, setAvailableStates] = useState([]);
@@ -52,8 +54,8 @@ const Step2 = ({ formData, setFormData }) => {
     setShowCityDropdown(false);
     
     // Get states for selected country
-    const countryCode = country.name === 'Nigeria' ? 'NG' : country.name === 'Ghana' ? 'GH' : 'KE';
-    const states = State.getStatesOfCountry(countryCode);
+    const states = State.getStatesOfCountry(country.isoCode);
+    // const states = State.getStatesOfCountry(countryCode);
     setAvailableStates(states.map(s => ({ id: s.isoCode, name: s.name })));
   };
 
@@ -65,9 +67,11 @@ const Step2 = ({ formData, setFormData }) => {
     setShowCityDropdown(false);
 
     // Get cities for selected state
-    const countryCode = formData.country === 'Nigeria' ? 'NG' : formData.country === 'Ghana' ? 'GH' : 'KE';
-    const cities = City.getCitiesOfState(countryCode, state.id);
-    setAvailableCities(cities.map(c => ({ id: c.name, name: c.name })));
+    const selectedCountry = allowedCountries.find(c => c.name === formData.country);
+    if (selectedCountry) {
+      const cities = City.getCitiesOfState(selectedCountry.isoCode, state.id);
+      setAvailableCities(cities.map(c => ({ id: c.name, name: c.name })));
+    }
   };
 
   const handleCitySelect = (city) => {
@@ -98,9 +102,9 @@ const Step2 = ({ formData, setFormData }) => {
           />
           {showCountryDropdown && filteredCountries.length > 0 && (
             <div className="absolute z-10 w-full mt-1 bg-gray-800 border border-gray-600 rounded-lg shadow-lg max-h-48 overflow-y-auto">
-              {filteredCountries.map(country => (
+              {filteredCountries.map((country, index) => (
                 <div
-                  key={country.id}
+                  key={index}
                   onClick={() => handleCountrySelect(country)}
                   className="px-4 py-2 hover:bg-gray-700 cursor-pointer text-white"
                 >
@@ -151,6 +155,7 @@ const Step2 = ({ formData, setFormData }) => {
               value={citySearch}
               onChange={(e) => {
                 setCitySearch(e.target.value);
+                setFormData(prev => ({ ...prev, city: e.target.value })); // Update formData.city directly
                 setShowCityDropdown(true);
               }}
               onFocus={() => setShowCityDropdown(true)}
