@@ -6,18 +6,11 @@ import {
   FaBell, 
   FaHeart, 
   FaLock, 
-  FaGlobe, 
   FaQuestionCircle, 
   FaSignOutAlt,
   FaChevronRight,
-  FaCamera,
   FaEnvelope,
-  FaPhone,
   FaMapMarkerAlt,
-  FaPalette,
-  FaMoon,
-  FaSun,
-  FaVolumeUp,
   FaEye,
   FaUserSecret,
   FaExclamationTriangle,
@@ -25,13 +18,10 @@ import {
   FaTimes
 } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
-// import addNotification from 'react-push-notification';
 
 export default function Settings({ onClose }) {
   const { user, handleLogOut, preferences, updatePreferences } = useAuth();
   const navigate = useNavigate();
-  
-  // Handle close - use onClose if provided, otherwise navigate back
   const handleClose = onClose || (() => navigate(-1));
   
   const [privacy, setPrivacy] = useState({
@@ -40,7 +30,6 @@ export default function Settings({ onClose }) {
     showAge: preferences?.showAge !== false
   });
 
-  // Update local state when preferences change
   useEffect(() => {
     setPrivacy({
       showOnline: preferences?.showOnline !== false,
@@ -313,7 +302,6 @@ export default function Settings({ onClose }) {
                   animationFillMode: 'forwards'
                 }}
               >
-                {/* Section Header */}
                 <div className="flex items-center space-x-3 mb-4">
                   <div 
                     className="p-2 rounded-xl"
@@ -356,8 +344,6 @@ export default function Settings({ onClose }) {
             <FaSignOutAlt size={20} className="text-white group-hover:animate-bounce" />
             <span className="text-white font-semibold text-lg">Logout</span>
           </button>
-          
-          {/* App Info */}
           <div className="text-center mt-6 text-[var(--text-muted)]">
             <p className="text-xs">Love Meet v1.0.0</p>
             <p className="text-xs">Made with 💖 for finding true love</p>
