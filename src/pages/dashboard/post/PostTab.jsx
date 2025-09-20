@@ -6,7 +6,7 @@ import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
 
-const PostTab = ({ selectedFiles, onFileSelect, onRemoveFile, onTextChange, text, onDone, previewUrls, isLoading }) => {
+const PostTab = ({ selectedFiles, onFileSelect, onRemoveFSile, onTextChange, text, onDone, previewUrls, isLoading }) => {
   return (
     <div className="space-y-6">
       {/* File Display Area */}

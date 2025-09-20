@@ -2,8 +2,8 @@ import axios from 'axios';
 import { getCookie } from './cookies';
 
 export const backendUrl = () => {
-  let localhostUrl = "http://localhost:8000";
-  let remoteUrl = "https://love-meet.onrender.com";
+  let localhostUrl = "http://localhost:8000/lovemeet";
+  let remoteUrl = "https://love-meet.onrender.com/lovemeet";
 
   const isLocalhost = typeof window !== 'undefined' && 
     (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
