@@ -17,6 +17,7 @@ const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
 const About = lazy(() => import('./pages/dashboard/settings/About.jsx'));
+const AboutLoveMeet = lazy(() => import('./pages/AboutLoveMeet.jsx'));
 const Help = lazy(() => import('./pages/dashboard/settings/Help.jsx'));
 const Feedback = lazy(() => import('./pages/dashboard/settings/Feedback.jsx'));
 const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
@@ -189,6 +190,13 @@ export const routes = [
     path: '/login',
     element: <Login />,
     name: 'Login',
+    showInNav: false,
+    protected: false,
+  },
+  {
+    path: '/about-lovemeet',
+    element: <AboutLoveMeet />,
+    name: 'About Love Meet',
     showInNav: false,
     protected: false,
   },
