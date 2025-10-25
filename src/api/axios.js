@@ -2,14 +2,22 @@ import axios from 'axios';
 import { getCookie } from './cookies';
 
 export const backendUrl = () => {
+  // For development, you might want to use the remote server
+  // to avoid having to run the backend locally
   let localhostUrl = "http://localhost:8000/lovemeet";
   let remoteUrl = "https://love-meet.onrender.com/lovemeet";
 
+  // Force using remote URL even on localhost for easier development
+  // Comment out the next line if you want to use local backend
+  return remoteUrl;
+
+  /*
   const isLocalhost = typeof window !== 'undefined' && 
     (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1");
   
   const _api = isLocalhost ? localhostUrl : remoteUrl;
   return _api;
+  */
 };
 
 const api = axios.create({

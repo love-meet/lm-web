@@ -21,6 +21,7 @@ const AboutLoveMeet = lazy(() => import('./pages/AboutLoveMeet.jsx'));
 const Help = lazy(() => import('./pages/dashboard/settings/Help.jsx'));
 const Feedback = lazy(() => import('./pages/dashboard/settings/Feedback.jsx'));
 const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
+const SupportChat = lazy(() => import('./pages/dashboard/support/SupportChat.jsx'));
 const Terms = lazy(() => import('./pages/Terms.jsx'));
 const Privacy = lazy(() => import('./pages/Privacy.jsx'));
 
@@ -220,6 +221,14 @@ export const routes = [
   path: '/contact',
   element: <Contact/>,
   name: 'Contact',
+  showInNav: false,
+  protected: false,
+},
+
+{
+  path: '/support',
+  element: <ProtectedRoute> <SupportChat /> </ProtectedRoute>,
+  name: 'Support Chat',
   showInNav: false,
   protected: false,
 },

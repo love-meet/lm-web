@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { 
-  FaUser, 
-  FaShieldAlt, 
-  FaBell, 
-  FaHeart, 
-  FaLock, 
-  FaQuestionCircle, 
+import {
+  FaUser,
+  FaShieldAlt,
+  FaBell,
+  FaHeart,
+  FaLock,
+  FaQuestionCircle,
   FaSignOutAlt,
   FaChevronRight,
   FaEnvelope,
@@ -15,7 +15,8 @@ import {
   FaUserSecret,
   FaExclamationTriangle,
   FaInfoCircle,
-  FaTimes
+  FaTimes,
+  FaComments
 } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 
@@ -149,6 +150,7 @@ export default function Settings({ onClose }) {
       items: [
         { id: "help-center", label: "Help Center", icon: FaQuestionCircle, action: () => console.log("Help Center") },
         { id: "contact-support", label: "Contact Support", icon: FaEnvelope, action: () => console.log("Contact Support") },
+        { id: "support-chat", label: "Support Chat", icon: FaComments, action: () => navigate('/support') },
         { id: "feedback", label: "Send Feedback", icon: FaHeart, action: () => console.log("Send Feedback") },
         { id: "about", label: "About Love Meet", icon: FaInfoCircle, action: () => console.log("About Love Meet") }
       ]
