@@ -9,6 +9,7 @@ import SignUp from './login/SignUp';
 import AuthToggle from './login/AuthToggle';
 import Google from './login/Google';
 import api from "../../api/axios"
+
 import Cookies from 'js-cookie';
 
 export default function Login() {

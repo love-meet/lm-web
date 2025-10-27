@@ -75,6 +75,9 @@ export default function HomePage() {
             <p className="text-lg mb-8 text-[var(--text-secondary)] max-w-md leading-relaxed">
               Where hearts connect, love grows, and forever begins. Join thousands finding their perfect match.
             </p>
+            <button className="bg-gradient-to-r from-[var(--primary-blue)] to-[var(--accent-pink)] text-white font-bold py-2 px-4 w-40 rounded-lg shadow-md hover:scale-105 transition-transform duration-300" onClick={handleGetStated}>
+              Get Started
+            </button>
           </div>
         </div>
 
@@ -88,6 +91,9 @@ export default function HomePage() {
             <p className="text-xl mb-8 text-[var(--text-secondary)] max-w-lg leading-relaxed">
               Where hearts connect, love grows, and forever begins. Join thousands of people finding their perfect match in our vibrant community.
             </p>
+            <button className="bg-gradient-to-r from-[var(--primary-blue)] to-[var(--accent-pink)] text-white font-bold py-2 px-4 w-40 rounded-lg shadow-md hover:scale-105 transition-transform duration-300" onClick={handleGetStated}>
+              Get Started
+            </button>
           </div>
 
           <div className="flex-1 flex items-center justify-center">

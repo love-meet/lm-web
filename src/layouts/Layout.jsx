@@ -39,7 +39,7 @@ const Layout = () => {
           <MobileBottomTabs />
         </>
       )}
-      {!isHomePage && <DesktopSidebar />}
+        {!isHomePage && location.pathname !== '/login' && <DesktopSidebar />}
       
       {/* Main Content Area */}
       <main className={`
