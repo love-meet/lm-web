@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { ArrowLeft, Eye, EyeOff, CheckCircle, XCircle } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
+import ForgotOtpModal from './login/ForgotOtpModal';
 import ForgetPassword from './login/ForgetPassword';
 import OtpModal from './login/OtpModal';
 import SignUp from './login/SignUp';
@@ -33,6 +34,10 @@ export default function Login() {
     const [otp, setOtp] = useState('');
     const [resetEmail, setResetEmail] = useState('');
     const [isNewAccount, setIsNewAccount] = useState(false);
+    const [showForgotOtpModal, setShowForgotOtpModal] = useState(false);
+    const [isResending, setIsResending] = useState(false);
+
+
 
     const handleInputChange = (e) => {
         const { name, value } = e.target;
@@ -156,7 +161,6 @@ export default function Login() {
         }
     };
 
-
     const handleForgotPassword = async () => {
         if (!resetEmail) {
             toast.error('Please enter your email address 📧');
@@ -164,26 +168,108 @@ export default function Login() {
         }
 
         try {
-            const response = await fetch('/auth/forgot-password', {
-                method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ email: resetEmail })
-            });
+            // const response = await fetch('/auth/forgot-password', {
+            //     method: 'POST',
+            //     headers: { 'Content-Type': 'application/json' },
+            //     body: JSON.stringify({ email: resetEmail })
+            // });
 
-            const data = await response.json();
+            
 
-            if (data.success) {
-                toast.success('Password reset email sent! 📧');
-                setShowForgotPasswordModal(false);
-                setResetEmail('');
-            } else {
-                toast.error('Email not found 💔');
-            }
+            // const data = await response.json();
+
+            // Starex fetched His first API
+            const response = await api.post("/forgot-password", {
+                email: resetEmail
+            })
+            console.log("Forgot password response:", response);
+
+            if (response.status) {
+            toast.success(response.message || 'OTP sent! 📧');
+            setShowForgotPasswordModal(false);
+            setShowForgotOtpModal(true);
+        } else {
+            toast.error(response.message || 'Email not found 💔');
+        }
         } catch (error) {
             console.error('Forgot password failed:', error);
             toast.error('Failed to send reset email. Please try again 💔');
         }
     };
+
+    // const handleVerifyForgotOtp = async () => {
+    // if (!otp || otp.length !== 6) {
+    //     toast.error('Please enter a valid 6-digit OTP 🔢');
+    //     return;
+    // }
+
+    // setIsLoading(true);
+    // try {
+    //     const response = await api.post('/verify-forgot-password-otp', {
+    //         email: resetEmail,
+    //         otp
+    //     });
+
+    //     if (response.status) {
+    //         toast.success(response.message || 'OTP verified! You can now reset your password 🔐');
+    //         setShowForgotOtpModal(false);
+    //         // You can now open another modal or navigate to a "Reset Password" page
+    //     } else {
+    //         toast.error(response.message || 'Invalid OTP 💔');
+    //     }
+    // } catch (error) {
+    //     console.error('OTP verification failed:', error);
+
+    //     if (response.status) {
+    //         toast.success(response.message || 'OTP verified! You can now reset your password 🔐');
+    //         setShowForgotOtpModal(false);
+    //         // You can now open another modal or navigate to a "Reset Password" page
+    //     } else {
+    //         toast.error(response.message || 'Invalid OTP 💔');
+    //     }
+    // } catch (error) {
+    //     console.error('OTP verification failed:', error);
+    //     toast.error('Failed to verify OTP 💔');
+    // } finally {
+    //     setIsLoading(false);
+    // }
+    // };
+
+    const handleVerifyForgotOtp = async () => {
+    if (!otp || otp.length !== 6) {
+        toast.error('Please enter a valid 6-digit OTP 🔢');
+        return;
+    }
+
+    setIsLoading(true);
+    try {
+        // ✅ Send OTP verification request
+        const response = await api.post('/verify-forgot-password-otp', {
+            email: resetEmail,
+            otp
+        });
+
+        // ✅ Check the right flag (backend might use success or status)
+        if (response.status) {
+            toast.success(response.message || 'OTP verified! You can now reset your password 🔐');
+            setShowForgotOtpModal(false);
+            // TODO: You can now open your Reset Password modal or navigate to reset page
+        } else {
+            toast.error(response.message || 'Invalid OTP 💔');
+        }
+
+    } catch (error) {
+        console.error('OTP verification failed:', error);
+
+        // ✅ Show more descriptive error if backend returns one
+        toast.error(error?.response?.data?.message || 'Failed to verify OTP 💔');
+
+    } finally {
+        setIsLoading(false);
+    }
+};
+
+
 
     const getPasswordStrengthColor = () => {
         if (passwordStrength.score <= 1) return 'text-red-400';
@@ -371,6 +457,18 @@ export default function Login() {
                 resetEmail={resetEmail}
              />
             )}
+
+            {showForgotOtpModal && (
+            <ForgotOtpModal
+                otp={otp}
+                setOtp={setOtp}
+                setShowForgotOtpModal={setShowForgotOtpModal}
+                handleVerifyForgotOtp={handleVerifyForgotOtp}
+                isLoading={isLoading}
+            />
+            )}
+
+
         </section>
     );
 }
