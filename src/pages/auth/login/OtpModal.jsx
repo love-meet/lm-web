@@ -53,6 +53,7 @@ export default function OtpModal({isNewAccount, otp, setOtp,
                       
                     </button>
                 </div>
+                
             </div>
         </div>
     </div>

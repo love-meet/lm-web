@@ -1,5 +1,6 @@
 import React from 'react'
 
+
 export default function ForgetPassword({ setResetEmail,
      resetEmail, setShowForgotPasswordModal, handleForgotPassword
      }) {
@@ -36,7 +37,8 @@ export default function ForgetPassword({ setResetEmail,
                     >
                         Send OTP
                     </button>
-                </div>
+                 </div>
+                 
             </div>
         </div>
     </div>

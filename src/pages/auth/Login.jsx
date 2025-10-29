@@ -5,6 +5,7 @@ import { useAuth } from '../../context/AuthContext';
 import { toast } from 'sonner';
 import ForgotOtpModal from './login/ForgotOtpModal';
 import ForgetPassword from './login/ForgetPassword';
+import ResetPassword from './login/resetPasswordModal';
 import OtpModal from './login/OtpModal';
 import SignUp from './login/SignUp';
 import AuthToggle from './login/AuthToggle';
@@ -35,7 +36,10 @@ export default function Login() {
     const [resetEmail, setResetEmail] = useState('');
     const [isNewAccount, setIsNewAccount] = useState(false);
     const [showForgotOtpModal, setShowForgotOtpModal] = useState(false);
-    const [isResending, setIsResending] = useState(false);
+    const [showResetPasswordModal, setShowResetPasswordModal] = useState(false);
+    const [isResetting, setIsResetting] = useState(false);
+
+ 
 
 
 
@@ -162,6 +166,7 @@ export default function Login() {
     };
 
     const handleForgotPassword = async () => {
+        console.log("Resend OTP clicked");   
         if (!resetEmail) {
             toast.error('Please enter your email address 📧');
             return;
@@ -253,6 +258,7 @@ export default function Login() {
         if (response.status) {
             toast.success(response.message || 'OTP verified! You can now reset your password 🔐');
             setShowForgotOtpModal(false);
+            setShowResetPasswordModal(true);
             // TODO: You can now open your Reset Password modal or navigate to reset page
         } else {
             toast.error(response.message || 'Invalid OTP 💔');
@@ -282,6 +288,39 @@ export default function Login() {
         if (passwordStrength.score <= 3) return 'Medium 😐';
         return 'Strong 😊';
     };
+
+    const handleResetPassword = async (newPassword, confirmPassword) => {
+        if (!newPassword || !confirmPassword) {
+            toast.error("Please fill in both fields ⚠️");
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            toast.error("Passwords do not match 💔");
+            return;
+        }
+
+        setIsResetting(true);
+        try {
+            const response = await api.post("/resetpassword", {
+            email: resetEmail,
+            newPassword,
+            });
+
+            if (response.status) {
+                toast.success(response.message || "Password reset successfully ✅");
+                setShowResetPasswordModal(false);
+            } else {
+                toast.error(response.message || "Failed to reset password 💔");
+            }
+        } catch (error) {
+            console.error("Password reset failed:", error);
+            toast.error(error?.response?.message || "Something went wrong 💔");
+        } finally {
+            setIsResetting(false);
+        }
+    };
+
 
     return (
         <section className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] z-50 flex flex-col">
@@ -462,11 +501,22 @@ export default function Login() {
             <ForgotOtpModal
                 otp={otp}
                 setOtp={setOtp}
+                handleForgotPassword={handleForgotPassword}
                 setShowForgotOtpModal={setShowForgotOtpModal}
                 handleVerifyForgotOtp={handleVerifyForgotOtp}
                 isLoading={isLoading}
             />
             )}
+
+            {showResetPasswordModal && (
+            <ResetPassword
+                resetEmail={resetEmail}
+                handleResetPassword={handleResetPassword}
+                setShowResetPasswordModal={setShowResetPasswordModal}
+                isResetting={isResetting}
+            />
+            )}
+
 
 
         </section>

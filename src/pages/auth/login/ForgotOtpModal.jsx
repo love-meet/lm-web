@@ -1,7 +1,8 @@
 import React from 'react';
+import { FiRefreshCcw } from "react-icons/fi";
 
-export default function ForgotOtpModal({ otp, setOtp, handleVerifyForgotOtp, setShowForgotOtpModal, isLoading }) {
-  return (
+export default function ForgotOtpModal({ otp, setOtp, handleVerifyForgotOtp, handleForgotPassword, setShowForgotOtpModal, isLoading }) {
+    return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
       <div className="bg-[var(--bg-secondary)] rounded-2xl p-6 w-full max-w-md border border-white/10 shadow-2xl">
         <h2 className="text-2xl font-bold text-white mb-2 text-center">🔢 Verify OTP</h2>
@@ -34,6 +35,13 @@ export default function ForgotOtpModal({ otp, setOtp, handleVerifyForgotOtp, set
               {isLoading ? 'Verifying...' : 'Verify OTP'}
             </button>
           </div>
+          <div className="resend flex justify-center mt-4">
+            <p className="flex text-text-muted text-center mb-6">
+                <strong>Resend OTP</strong> <button onClick={handleForgotPassword} disabled={isLoading} 
+                className="px-1.5 items-center text-sm text-pink-400 hover:text-pink-300 transition"><FiRefreshCcw /></button>
+            </p>
+            
+            </div>
         </div>
       </div>
     </div>
