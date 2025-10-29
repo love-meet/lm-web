@@ -315,8 +315,9 @@ export default function Login() {
             }
         } catch (error) {
             console.error("Password reset failed:", error);
-            toast.error(error?.response?.message || "Something went wrong 💔");
-        } finally {
+            toast.error(error?.message || "Something went wrong 💔");
+        }
+        finally{
             setIsResetting(false);
         }
     };
