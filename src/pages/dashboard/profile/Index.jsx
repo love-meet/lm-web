@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useRef, Suspense } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { FaArrowLeft, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe, FaFan, FaShare, FaCog, FaUserFriends } from 'react-icons/fa';
+import { FaArrowLeft, FaUser, FaWallet, FaArrowUp, FaLink, FaPencilAlt, FaCheck, FaCopy, FaUsers, FaTachometerAlt, FaMapMarkerAlt, FaVenusMars, FaGlobe, FaFan, FaShare, FaCog, FaUserFriends, FaImages } from 'react-icons/fa';
 import { useAuth } from '../../../context/AuthContext';
 import { planIcons, planColors } from '../../../data/PlansIcons';
 import PageLoader from "../../../components/PageLoader"
@@ -125,6 +125,7 @@ const Profile = ({ onClose }) => {
   const handleCopy = () => {
     navigator.clipboard.writeText(affiliateLink);
     setIsCopied(true);
+    toast.success("Referral code copied!");
     setTimeout(() => {
       setIsCopied(false);
     }, 2000);
@@ -133,185 +134,97 @@ const Profile = ({ onClose }) => {
   return (
     <>
       <Suspense fallback={<PageLoader />}>
-        <div className="fixed inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] z-50 flex flex-col">
-          <div className="relative z-10 bg-[var(--bg-primary)]/90 backdrop-blur-lg border-b border-white/10 p-4 flex items-center justify-between flex-shrink-0">
-            <button onClick={onClose} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-              <FaArrowLeft className="text-white" />
-            </button>
-            <h1 className="text-xl font-bold">Profile</h1>
+        <div className="fixed inset-0 bg-[#020418] z-50 flex flex-col">
+          {/* Header */}
+         <div className="relative z-10 bg-[#020418] p-4 flex items-center justify-between flex-shrink-0">
+  <button onClick={onClose} className="p-2 rounded-full bg-[rgba(26,31,58,0.56)] hover:bg-[#252b4a] transition-colors">
+    <FaArrowLeft className="text-white text-xl" />
+  </button>
             <div className="flex items-center space-x-4">
-              <button onClick={() => setIsSettingsModalOpen(true)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-                <FaCog className="text-white" />
+              <button onClick={() => setIsSettingsModalOpen(true)} className="p-2 rounded-full bg-[rgba(26,31,58,0.56)] hover:bg-[#252b4a] transition-colors">
+                <FaCog className="text-white text-xl" />
               </button>
-              <button onClick={() => setIsAffiliateModalOpen(true)} className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-                <FaUserFriends className="text-white" />
+              <button onClick={() => setIsAffiliateModalOpen(true)} className="p-2 rounded-full  bg-[rgba(26,31,58,0.56)] hover:bg-[#252b4a] transition-colors">
+                <FaUserFriends className="text-white text-xl" />
               </button>
             </div>
           </div>
 
-          <div className="overflow-y-auto p-4 pb-20">
-            <div className="text-center mb-8">
-              <div className="relative inline-block">
-                <img
-                  src={user?.picture ||  "/assets/female.jpg"}
-                  alt="Profile"
-                  className="w-32 h-32 rounded-full border-4 border-[var(--primary-cyan)] object-cover cursor-pointer"
-                  onClick={() => setIsMenuOpen(!isMenuOpen)}
-                />
-                <div className="absolute bottom-0 right-0 bg-[var(--bg-secondary)] p-2 rounded-full">
-                  <PlanIcon style={{ color: planColor }} className="text-2xl" />
+          <div className="overflow-y-auto p-6 pb-24">
+            {/* Profile Section */}
+            <div className="mb-6">
+              <div className="flex items-center space-x-2 mb-2">
+                <h2 className="text-2xl font-bold text-white">{user?.username}</h2>
+                <div className="bg-cyan-500 rounded-full p-1">
+                  <FaCheck className="text-white text-xs" />
                 </div>
-                {isMenuOpen && (
-                  <div className="absolute top-0 left-0 w-full h-full bg-black/50 flex flex-col items-center justify-center rounded-full">
-                    <button onClick={() => {setIsPictureViewOpen(true); setIsMenuOpen(false)}} className="text-white py-2">View Picture</button>
-                    <button onClick={handleUpdateProfile} className="text-white py-2">Update Profile</button>
-                  </div>
-                )}
               </div>
-              <h2 className="text-3xl font-bold mt-4">{user?.username}</h2>
-              <p className="text-[var(--text-muted)]">{user?.email}</p>
-              <div className="mt-2 text-xs text-gray-400">
-                <span>Joined on: {user?.dateJoined ? formatDateTime(user.dateJoined) : 'N/A'}</span>
-              </div>
-              <div className="mt-2 text-sm font-semibold" style={{ color: planColor }}>
-                <span>Current Plan: {planName}</span>
+              <p className="text-gray-400 text-sm mb-1">{user?.email}</p>
+              <p className="text-gray-400 text-sm mb-3">Current plan: <span className="font-semibold" style={{ color: planColor }}>{planName}</span></p>
+              
+              {/* Ref Code Box */}
+              <div className="inline-flex items-center space-x-2 bg-[#12152b] rounded-lg px-4 py-2">
+                <span className="text-white-bold-300 text-sm">Ref code: <span className="font-mono">{user?.referralCode || 'mgf1z4nlifj2o'}</span></span>
+                <button onClick={handleCopy} className="text-gray-400 hover:text-white">
+                  {isCopied ? <FaCheck className="text-green-500" /> : <FaCopy />}
+                </button>
               </div>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-              <div className="flex justify-between items-center mb-4">
-                <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Bio</h3>
-                {!isEditingBio ? (
-                  <button onClick={() => setIsEditingBio(true)}  className="p-2 rounded-full bg-white/10 hover:bg-white/20 transition-colors">
-                    <FaPencilAlt className="text-white"/>
-                  </button>
-                ) : (
-                  <button onClick={handleUpdateBio} disabled={loadBioButton} className="bg-green-500 text-white font-bold py-1 px-3 rounded-full hover:bg-green-600 transition-all duration-300">
-                    {loadBioButton ? "Loading..." : "Save"}
-                  </button>
-                )}
-              </div>
-              {isEditingBio ? (
-                <textarea
-                  value={bio}
-                  onChange={(e) => setBio(e.target.value)}
-                  className="w-full p-2 bg-black/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-[var(--primary-cyan)] transition-all duration-300"
-                  rows="4"
-                ></textarea>
-              ) : (
-                <p className="text-gray-300">{bio ? bio : " Click the pencil icon to edit." }</p>
-              )}
-            </div>
+            {/* Gallery Button */}
+            <button className="w-full bg-[#1a1f3a] hover:bg-[#252b4a] text-white rounded-2xl p-4 mb-4 flex items-center space-x-3 transition-colors border-1 border-gray-700" onClick={() => setIsPictureViewOpen(true)}>
+              <FaImages className="text-xl" />
+              <span className="text-lg font-medium">Gallery</span>
+            </button>
 
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-              <h3 className="text-xl font-semibold mb-4 text-[var(--primary-cyan)]">User Properties</h3>
-              <div className="flex items-center gap-2 pb-4">
-                <FaUser className="text-[var(--accent-pink)]" />
-                <h3>{user?.firstName} {user?.lastName}</h3>
-              </div>
-              <div className="grid grid-cols-2 gap-4">
-                <div className="flex items-center space-x-2">
-                  <FaUser className="text-[var(--accent-pink)]" />
-                  <span>Age: {user?.age || 'N/A'}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <FaVenusMars className="text-[var(--accent-pink)]" />
-                  <span>Gender: {user?.gender || 'N/A'}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <FaMapMarkerAlt className="text-[var(--accent-pink)]" />
-                  <span>City: {user?.city || 'N/A'}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <FaMapMarkerAlt className="text-[var(--accent-pink)]" />
-                  <span>State: {user?.state || 'N/A'}</span>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <FaGlobe className="text-[var(--accent-pink)]" />
-                  <span>Country: {user?.country || 'N/A'}</span>
-                </div>
-              </div>
-            </div>
+            {/* Wallet Button */}
+            <button className="w-full bg-[#1a1f3a] hover:bg-[#252b4a] text-white rounded-2xl p-4 mb-6 flex items-center space-x-3 transition-colors border-1 border-gray-700">
+              <FaWallet className="text-xl" />
+              <span className="text-lg font-medium">Wallet</span>
+            </button>
 
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-              <h3 className="text-xl font-semibold mb-4 text-[var(--primary-cyan)]">Affiliate Dashboard</h3>
-              <p className="text-[var(--text-muted)] mb-4">Check your affiliate status and earnings.</p>
-              <Link to="/affiliate/dashboard" className="w-full bg-gradient-to-r from-purple-500 to-indigo-500 text-white font-bold py-3 px-6 rounded-full hover:opacity-80 transition-all duration-300 flex items-center justify-center space-x-2">
-                <FaTachometerAlt />
-                <span>Go to Dashboard</span>
-              </Link>
-            </div>
-
-            {isUserAffiliate ? (
-              <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-                <div className="mb-4">
-                  <h3 className="text-xl font-semibold text-[var(--primary-cyan)]">Affiliate Program</h3>
-                </div>
-                <div className="flex items-center justify-between">
-                  <div>
-                    <p className="text-[var(--text-muted)]">Your affiliate link:</p>
-                    <div className="flex items-center space-x-2 mt-2">
-                      <FaLink className="text-[var(--accent-pink)] flex-shrink-0" />
-                      <span className="text-white font-mono truncate w-48">{affiliateLink}</span>
-                    </div>
-                  </div>
-                  <button 
-                    onClick={handleCopy}
-                    className={`p-2 rounded-full transition-all duration-300 ${isCopied ? 'bg-green-500' : 'bg-white/10 hover:bg-white/20'}`}>
-                    {isCopied ? <FaCheck className="text-white" /> : <FaCopy className="text-white" />}
-                  </button>
-                </div>
-                <div className="mt-6 border-t border-white/10 pt-4">
-                  <div className="flex justify-between items-center">
-                    <div className="flex items-center space-x-2">
-                      <FaUsers className="text-[var(--accent-pink)]" />
-                      <span>{user?.referrals?.length || 0} Referrals</span>
-                    </div>
-                    <div className="text-right">
-                      <h4 className="text-lg font-semibold">Earnings</h4>
-                      <div className="flex items-center space-x-2 mt-1">
-                        <FaWallet className="text-[var(--accent-pink)]" />
-                        <span className="text-2xl font-bold">₦{user?.affiliateEarnings || '0.00'}</span>
-                      </div>
-                    </div>
-                  </div>
-                  <button className="w-full mt-4 bg-green-500 text-white font-bold py-2 px-4 rounded-full hover:bg-green-600 transition-all duration-300">
-                    Withdraw
-                  </button>
-                  <div className="flex justify-center mt-3">
-                    <button 
-                      onClick={handleCopy}
-                      className="flex items-center justify-center space-x-2 py-2 px-6 bg-[var(--accent-pink)] hover:bg-[var(--accent-pink)]/80 rounded-full transition-colors text-white font-medium text-sm"
-                    >
-                      <FaShare size={14} />
-                      <span>Share Link</span>
-                    </button>
-                  </div>
-                </div>
+            {/* User Details Card */}
+            <div className="bg-[#1a1f3a] rounded-2xl p-6 border-1 border-gray-700">
+              <div className="mb-6">
+                <h3 className="text-gray-400 text-sm mb-2">Full Name</h3>
+                <p className="text-white text-lg">{user?.firstName} {user?.lastName}</p>
               </div>
-            ) : (
-              <div className="relative bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6 mb-6">
-                <div className="text-center">
-                  <h3 className="text-xl font-semibold text-[var(--primary-cyan)] mb-4">Join Our Affiliate Program</h3>
-                  <p className="text-gray-300 mb-6">Start earning money by referring new users to our platform</p>
-                  <Link
-                    to="/affiliate/create"
-                    className="inline-flex items-center space-x-2 bg-gradient-to-r from-[var(--primary-cyan)] to-[var(--accent-pink)] hover:from-[var(--accent-pink)] hover:to-[var(--primary-cyan)] text-white font-semibold py-3 px-6 rounded-lg transition-all duration-300 transform hover:scale-105"
-                  >
-                    <FaUsers className="text-lg" />
-                    <span>Become an Affiliate</span>
-                  </Link>
-                </div>
-              </div>
-            )}
 
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-lg p-6">
-              <h3 className="text-xl font-semibold mb-4 text-[var(--primary-cyan)]">Upgrade Your Plan</h3>
-              <p className="text-[var(--text-muted)] mb-4">Unlock more features and increase your earnings potential.</p>
-              <Link to="/subscription/plans" className="w-full bg-gradient-to-r from-[var(--primary-cyan)] to-[var(--accent-pink)] text-white font-bold py-3 px-6 rounded-full hover:opacity-80 transition-all duration-300 flex items-center justify-center space-x-2">
-                <FaArrowUp />
-                <span>Upgrade Now</span>
-              </Link>
+              <div className="mb-6">
+                <h3 className="text-gray-400 text-sm mb-2">Location</h3>
+                <p className="text-white text-lg">{user?.country}, {user?.state}</p>
+              </div>
+
+              <div className="mb-6">
+                <h3 className="text-gray-400 text-sm mb-2">Age</h3>
+                <p className="text-white text-lg">{user?.age || 'N/A'}</p>
+              </div>
+
+              <div>
+                <h3 className="text-gray-400 text-sm mb-2">Gender</h3>
+                <p className="text-white text-lg">{user?.gender || 'N/A'}</p>
+              </div>
+
+                <div>
+                <h3 className="text-gray-400 text-sm mb-2">Looking For</h3>
+                <p className="text-white text-lg">{user?.looking || 'N/A'}</p>
+              </div>
+
+                <div>
+                <h3 className="text-gray-400 text-sm mb-2">Age Preference </h3>
+                <p className="text-white text-lg">{user?.agePreference || 'N/A'}</p>
+              </div>
+
+                <div>
+                <h3 className="text-gray-400 text-sm mb-2">Bio</h3>
+                <p className="text-white text-lg">{user?.bio || 'N/A'}</p>
+              </div>
+
+                <div>
+                <h3 className="text-gray-400 text-sm mb-2">Hobbies</h3>
+                <p className="text-white text-lg">{user?.hobbies || 'N/A'}</p>
+              </div>
+
             </div>
           </div>
 

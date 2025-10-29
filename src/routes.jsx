@@ -227,7 +227,7 @@ export const routes = [
 
 {
   path: '/support',
-  element: <ProtectedRoute> <SupportChat /> </ProtectedRoute>,
+  element: <SupportChat /> ,
   name: 'Support Chat',
   showInNav: false,
   protected: false,
