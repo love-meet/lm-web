@@ -99,90 +99,77 @@ export default function Terms() {
       </h1>
 
       <MainSection title="Terms & Conditions">
-        <NestedSection title=" Eligibility">
+        <NestedSection title="1. Eligibility & Account Security">
           <p>
-            You must be 18 years or older to use Love Meet. You agree that the
-            information you provide is accurate and up to date. You are
-            responsible for maintaining the confidentiality of your account.
+            You must be at least 18 years of age to create an account and use Love Meet. By using our service, you represent and warrant that you have the right, authority, and capacity to enter into this Agreement and to abide by all of its terms and conditions. You are responsible for maintaining the confidentiality of your login credentials.
           </p>
         </NestedSection>
-        <NestedSection title=" User Responsibilities">
+        <NestedSection title="2. User Conduct & Responsibilities">
           <p>
-            Do not post or share offensive, harmful, or illegal content. Respect
-            other users; no harassment, impersonation, or discrimination. Do not
-            use Love Meet for spam, scams, or commercial purposes. You are
-            solely responsible for your interactions with other users.
+            You agree not to post or share content that is illegal, harmful, threatening, abusive, harassing, defamatory, vulgar, obscene, hateful, or racially, ethnically, or otherwise objectionable. You are solely responsible for your interactions with other users.
           </p>
         </NestedSection>
-        <NestedSection title=" Content Ownership">
+        <NestedSection title="3. Content Ownership and License">
           <p>
-            You retain ownership of any content you post. By posting, you grant
-            Love Meet a limited, non-exclusive license to use and display your
-            content within the app. We may remove content that violates these
-            Terms.
+            You retain all ownership rights to the content you post on Love Meet. However, by posting content, you grant Love Meet a worldwide, non-exclusive, royalty-free, sublicensable, and transferable license to use, reproduce, distribute, prepare derivative works of, display, and perform the content in connection with the service.
           </p>
         </NestedSection>
-        <NestedSection title=" Payments & Subscriptions">
+        <NestedSection title="4. Payments & Subscriptions">
           <p>
-            Some features may require payment. All payments are non-refundable
-            unless required by law. Love Meet reserves the right to update
-            pricing with notice.
+            Certain features of the app may require payment. All payments are final and non-refundable, except as required by applicable law. We reserve the right to change our pricing with reasonable notice.
           </p>
         </NestedSection>
-        <NestedSection title="Termination">
+        <NestedSection title="5. Termination of Service">
           <p>
-            Love Meet may suspend or terminate accounts that violate these
-            Terms. You may delete your account at any time via your settings.
+            We may suspend or terminate your account without notice if you violate these Terms or our Community Guidelines. You may delete your account at any time through the app's settings.
           </p>
         </NestedSection>
-        <NestedSection title=" Limitation of Liability">
+        <NestedSection title="6. Limitation of Liability">
           <p>
-            Love Meet is provided on an "as-is" basis. We are not responsible
-            for any damages, losses, or disputes arising from the use of the
-            app.
+            Love Meet is provided "as is," and we make no guarantees that it will always be safe, secure, or error-free. We are not liable for any lost profits, revenues, information, or data, or consequential, special, indirect, exemplary, punitive, or incidental damages arising out of or related to these Terms or the Love Meet products.
           </p>
         </NestedSection>
       </MainSection>
 
-      <MainSection title="Community Guidelines">
+      <MainSection title="Community & Safety Guidelines">
         <div className="space-y-4">
           <p>
-            <strong> Be Respectful</strong>
-            <br />
-            Treat everyone with kindness. Harassment, bullying, threats, or hate
-            speech will not be tolerated.
+            <strong>Be Respectful:</strong> Treat everyone with kindness. Harassment, bullying, hate speech, and any form of discrimination are strictly prohibited and will result in immediate account termination.
           </p>
           <p>
-            <strong> Be Honest</strong>
-            <br />
-            Use your real identity and provide accurate details. Fake profiles
-            and impersonation are prohibited.
+            <strong>Be Authentic:</strong> Your profile should be a true representation of you. Do not impersonate others or create fake profiles.
           </p>
           <p>
-            <strong> Keep It Safe</strong>
-            <br />
-            Do not share sensitive personal or financial information with others.
-            Never ask for or send money.
+            <strong>Prohibited Content:</strong> Do not post or share content that is sexually explicit, graphically violent, or promotes illegal activities. This includes nudity, pornography, and hate speech.
           </p>
           <p>
-            <strong> Keep It Clean</strong>
-            <br />
-            Do not post or share nudity, pornography, or other offensive
-            material. Illegal activities are strictly forbidden.
+            <strong>No Commercial Activity:</strong> Do not use Love Meet for spam, scams, or any form of commercial solicitation.
           </p>
           <p>
-            <strong> 18+ Only</strong>
-            <br />
-            Love Meet is an adult-only platform. Accounts for users under 18
-            will be removed.
-          </p>
-          <p>
-            <strong> Report Issues</strong>
-            <br />
-            If you encounter any inappropriate behavior, please use the report
-            feature. Our team will review and take appropriate action.
+            <strong>Report Violations:</strong> Use our in-app reporting tools to flag any user or content that violates these guidelines. Our moderation team will review all reports and take appropriate action.
           </p>
         </div>
+      </MainSection>
+
+      <MainSection title="Child Safety & Content Moderation Policy">
+        <NestedSection title="Zero-Tolerance Policy on Child Sexual Abuse and Exploitation (CSAE)">
+          <p>
+            Love Meet has an absolute zero-tolerance policy for any content that depicts, promotes, or facilitates Child Sexual Abuse and Exploitation (CSAE), including Child Sexual Abuse Material (CSAM). Our platform is strictly for adults (18+), and the safety of children is our highest priority.
+          </p>
+        </NestedSection>
+        <NestedSection title="Reporting and Enforcement">
+          <p>
+            We utilize a combination of automated detection tools and human moderation to proactively identify and remove prohibited content. We urge our users to immediately report any suspected CSAE content or predatory behavior using our in-app reporting tools.
+          </p>
+          <p>
+            Upon identifying a credible report or detecting such content, we will take swift and decisive action, which includes:
+          </p>
+          <ul className="list-disc pl-6 space-y-2 mt-2">
+            <li>Immediate removal of the offending content.</li>
+            <li>Permanent termination of the responsible user's account.</li>
+            <li>Reporting the content and associated user information to law enforcement authorities, including the National Center for Missing & Exploited Children (NCMEC), as required by law.</li>
+          </ul>
+        </NestedSection>
       </MainSection>
 
       <div className="mt-8 border-t border-gray-700 pt-6">
@@ -195,7 +182,7 @@ export default function Terms() {
             href="mailto:app.lovemeet@gmail.com"
             className="text-pink-400 hover:underline"
           >
-            app.lovemeet@gmail.com
+            lovemeet.global@gmail.com
           </a>
         </p>
       </div>
