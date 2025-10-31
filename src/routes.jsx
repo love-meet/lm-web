@@ -17,9 +17,11 @@ const ReferralHandler = lazy(() => import('./pages/referral/Index'));
 const Login = lazy(() => import('./pages//auth/Login'));
 const Love = lazy(() => import('./games/LoveWords/Love.jsx'));
 const About = lazy(() => import('./pages/dashboard/settings/About.jsx'));
+const AboutLoveMeet = lazy(() => import('./pages/AboutLoveMeet.jsx'));
 const Help = lazy(() => import('./pages/dashboard/settings/Help.jsx'));
 const Feedback = lazy(() => import('./pages/dashboard/settings/Feedback.jsx'));
 const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
+const SupportChat = lazy(() => import('./pages/dashboard/support/SupportChat.jsx'));
 const Terms = lazy(() => import('./pages/Terms.jsx'));
 const Privacy = lazy(() => import('./pages/Privacy.jsx'));
 
@@ -192,6 +194,13 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
+  {
+    path: '/about-lovemeet',
+    element: <AboutLoveMeet />,
+    name: 'About Love Meet',
+    showInNav: false,
+    protected: false,
+  },
 
 { 
   path: '/help',
@@ -212,6 +221,14 @@ export const routes = [
   path: '/contact',
   element: <Contact/>,
   name: 'Contact',
+  showInNav: false,
+  protected: false,
+},
+
+{
+  path: '/support',
+  element: <SupportChat /> ,
+  name: 'Support Chat',
   showInNav: false,
   protected: false,
 },

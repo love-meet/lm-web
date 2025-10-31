@@ -1,16 +1,18 @@
 import React from 'react';
 import { Check, CheckCheck } from 'lucide-react';
-import { currentUserId } from '../../data/chatsData';
+import { useAuth } from '../../context/AuthContext';
 
 const ChatBubble = ({ message, isLast }) => {
-  const isMyMessage = message.senderId === currentUserId;
-  
+  const { user } = useAuth();
+  const isMyMessage = message.role === 'user';
+
   const getTimeFormat = (timestamp) => {
+    if (message.time) return message.time;
     const date = new Date(timestamp);
-    return date.toLocaleTimeString('en-US', { 
-      hour: '2-digit', 
+    return date.toLocaleTimeString('en-US', {
+      hour: '2-digit',
       minute: '2-digit',
-      hour12: false 
+      hour12: false
     });
   };
 
@@ -27,7 +29,7 @@ const ChatBubble = ({ message, isLast }) => {
         >
           {/* Message Content */}
           <p className="text-sm leading-relaxed break-words">
-            {message.content}
+            {message.message || message.content}
           </p>
           
           {/* Time and Status */}
@@ -35,25 +37,13 @@ const ChatBubble = ({ message, isLast }) => {
             isMyMessage ? 'text-white/70' : 'text-[var(--text-muted)]'
           }`}>
             <span className="text-xs">
-              {getTimeFormat(message.timestamp)}
+              {getTimeFormat(message.timestamp || message.time)}
             </span>
             
-            {/* Read Status (only for sent messages) */}
-            {isMyMessage && (
-              <div className="ml-1">
-                {message.isRead ? (
-                  <CheckCheck 
-                    size={12} 
-                    className="text-[var(--accent-green)]" 
-                  />
-                ) : message.isSent ? (
-                  <Check 
-                    size={12} 
-                    className="text-white/70" 
-                  />
-                ) : (
-                  <div className="w-3 h-3 border border-white/50 rounded-full animate-spin" />
-                )}
+            {/* Sender name for system/admin messages */}
+            {(message.role === 'system' || message.role === 'admin') && (
+              <div className="text-xs text-[var(--text-muted)] mt-1">
+                {message.sender}
               </div>
             )}
           </div>

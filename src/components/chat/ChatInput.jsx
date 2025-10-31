@@ -2,9 +2,10 @@ import React, { useState, useRef, useEffect } from 'react';
 import { Send } from 'lucide-react';
 import EmojiButton from './EmojiPicker';
 
-const ChatInput = ({ onSendMessage }) => {
+const ChatInput = ({ onSendMessage, onTyping }) => {
   const [message, setMessage] = useState('');
   const textareaRef = useRef(null);
+  const typingTimeoutRef = useRef(null);
 
   const adjustHeight = () => {
     const textarea = textareaRef.current;
@@ -19,11 +20,36 @@ const ChatInput = ({ onSendMessage }) => {
     adjustHeight();
   }, [message]);
 
+  const handleTyping = (isTyping) => {
+    if (onTyping) {
+      onTyping(isTyping);
+    }
+  };
+
+  const handleInputChange = (e) => {
+    setMessage(e.target.value);
+    handleTyping(true);
+
+    // Clear previous timeout
+    if (typingTimeoutRef.current) {
+      clearTimeout(typingTimeoutRef.current);
+    }
+
+    // Set new timeout to stop typing indicator
+    typingTimeoutRef.current = setTimeout(() => {
+      handleTyping(false);
+    }, 1000);
+  };
+
   const handleSubmit = (e) => {
     e.preventDefault();
     if (message.trim()) {
       onSendMessage(message.trim());
       setMessage('');
+      handleTyping(false);
+      if (typingTimeoutRef.current) {
+        clearTimeout(typingTimeoutRef.current);
+      }
     }
   };
 
@@ -37,6 +63,7 @@ const ChatInput = ({ onSendMessage }) => {
   const handleEmojiSelect = (emoji) => {
     setMessage(prev => prev + emoji);
     textareaRef.current?.focus();
+    handleTyping(true);
   };
 
   return (
@@ -50,7 +77,7 @@ const ChatInput = ({ onSendMessage }) => {
           <textarea
             ref={textareaRef}
             value={message}
-            onChange={(e) => setMessage(e.target.value)}
+            onChange={handleInputChange}
             onKeyPress={handleKeyPress}
             placeholder="Type a message..."
             className="w-full bg-[var(--bg-secondary)]/80 border border-white/20 rounded-2xl px-4 py-3 text-white placeholder-[var(--text-muted)] focus:outline-none focus:border-[var(--primary-cyan)] resize-none backdrop-blur-sm transition-all duration-300 min-h-[48px]"

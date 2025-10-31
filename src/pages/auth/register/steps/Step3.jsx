@@ -7,7 +7,22 @@ const Step3 = ({ formData, setFormData, handleChange, validationErrors }) => {
     'July', 'August', 'September', 'October', 'November', 'December'
   ];
   const currentYear = new Date().getFullYear();
-  const years = Array.from({ length: 33 }, (_, i) => currentYear - 18 - i); // Only 18-50 years
+  const years = Array.from({ length: 33 }, (_, i) => currentYear - 18 - i);
+
+  // This function automatically creates dateOfBirth when all fields are selected
+  const handleDobChange = (field, value) => {
+    setFormData(prev => {
+      const updated = { ...prev, [field]: value };
+      
+      // Construct dateOfBirth in YYYY-MM-DD format
+      if (updated.dobDay && updated.dobMonth && updated.dobYear) {
+        const dateOfBirth = `${updated.dobYear}-${String(updated.dobMonth).padStart(2, '0')}-${String(updated.dobDay).padStart(2, '0')}`;
+        return { ...updated, dateOfBirth };
+      }
+      
+      return updated;
+    });
+  };
 
   return (
     <div className="space-y-6 animate-fadeIn">
@@ -41,8 +56,8 @@ const Step3 = ({ formData, setFormData, handleChange, validationErrors }) => {
             <select 
               name="dobDay" 
               value={formData.dobDay} 
-              onChange={(e) => setFormData(prev => ({...prev, dobDay: e.target.value}))} 
-              className={`input-styled ${validationErrors.dob ? 'border-red-500' : ''}`}
+              onChange={(e) => handleDobChange('dobDay', e.target.value)}
+              className={`input-styled ${(validationErrors.dob || validationErrors.dateOfBirth) ? 'border-red-500' : ''}`}
             >
               <option value="">Day</option>
               {days.map(day => (
@@ -55,8 +70,8 @@ const Step3 = ({ formData, setFormData, handleChange, validationErrors }) => {
             <select 
               name="dobMonth" 
               value={formData.dobMonth} 
-              onChange={(e) => setFormData(prev => ({...prev, dobMonth: e.target.value}))} 
-              className={`input-styled ${validationErrors.dob ? 'border-red-500' : ''}`}
+              onChange={(e) => handleDobChange('dobMonth', e.target.value)}
+              className={`input-styled ${(validationErrors.dob || validationErrors.dateOfBirth) ? 'border-red-500' : ''}`}
             >
               <option value="">Month</option>
               {months.map((month, index) => (
@@ -69,8 +84,8 @@ const Step3 = ({ formData, setFormData, handleChange, validationErrors }) => {
             <select 
               name="dobYear" 
               value={formData.dobYear} 
-              onChange={(e) => setFormData(prev => ({...prev, dobYear: e.target.value}))} 
-              className={`input-styled ${validationErrors.dob ? 'border-red-500' : ''}`}
+              onChange={(e) => handleDobChange('dobYear', e.target.value)}
+              className={`input-styled ${(validationErrors.dob || validationErrors.dateOfBirth) ? 'border-red-500' : ''}`}
             >
               <option value="">Year</option>
               {years.map(year => (
@@ -79,7 +94,11 @@ const Step3 = ({ formData, setFormData, handleChange, validationErrors }) => {
             </select>
           </div>
         </div>
-        {validationErrors.dob && <p className="text-red-400 text-sm mt-1">{validationErrors.dob}</p>}
+        {(validationErrors.dob || validationErrors.dateOfBirth) && (
+          <p className="text-red-400 text-sm mt-1">
+            {validationErrors.dob || validationErrors.dateOfBirth}
+          </p>
+        )}
       </div>
     </div>
   );
