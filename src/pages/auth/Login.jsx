@@ -317,7 +317,7 @@ export default function Login() {
 
         setIsResetting(true);
         try {
-            const response = await api.post("/resetpassword", {
+            const response = await api.post("/reset-password", {
             email: resetEmail,
             newPassword,
             });
