@@ -39,16 +39,16 @@ const Layout = () => {
           <MobileBottomTabs />
         </>
       )}
-        {!isHomePage && location.pathname !== '/login' && <DesktopSidebar />}
+      {/* {!isHomePage && <DesktopSidebar />} */}
       
       {/* Main Content Area */}
       <main className={`
-        ${!isHomePage ? 'pt-4 pb-20 md:pt-2 md:pb-0 md:pr-72' : ''}
+        ${!isHomePage ? 'pt-4 pb-20 md:pt-2 md:pb-0 ' : ''}
         min-h-screen
       `}>
         <div className={`
           ${!isHomePage 
-            ? 'md:max-w-md md:mx-auto md:my-4 md:rounded-2xl md:shadow-2xl md:bg-gradient-to-b md:from-[var(--bg-primary)]/50 md:to-[var(--bg-secondary)]/50 md:backdrop-blur-lg md:border md:border-white/10 md:min-h-[calc(100vh-2rem)] md:overflow-hidden' 
+            ? ' md:mx-auto md:my-4 md:rounded-2xl md:shadow-2xl md:bg-gradient-to-b md:from-[var(--bg-primary)]/50 md:to-[var(--bg-secondary)]/50 md:backdrop-blur-lg md:border md:border-white/10 md:min-h-[calc(100vh-2rem)] md:overflow-hidden' 
             : ''
           }
         `}>

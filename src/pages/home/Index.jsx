@@ -22,10 +22,10 @@ export default function HomePage() {
             src="/assets/lm-logo.png"
             alt="Love Meet Logo"
             className="h-5 md:h-6 w-19 md:w-24 animate-logoGlow"
-          />
+          /> 
         </div>
         
-        <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-[var(--bg-tertiary)] z-0">
           <div className="absolute inset-0">
             {[...Array(15)].map((_, i) => (
               <div
@@ -73,11 +73,11 @@ export default function HomePage() {
               Find Your <span className="text-gradient-accent">Soulmate</span>
             </h1>
             <p className="text-lg mb-8 text-[var(--text-secondary)] max-w-md leading-relaxed">
-              Where hearts connect, love grows, and forever begins. Join thousands finding their perfect match.
+              Where hearts connect, love begins, and forever grows. Join thousands finding their perfect match.
             </p>
-            <button className="bg-gradient-to-r from-[var(--primary-blue)] to-[var(--accent-pink)] text-white font-bold py-2 px-4 w-40 rounded-lg shadow-md hover:scale-105 transition-transform duration-300" onClick={handleGetStated}>
+            {/* <button className="bg-gradient-to-r from-[var(--primary-blue)] to-[var(--accent-pink)] text-white font-bold py-2 px-4 w-40 rounded-lg shadow-md hover:scale-105 transition-transform duration-300" onClick={handleGetStated}>
               Get Started
-            </button>
+            </button> */}
           </div>
         </div>
 
@@ -89,11 +89,11 @@ export default function HomePage() {
               <span className="text-gradient-accent">Soulmate</span>
             </h1>
             <p className="text-xl mb-8 text-[var(--text-secondary)] max-w-lg leading-relaxed">
-              Where hearts connect, love grows, and forever begins. Join thousands of people finding their perfect match in our vibrant community.
+              Where hearts connect, love begins, and forever grows. Join thousands of people who are here to find their perfect match in our vibrant community.
             </p>
-            <button className="bg-gradient-to-r from-[var(--primary-blue)] to-[var(--accent-pink)] text-white font-bold py-2 px-4 w-40 rounded-lg shadow-md hover:scale-105 transition-transform duration-300" onClick={handleGetStated}>
+            {/* <button className="bg-gradient-to-r from-[var(--primary-blue)] to-[var(--accent-pink)] text-white font-bold py-2 px-4 w-40 rounded-lg shadow-md hover:scale-105 transition-transform duration-300" onClick={handleGetStated}>
               Get Started
-            </button>
+            </button> */}
           </div>
 
           <div className="flex-1 flex items-center justify-center">
@@ -121,7 +121,7 @@ export default function HomePage() {
               Get Our Mobile App
             </h2>
             <p className="text-xl text-[var(--text-secondary)] max-w-2xl mx-auto">
-              Experience the magic of love on the go. Available on all major mobile platforms.
+              Experience the beauty and magic of love on the go. Available on all major mobile platforms.
             </p>
           </div>
 
