@@ -275,7 +275,22 @@ export default function Login() {
     }
 };
 
-
+// const fetchReferralCode = async () => {
+//     try {
+//         const response = await api.get(`/auth/user/${userId}/ref-code`);
+//         if (response.status) {
+//             setFormData((prevData) => ({
+//                 ...prevData,
+//                 referralCode: response.data.code || '',
+//             }));
+//         } else {
+//             toast.error(response.message || 'Failed to fetch referral code 💔');
+//         }
+//     } catch (error) {
+//         console.error('Failed to fetch referral code:', error);
+//         toast.error('Failed to fetch referral code 💔');
+//     }
+// };
 
     const getPasswordStrengthColor = () => {
         if (passwordStrength.score <= 1) return 'text-red-400';
