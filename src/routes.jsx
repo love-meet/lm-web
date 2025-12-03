@@ -24,6 +24,7 @@ const Contact = lazy(() => import('./pages/dashboard/settings/Contact.jsx'));
 const SupportChat = lazy(() => import('./pages/dashboard/support/SupportChat.jsx'));
 const Terms = lazy(() => import('./pages/Terms.jsx'));
 const Privacy = lazy(() => import('./pages/Privacy.jsx'));
+const DeleteAccount = lazy(() => import('./pages/DeleteAccount.jsx'));
 
 // Settings sub-pages
 const EditProfile = lazy(() => import('./pages/dashboard/settings/EditProfile'));
@@ -201,29 +202,28 @@ export const routes = [
     showInNav: false,
     protected: false,
   },
+  { 
+    path: '/help',
+    element: <Help />,
+    showInNav: false,
+    protected: false,
+  },
 
-{ 
-  path: '/help',
-  element: <Help />,
-  showInNav: false,
-  protected: false,
-},
+  {
+    path: '/feedback',
+    element: <Feedback />,
+    name: 'Feedback',
+    showInNav: false,
+    protected: false,
+  },
 
-{
-  path: '/feedback',
-  element: <Feedback />,
-  name: 'Feedback',
-  showInNav: false,
-  protected: false,
-},
-
-{
-  path: '/contact',
-  element: <Contact/>,
-  name: 'Contact',
-  showInNav: false,
-  protected: false,
-},
+  {
+    path: '/contact',
+    element: <Contact/>,
+    name: 'Contact',
+    showInNav: false,
+    protected: false,
+  },
 
 {
   path: '/support',
@@ -244,6 +244,13 @@ export const routes = [
   path: '/privacy',
   element: <Privacy />,
   name: 'Privacy',
+  showInNav: false,
+  protected: false,
+},
+{
+  path: '/delete-account',
+  element: <DeleteAccount />,
+  name: 'Delete Account',
   showInNav: false,
   protected: false,
 },
