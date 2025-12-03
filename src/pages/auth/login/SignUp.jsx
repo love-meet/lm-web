@@ -28,6 +28,14 @@ export default function SignUp({showConfirmPassword, formData, handleInputChange
                 )}
             </div>
         )}
+        <input
+        type = "text"
+        name = "referralCode"
+        value = {formData.referralCode}
+        onChange = {handleInputChange}
+        placeholder = "🎁 Referral Code (Optional)"
+        className = "w-full mt-4 px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-pink-500 transition"
+        />
     </div>
   )
 }

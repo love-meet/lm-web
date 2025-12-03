@@ -1,10 +1,16 @@
 import React, { useState } from "react";
-import { IoMdEye } from "react-icons/io";
-import { IoMdEyeOff } from "react-icons/io";
+import { IoMdEye, IoMdEyeOff } from "react-icons/io";
 
-export default function ResetPassword({ resetEmail, handleResetPassword, setShowResetPasswordModal, isResetting }) {
+export default function ResetPassword({
+  resetEmail,
+  handleResetPassword,
+  setShowResetPasswordModal,
+  isResetting,
+}) {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
+  const [showNewPassword, setShowNewPassword] = useState(false);
+  const [showConfirmPassword, setShowConfirmPassword] = useState(false);
 
   return (
     <div className="fixed inset-0 bg-black/50 backdrop-blur-sm z-[100] flex items-center justify-center p-4">
@@ -15,24 +21,43 @@ export default function ResetPassword({ resetEmail, handleResetPassword, setShow
         </p>
 
         <div className="space-y-4">
-          <input
-            type="password"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            placeholder="New Password"
-            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-pink-500 transition"
-          />
-          <IoMdEye />
+          {/* New Password */}
+          <div className="relative">
+            <input
+              type={showNewPassword ? "text" : "password"}
+              value={newPassword}
+              onChange={(e) => setNewPassword(e.target.value)}
+              placeholder="New Password"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-pink-500 transition"
+            />
+            <button
+              type="button"
+              onClick={() => setShowNewPassword(!showNewPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white"
+            >
+              {showNewPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
+            </button>
+          </div>
 
-          <input
-            type="password"
-            value={confirmPassword}
-            onChange={(e) => setConfirmPassword(e.target.value)}
-            placeholder="Confirm New Password"
-            className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-pink-500 transition"
-          />
-          <IoMdEyeOff />
+          {/* Confirm Password */}
+          <div className="relative">
+            <input
+              type={showConfirmPassword ? "text" : "password"}
+              value={confirmPassword}
+              onChange={(e) => setConfirmPassword(e.target.value)}
+              placeholder="Confirm New Password"
+              className="w-full px-4 py-3 bg-white/10 border border-white/20 rounded-lg text-white placeholder-white/60 focus:outline-none focus:border-pink-500 transition"
+            />
+            <button
+              type="button"
+              onClick={() => setShowConfirmPassword(!showConfirmPassword)}
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-white/60 hover:text-white"
+            >
+              {showConfirmPassword ? <IoMdEyeOff size={20} /> : <IoMdEye size={20} />}
+            </button>
+          </div>
 
+          {/* Buttons */}
           <div className="flex gap-3 mt-4">
             <button
               onClick={() => setShowResetPasswordModal(false)}
