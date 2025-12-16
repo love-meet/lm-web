@@ -34,7 +34,7 @@ const Layout = () => {
   return (
     <div className="min-h-screen bg-gradient-to-br from-[var(--bg-primary)] via-[var(--bg-secondary)] to-[var(--bg-tertiary)] text-white">
       {/* Mobile Navigation - Hide on home page */}
-      {!isHomePage && (
+      {!isHomePage && showNavigation && (
         <>
           <MobileBottomTabs />
         </>
